@@ -1,0 +1,7 @@
+<resources>
+<!--    <string name="privacy_policy">file:///android_asset/privacy_policy.html</string>-->
+<!--    <string name="service_agreement">file:///android_asset/service_agreement.html</string>    -->
+
+    <string name="privacy_policy">https://www.ieway.cn/privacy-policy-mobile.html</string>
+    <string name="service_agreement">https://www.ieway.cn/user-agreement-mobile.html</string>
+</resources>
