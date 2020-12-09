@@ -1,7 +1,6 @@
 package cn.ieway.evmirror.net;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tamsiree.rxkit.RxDataTool;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,8 +9,8 @@ import cn.ieway.evmirror.application.BaseConfig;
 import cn.ieway.evmirror.application.Const;
 import cn.ieway.evmirror.net.okhttp.CallBackUtil;
 import cn.ieway.evmirror.net.okhttp.OkhttpUtil;
-import cn.ieway.evmirror.util.AesUtils;
-import cn.ieway.evmirror.util.SignUtils;
+import cn.ieway.evmirror.net.util.AesUtils;
+import cn.ieway.evmirror.net.util.SignUtils;
 import okhttp3.Call;
 
 /**
@@ -20,7 +19,7 @@ import okhttp3.Call;
  * Date: 2020/7/31 17:21
  * Description: '我的’模块相关选项网络请求
  */
-public class MineNetUtils {
+public class CommonRequest {
 
     public static void checkAPPVersion(CallBackUtil callBackUtil) throws Exception {
         JSONObject jsonObject = new JSONObject();

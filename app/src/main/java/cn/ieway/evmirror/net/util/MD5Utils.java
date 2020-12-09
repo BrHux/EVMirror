@@ -1,4 +1,4 @@
-package cn.ieway.evmirror.util;
+package cn.ieway.evmirror.net.util;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

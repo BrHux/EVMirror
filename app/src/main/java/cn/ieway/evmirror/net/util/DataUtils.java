@@ -1,4 +1,4 @@
-package cn.ieway.evmirror.net;
+package cn.ieway.evmirror.net.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.tamsiree.rxkit.RxDataTool;
@@ -6,7 +6,7 @@ import com.tamsiree.rxkit.view.RxToast;
 
 import java.io.UnsupportedEncodingException;
 
-import cn.ieway.evmirror.util.AesUtils;
+import cn.ieway.evmirror.net.util.AesUtils;
 import cn.ieway.evmirror.util.CommonUtils;
 
 /**
@@ -26,7 +26,7 @@ public class DataUtils {
                 errorMsg = object.getString("errmsg");
             }
             return errorMsg;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -34,8 +34,9 @@ public class DataUtils {
     }
 
 
-
-    /**返回数据解密
+    /**
+     * 返回数据解密
+     *
      * @param response
      * @return
      */
@@ -44,7 +45,9 @@ public class DataUtils {
         return JSONObject.parseObject(result);
     }
 
-    /**返回数据解密
+    /**
+     * 返回数据解密
+     *
      * @param jsonStr
      * @return
      */
@@ -101,7 +104,7 @@ public class DataUtils {
      * @return
      */
     public static String dealResponse(String response) {
-        return  dealResponse(response,true);
+        return dealResponse(response, true);
     }
 
     /**
@@ -120,21 +123,20 @@ public class DataUtils {
             int errorCode = jsonObject.getIntValue("errcode");
             int encrypt = jsonObject.getIntValue("encrypt");
             if (errorCode == 0) {
-                if (encrypt == 1){
+                if (encrypt == 1) {
                     String data = jsonObject.getString("result");
                     byte[] bytes = new byte[0];
                     bytes = AesUtils.decrypt(data);
                     result = new String(bytes, "utf-8");
-                }else {
+                } else {
                     String data = jsonObject.getString("result");
                     result = data;
                 }
-            }
-            else {
+            } else {
                 if (showmMsg) RxToast.error(errorCode + ": " + jsonObject.getString("errmsg"));
             }
         } catch (Exception e) {
-            RxToast.error(e.toString());
+            if (showmMsg) RxToast.error(e.toString());
             e.printStackTrace();
         }
         return result;

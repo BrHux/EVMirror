@@ -19,8 +19,8 @@ import cn.ieway.evmirror.application.BaseConfig;
 import cn.ieway.evmirror.application.Const;
 import cn.ieway.evmirror.entity.AppVersion;
 import cn.ieway.evmirror.modules.main.MainActivity;
-import cn.ieway.evmirror.net.DataUtils;
-import cn.ieway.evmirror.net.MineNetUtils;
+import cn.ieway.evmirror.net.util.DataUtils;
+import cn.ieway.evmirror.net.CommonRequest;
 import cn.ieway.evmirror.net.okhttp.CallBackUtil;
 import cn.ieway.evmirror.util.CommonUtils;
 import okhttp3.Call;
@@ -51,7 +51,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void checkVersion() {
         try {
-            MineNetUtils.checkAPPVersion(new CallBackUtil.CallBackString() {
+            CommonRequest.checkAPPVersion(new CallBackUtil.CallBackString() {
                 @Override
                 public void onFailure(Call call, Exception e) {
                     enterHomeActivity();
@@ -59,32 +59,31 @@ public class SplashActivity extends AppCompatActivity {
 
                 @Override
                 public void onResponse(String response) {
-                    if (CommonUtils.isNotJSONString(response)){
+                    if (CommonUtils.isNotJSONString(response)) {
                         enterHomeActivity();
                         return;
                     }
-                    if (DataUtils.getErroCode(response) != 0){
+                    if (DataUtils.getErroCode(response) != 0) {
                         RxToast.error(DataUtils.getErroMsg(response));
                         enterHomeActivity();
-                    }else {
-                        String result = DataUtils.dealResponse(response);
-                        AppVersion version = JSONObject.parseObject(result,AppVersion.class);
-                        if(version == null) {
+                    } else {
+                        String result = DataUtils.dealResponse(response, false);
+                        AppVersion version = JSONObject.parseObject(result, AppVersion.class);
+                        if (version == null) {
                             enterHomeActivity();
                             return;
                         }
-                        String currentVer = version.getCurrent_version().replace(".","");
-                        String localVer = BaseConfig.APP_VERSION.replace(".","");
+                        String currentVer = version.getCurrent_version().replace(".", "");
+                        String localVer = BaseConfig.APP_VERSION.replace(".", "");
                         int cv = Integer.parseInt(currentVer);
                         int lv = Integer.parseInt(localVer);
 
-                        if (version.getForce_update() == 1){ //需强制更新
+                        if (version.getForce_update() == 1) { //需强制更新
                             html = version.getDownload_url();
-                            showTips(version.getEnd_error(),"下载新版本",1);
-                        }else   if (cv > lv) {
-                            showTips(version.getUpdate_brief(),"好的",2);
-                        }
-                        else {
+                            showTips(version.getEnd_error(), "下载新版本", 1);
+                        } else if (cv > lv) {
+                            showTips(version.getUpdate_brief(), "好的", 2);
+                        } else {
                             enterHomeActivity();
                         }
                     }
@@ -141,32 +140,31 @@ public class SplashActivity extends AppCompatActivity {
     }
 
 
-
     private void showTips(String title, String actStr, final int type) {
         final RxDialogSureCancel rxDialogSureCancel = new RxDialogSureCancel(SplashActivity.this);
         rxDialogSureCancel.setContent(title);
         rxDialogSureCancel.getContentView().setLinksClickable(true);
         rxDialogSureCancel.getContentView().setTextSize(16.0f);
         rxDialogSureCancel.setCancel(actStr);
-        rxDialogSureCancel.getCancelView().setTextColor(ContextCompat.getColor(this,R.color.colorBlue));
+        rxDialogSureCancel.getCancelView().setTextColor(ContextCompat.getColor(this, R.color.colorBlue));
         rxDialogSureCancel.getCancelView().setTextSize(14.0f);
         rxDialogSureCancel.getSureView().setTextSize(14.0f);
         rxDialogSureCancel.setCancelListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (type){
-                    case 1:{ //登录
+                switch (type) {
+                    case 1: { //登录
 
                         if (!html.contains("http")) {
-                            html = "https://"+html;
+                            html = "https://" + html;
                         }
-                        Uri uri= Uri.parse(html);
-                        Intent intent=new Intent(Intent.ACTION_VIEW,uri);
+                        Uri uri = Uri.parse(html);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                         SplashActivity.this.startActivity(intent);
                         SplashActivity.this.finish();
                         break;
                     }
-                    case 2:{
+                    case 2: {
                         enterHomeActivity();
                         break;
                     }
@@ -175,9 +173,9 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
 
-        if (type == 2){
+        if (type == 2) {
             rxDialogSureCancel.getSureView().setVisibility(View.GONE);
-        }else {
+        } else {
             rxDialogSureCancel.setSure("取消");
             rxDialogSureCancel.setSureListener(new View.OnClickListener() {
                 @Override
