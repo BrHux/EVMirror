@@ -4,26 +4,24 @@
     package="cn.ieway.evmirror">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<!--    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />-->
-<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
-<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
 
     <application
         android:name=".application.MirrorApplication"
         android:allowBackup="false"
-        tools:replace="android:allowBackup"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:requestLegacyExternalStorage="true">
-        <activity android:name=".modules.main.MainActivity">
-        </activity>
+        tools:replace="android:allowBackup">
+        <activity android:name=".modules.main.ActivityScanerCoder"></activity>
+        <activity android:name=".modules.main.MainActivity"></activity>
         <activity
             android:name=".modules.welcome.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -35,4 +33,5 @@
             android:name=".modules.welcome.ShowClauseActivity"
             android:theme="@style/activity_dialog_un" />
     </application>
+
 </manifest>
