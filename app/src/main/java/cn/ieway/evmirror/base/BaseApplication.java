@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.tamsiree.rxkit.RxTool;
 
+import cn.ieway.evmirror.application.BaseConfig;
+import cn.ieway.evmirror.application.MirrorApplication;
 import cn.ieway.evmirror.util.AppFrontBackHelper;
 
 /**
@@ -19,9 +21,13 @@ public class BaseApplication extends Application {
     private boolean isBackGround; //界面是否后台运行
     private Long backGroundTiem;//界面进入后台的时间
 
+    public static BaseApplication sMe;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        sMe = BaseApplication.this;
+
         initTools(this);
         initFrontBackHelper();
     }
@@ -33,7 +39,7 @@ public class BaseApplication extends Application {
      */
     private void initTools(Context application) {
         RxTool.init(application);
-//        BaseConfig.init(application);
+        BaseConfig.init(application);
     }
 
     /**

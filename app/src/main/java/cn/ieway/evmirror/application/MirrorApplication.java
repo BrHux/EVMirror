@@ -9,11 +9,8 @@ import cn.ieway.evmirror.base.BaseApplication;
  * Description:
  */
 public class MirrorApplication extends BaseApplication {
-    public static MirrorApplication sMe;
-
     @Override
     public void onCreate() {
         super.onCreate();
-        sMe = MirrorApplication.this;
     }
 }

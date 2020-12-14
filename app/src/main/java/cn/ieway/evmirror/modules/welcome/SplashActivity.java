@@ -74,7 +74,7 @@ public class SplashActivity extends AppCompatActivity {
                             return;
                         }
                         String currentVer = version.getCurrent_version().replace(".", "");
-                        String localVer = BaseConfig.APP_VERSION.replace(".", "");
+                        String localVer = BaseConfig.appVersionName.replace(".", "");
                         int cv = Integer.parseInt(currentVer);
                         int lv = Integer.parseInt(localVer);
 

@@ -25,7 +25,7 @@ public class CommonRequest {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("platform", Const.PLATFORM_TYPE);
         jsonObject.put("app_name", "EVRemote");
-        jsonObject.put("app_version", BaseConfig.APP_VERSION);
+        jsonObject.put("app_version", BaseConfig.appVersionName);
         jsonObject.put("req_time", System.currentTimeMillis());
         String bufStr = SignUtils.createSign(jsonObject);
         jsonObject.put("sign", bufStr);
