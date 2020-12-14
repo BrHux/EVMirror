@@ -3,6 +3,7 @@ package cn.ieway.evmirror.base;
 import android.app.Application;
 import android.content.Context;
 
+import com.hjq.toast.ToastUtils;
 import com.tamsiree.rxkit.RxTool;
 
 import cn.ieway.evmirror.application.BaseConfig;
@@ -39,6 +40,7 @@ public class BaseApplication extends Application {
      */
     private void initTools(Context application) {
         RxTool.init(application);
+        ToastUtils.init(this);
         BaseConfig.init(application);
     }
 

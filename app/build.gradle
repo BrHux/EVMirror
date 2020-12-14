@@ -71,5 +71,7 @@ dependencies {
     //fastjson
     implementation 'com.alibaba:fastjson:1.2.71'
     //权限请求框架
-    implementation 'com.hjq:xxpermissions:9.5'
+    implementation 'com.hjq:xxpermissions:9.6'
+    //Toast工具类
+    implementation 'com.hjq:toast:8.8'
 }
