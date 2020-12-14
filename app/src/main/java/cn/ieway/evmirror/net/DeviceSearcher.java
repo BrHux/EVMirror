@@ -28,7 +28,7 @@ import cn.ieway.evmirror.util.NetWorkUtil;
 public abstract class DeviceSearcher extends Thread {
     private static final String TAG = DeviceSearcher.class.getSimpleName();
 
-    private static final int DEVICE_FIND_PORT = 5679; //需要扫描的端口
+    private static final int DEVICE_FIND_PORT = /*5679*/5003; //需要扫描的端口
     private static final int RECEIVE_TIME_OUT = 500; // 接收超时时间
     private static final int RESPONSE_DEVICE_MAX = 200; // 响应设备的最大个数，防止UDP广播攻击
     private static final int SEND_TIME_MAX = 2; // 广播发送次数
@@ -37,7 +37,7 @@ public abstract class DeviceSearcher extends Thread {
     private String ipAddress = ""; //本机ip地址
     int[] pionts = new int[]{DEVICE_FIND_PORT, 5680, 5681, 5682, 5683, 5684, 5685, 5686, 5687, 5688, 5689};//本地绑定端口
     Gson gson;
-    private static  final String SERVER_BROADCAST ="ev_screen_share_server_broadcast";
+    private static final String SERVER_BROADCAST = "ev_screen_share_server_broadcast";
 
     protected DeviceSearcher() {
         mDeviceSet = new HashSet<>();
@@ -47,6 +47,8 @@ public abstract class DeviceSearcher extends Thread {
     static class BroadCastBean {
         String msg_type = "ev_screen_share_client_broadcast";
         String id;
+        String name;
+        String url;
 
         public String getId() {
             return id;
@@ -62,6 +64,22 @@ public abstract class DeviceSearcher extends Thread {
 
         public void setMsg_type(String msg_type) {
             this.msg_type = msg_type;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
         }
     }
 
@@ -102,28 +120,28 @@ public abstract class DeviceSearcher extends Thread {
                     int rspCount = RESPONSE_DEVICE_MAX;
                     while (rspCount-- > 0) {
                         hostSocket.receive(recePack);
-                       if (parsePack(recePack)){
-                       }
+                        if (parsePack(recePack)) {
+                        }
                     }
                 } catch (SocketTimeoutException e) {
                     LogUtil.i("[DeviceSearcher] run() SocketTimeoutException " + e.toString());
-                    e.printStackTrace();
+//                    e.printStackTrace();
                 }
             }
             onSearchFinish(mDeviceSet);
         } catch (UnknownHostException e) {
-            Log.d(TAG, "run: UnknownHostException: "+e.getMessage());
+            Log.d(TAG, "run: UnknownHostException: " + e.getMessage());
             e.printStackTrace();
         } catch (SocketException e) {
-            Log.d(TAG, "run: SocketException: "+e.getMessage());
+            Log.d(TAG, "run: SocketException: " + e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
-            Log.d(TAG, "run: IOException: "+e.getMessage());
+            Log.d(TAG, "run: IOException: " + e.getMessage());
             e.printStackTrace();
-        } catch (Exception e){
-            Log.d(TAG, "run: Exception: "+e.getMessage());
+        } catch (Exception e) {
+            Log.d(TAG, "run: Exception: " + e.getMessage());
             e.printStackTrace();
-        }finally {
+        } finally {
             if (hostSocket != null) {
                 hostSocket.close();
             }
@@ -159,7 +177,7 @@ public abstract class DeviceSearcher extends Thread {
         }
 
         for (DeviceBean d : mDeviceSet) { //过滤重复广播
-            if (d.getIp().equals(ip)) {
+            if (d.getUrl().contains(ip)) {
                 return false;
             }
         }
@@ -172,16 +190,17 @@ public abstract class DeviceSearcher extends Thread {
 
         byte[] data = new byte[dataLen];
         System.arraycopy(pack.getData(), pack.getOffset(), data, 0, dataLen);//获取有效data
-
+        String dataStr = new String(data);
+        Log.d(TAG, "parsePack: "+dataStr);
         BroadCastBean bean = gson.fromJson(new String(data), BroadCastBean.class);
 
-        if (!bean.getMsg_type().equals(SERVER_BROADCAST)) {
-            return false;
-        }
+//        if (!bean.getMsg_type().equals(SERVER_BROADCAST)) {
+//            return false;
+//        }
 
         device = new DeviceBean();
-        device.setIp(ip);
-        device.setPort(port);
+        device.setName(bean.getName());
+        device.setUrl(bean.getUrl());
 
         if (device != null) {
             mDeviceSet.add(device);
