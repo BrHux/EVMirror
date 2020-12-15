@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hjq.toast.ToastUtils;
@@ -160,6 +161,14 @@ public class AboutActivity extends BaseActivity {
 
     private void starApp() {
         Log.d(TAG, "starApp: ");
+        try {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse("market://details?id="+mContext.getPackageName()));
+            startActivity(i);
+        } catch (Exception e) {
+            ToastUtils.show( "您的手机上没有安装应用市场");
+            e.printStackTrace();
+        }
     }
 
     private void shareToOther() {
