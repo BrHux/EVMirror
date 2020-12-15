@@ -15,18 +15,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".modules.about.AboutActivity"></activity>
+        <activity android:name=".modules.main.ScanningActivity"></activity>
+        <activity
+            android:name=".modules.about.AboutActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".modules.main.HelpTipsActivity"
             android:theme="@style/activity_dialog" />
         <activity android:name=".modules.main.ActivityScanerCoder" />
-        <activity android:name=".modules.main.MainActivity" />
+        <activity
+            android:name=".modules.main.MainActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".modules.link.LinkActivity" />
         <activity
             android:name=".modules.welcome.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
