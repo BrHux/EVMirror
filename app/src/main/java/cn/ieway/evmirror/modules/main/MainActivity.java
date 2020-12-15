@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.base.BaseActivity;
+import cn.ieway.evmirror.modules.link.LinkActivity;
 import cn.ieway.evmirror.modules.other.WebViewActivity;
 import cn.ieway.evmirror.modules.welcome.ShowClauseActivity;
 
@@ -63,16 +64,18 @@ public class MainActivity extends BaseActivity {
             }
             case R.id.iv_start_btn:{
                 Toast.makeText(MainActivity.this,"开始",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(MainActivity.this, LinkActivity.class);
+                MainActivity.this.startActivity(intent);
             }
             case R.id.iv_scanning:{
                 Toast.makeText(MainActivity.this,"扫描",Toast.LENGTH_LONG).show();
             }
             case R.id.tv_instruction_book:{
-                Toast.makeText(MainActivity.this,"步骤",Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                intent.putExtra("title", "ieway");
-                intent.putExtra("url", "https://www.ieway.cn/");
-                MainActivity.this.startActivity(intent);
+//                Toast.makeText(MainActivity.this,"步骤",Toast.LENGTH_LONG).show();
+//                Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+//                intent.putExtra("title", "ieway");
+//                intent.putExtra("url", "https://www.ieway.cn/");
+//                MainActivity.this.startActivity(intent);
             }
         }
     }

@@ -20,6 +20,7 @@
             android:theme="@style/activity_dialog"></activity>
         <activity android:name=".modules.main.ActivityScanerCoder" />
         <activity android:name=".modules.main.MainActivity" />
+        <activity android:name=".modules.link.LinkActivity" />
         <activity
             android:name=".modules.welcome.SplashActivity"
             android:screenOrientation="portrait">

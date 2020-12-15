@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".modules.Link.LinkActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="558dp"
+        android:layout_height="312dp"
+        android:layout_margin="@dimen/dp_0"
+        android:contentDescription="@android:string/cancel"
+        android:padding="@dimen/dp_0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/beijing" />
+
+     <LinearLayout
+         android:id="@+id/linearLayout"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="horizontal"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.0"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toTopOf="parent"
+         app:layout_constraintVertical_bias="0.052">
+         <ImageButton
+             android:id="@+id/imageButton"
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
+             android:layout_margin="@dimen/dp_0"
+             android:layout_weight="1.0"
+             android:background="@android:color/transparent"
+             android:contentDescription="@string/todo"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintHorizontal_bias="0.043"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toTopOf="parent"
+             app:layout_constraintVertical_bias="0.031"
+             app:srcCompat="@drawable/last_page_white" />
+         <com.ogaclejapan.smarttablayout.SmartTabLayout
+             android:id="@+id/viewpagertab"
+             android:layout_width="wrap_content"
+             android:layout_weight="15.0"
+             android:layout_height="match_parent"
+             android:layout_marginEnd="@dimen/dp_0"
+             android:background="@android:color/transparent"
+             android:textColor="@color/custom_tab"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintHorizontal_bias="1.0"
+             app:layout_constraintStart_toEndOf="@+id/imageButton"
+             app:layout_constraintTop_toTopOf="parent"
+             app:layout_constraintVertical_bias="0.023"
+             app:stl_customTabTextLayoutId="@layout/custom_tab"
+             app:stl_customTabTextViewId="@id/custom_text"
+             app:stl_defaultTabTextAllCaps="true"
+             app:stl_defaultTabTextColor="@color/gray"
+             app:stl_defaultTabTextHorizontalPadding="20dp"
+             app:stl_defaultTabTextSize="20sp"
+             app:stl_distributeEvenly="true"
+             app:stl_dividerColor="@color/Black"
+             app:stl_dividerThickness="@dimen/dp_0_1"
+             app:stl_indicatorAlwaysInCenter="false"
+             app:stl_indicatorColor="#FFFFFF"
+             app:stl_indicatorCornerRadius="2dp"
+             app:stl_indicatorInFront="false"
+             app:stl_indicatorInterpolation="smart"
+             app:stl_indicatorThickness="4dp"
+             app:stl_indicatorWidth="@dimen/dp_50"
+             app:stl_underlineColor="#ff00ff"
+             app:stl_underlineThickness="@dimen/dp_0" >
+
+
+         </com.ogaclejapan.smarttablayout.SmartTabLayout>
+
+     </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/White"
+            app:layout_constraintBottom_toTopOf="@+id/viewpager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/viewpager" />
+
+     <androidx.viewpager.widget.ViewPager
+         android:id="@+id/viewpager"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="1.0"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+     </androidx.viewpager.widget.ViewPager>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

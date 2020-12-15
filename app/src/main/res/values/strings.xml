@@ -7,4 +7,5 @@
     <string name="text_tips_2">2、请将所有设备连接至同一个WiFi网络</string>
     <string name="text_tips_3">3、点击投屏按钮开始投屏</string>
     <string name="download_url">&#160;&#160;&#8201;&#160;&#160;&#8201;下载地址：</string>
+    <string name="todo">TODO</string>
 </resources>

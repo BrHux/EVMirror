@@ -8,7 +8,23 @@
     <color name="color_little_blue">#E1F1FF</color>
 
     <color name="color_light_gray">#EFEFEF</color>
-
+    <color name="text_enabled">#FFFFFFFF</color>
+    <color name="text_disabled">#4DFFFFFF</color>
     <color name="color_text_33">#333333</color>
     <color name="color_text_99">#999999</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="viewfinder_frame">#00000000</color>
+    <color name="viewfinder_corner">#00000000</color>
+    <color name="viewfinder_laser">#FF1FB3E2</color>
+    <color name="viewfinder_result_point_color">#C0FFBD21</color>
+    <color name="viewfinder_text_color">#FFC0C0C0</color>
+
+    <color name="capture_status_bar_color">#00000000</color>
+    <color name="capture_navigation_bar_color">#00000000</color>
+
+    <color name="header">#58567D</color>
+    <color name="grgray">#686868</color>
+
 </resources>

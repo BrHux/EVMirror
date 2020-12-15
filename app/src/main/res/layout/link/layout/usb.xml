@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    >
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="@dimen/dp_300"
+        android:layout_height="wrap_content"
+
+        android:background="@drawable/card"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.088">
+
+                        <ImageView
+                            android:id="@+id/imageView4"
+                            android:layout_width="240dp"
+                            android:layout_height="145dp"
+                            android:layout_gravity="center_horizontal"
+                            app:srcCompat="@drawable/copy2x111" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="134dp"
+            android:gravity="clip_horizontal"
+            android:text="请确保您的手机已开启调试模式，并连接USB线到电脑"
+            android:textColor="#666666" />
+
+                        <View
+                            android:layout_width="@dimen/dp_300"
+                            android:layout_height="@dimen/dp_1"
+                            android:background="@color/gray"
+                            ></View>
+
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:gravity="center|center_horizontal"
+            android:text="投屏提示" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="37dp"
+            android:gravity="center|center_horizontal"
+            android:text="1、USB投屏可直接连接，无需打开EV投屏APP" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="39dp"
+            android:gravity="center|center_horizontal"
+            android:text="2、如果连接失败可重新拔插usb再次尝试" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
