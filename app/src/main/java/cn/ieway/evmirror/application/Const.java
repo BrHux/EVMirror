@@ -10,7 +10,7 @@ public class Const {
     public static final String AES_SIGN_KEY_TEST = "ieway.cn_2020_07"; // AES加密KRY(测试)
     public static final String AES_SIGN_KEY = "ieway.cn_!@#$_20"; // AES加密KRY(正式)
     public static final String MD5_SIGN_KEY = "ieway.cn@20200611"; // MD5KRY (正式环境)
-    public static final int PRODUCT_TYPE = 3000; //产品类型 1000 录屏 2000 剪辑 4000 android录屏 5000 视频转换器 6000 录像大师 7000 LiveView 3000 ev远控
+    public static final int PRODUCT_TYPE = 15000; //产品类型 1000 录屏 2000 剪辑 4000 android录屏 5000 视频转换器 6000 录像大师 7000 LiveView 3000 ev远控 android录屏 15000
     public static final int PLATFORM_TYPE = 2; //设备类型 1 windows 2 android 4 iphone 8 ipad 16 mac 32 pc网校 64 小程序 128 h5网页
     //聊天室
     public static final String MESSAGEVERSION = "0.1.6"; //聊天室信息传输参数--版本号
