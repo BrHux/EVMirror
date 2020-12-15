@@ -8,4 +8,10 @@
     <string name="text_tips_3">3、点击投屏按钮开始投屏</string>
     <string name="download_url">&#160;&#160;&#8201;&#160;&#160;&#8201;下载地址：</string>
     <string name="todo">TODO</string>
+    <string name="copyright_ieway">Copyright© ieway.cn Ltd. 版权所有</string>
+    <string name="text_upgrade">更新</string>
+    <string name="share_to_someone">分享给好友</string>
+    <string name="grade_us">给我们打五分</string>
+    <string name="ev_agreement">《EV服务协议》</string>
+    <string name="ev_privacy_policy">《隐私政策》</string>
 </resources>

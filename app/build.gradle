@@ -35,6 +35,7 @@ android {
                     'src/main/res/layout/welcome',
                     'src/main/res/layout/main',
                     'src/main/res/layout/link',
+                    'src/main/res/layout/about',
             ]
         }
     }
