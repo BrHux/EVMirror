@@ -9,9 +9,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.entity.DeviceBean;
@@ -32,7 +35,7 @@ public class WifiSearchListFragment extends Fragment {
         Log.d(TAG, "getFragment: "+fragment);
         return fragment;
     }
-
+    RecyclerView recyclerView;
 
 
     @Nullable
@@ -40,7 +43,7 @@ public class WifiSearchListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.search_wifi, container, false);
         SwipeRefreshLayout swipeRefreshLayout=view.findViewById(R.id.swipeRedreshLayout);
-
+        recyclerView=view.findViewById(R.id.recyclerView);
                 deviceSearcher = new DeviceSearcher() {
                     @Override
                     public void onSearchStart() {
@@ -66,6 +69,17 @@ public class WifiSearchListFragment extends Fragment {
             @Override
             public void onRefresh() {
                 //具体操作
+
+
+                //定时停止刷新
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "run: ");
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                },2000);
 
             }
         });
