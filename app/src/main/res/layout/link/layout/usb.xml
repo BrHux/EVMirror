@@ -3,64 +3,71 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
+
     >
 
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="@dimen/dp_300"
-        android:layout_height="wrap_content"
-
+        android:layout_height="match_parent"
         android:background="@drawable/card"
+        android:layout_marginTop="@dimen/dp_15"
+        android:layout_marginBottom="@dimen/dp_60"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.088">
+        app:layout_constraintTop_toTopOf="parent">
 
-                        <ImageView
-                            android:id="@+id/imageView4"
-                            android:layout_width="240dp"
-                            android:layout_height="145dp"
-                            android:layout_gravity="center_horizontal"
-                            app:srcCompat="@drawable/copy2x111" />
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="@dimen/dp_150"
+            android:layout_height="@dimen/dp_70"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_60"
+            app:srcCompat="@drawable/copy2x111" />
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="134dp"
+            android:layout_width="@dimen/dp_180"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
             android:gravity="clip_horizontal"
             android:text="请确保您的手机已开启调试模式，并连接USB线到电脑"
             android:textColor="#666666" />
 
-                        <View
-                            android:layout_width="@dimen/dp_300"
-                            android:layout_height="@dimen/dp_1"
-                            android:background="@color/gray"
-                            ></View>
+        <View
+            android:layout_width="@dimen/dp_300"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginTop="@dimen/dp_60"
+            android:background="@color/gray"></View>
 
 
         <TextView
             android:id="@+id/textView3"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/dp_250"
             android:layout_height="34dp"
-            android:gravity="center|center_horizontal"
+            android:layout_marginTop="@dimen/dp_17"
+            android:gravity="center_vertical|left"
             android:text="投屏提示" />
 
         <TextView
             android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="37dp"
+            android:layout_width="@dimen/dp_250"
+            android:layout_height="54dp"
+            android:layout_marginTop="@dimen/dp_11"
             android:gravity="center|center_horizontal"
             android:text="1、USB投屏可直接连接，无需打开EV投屏APP" />
 
         <TextView
             android:id="@+id/textView5"
-            android:layout_width="match_parent"
-            android:layout_height="39dp"
+            android:layout_width="@dimen/dp_250"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_15"
             android:gravity="center|center_horizontal"
             android:text="2、如果连接失败可重新拔插usb再次尝试" />
     </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

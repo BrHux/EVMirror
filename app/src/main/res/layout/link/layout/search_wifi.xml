@@ -3,58 +3,75 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
-    android:orientation="vertical"
-    >
+
+    android:background="@color/transparent"
+    android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="@dimen/dp_300"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/dp_80"
+            android:layout_marginTop="@dimen/dp_80"
+            android:background="@color/White"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
 
-    <LinearLayout
-        android:layout_width="@dimen/dp_300"
-        android:layout_height="@dimen/dp_400"
-        android:layout_gravity="center"
-        android:background="@color/White"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.602">
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRedreshLayout"
+                android:layout_width="@dimen/dp_300"
+                android:layout_height="@dimen/dp_200"
 
-                        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                            android:id="@+id/swipeRedreshLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/transparent">
-                            <LinearLayout
-                                android:layout_width="@dimen/dp_300"
-                                android:layout_height="@dimen/dp_400"
-                                android:background="@color/White"
-                                android:gravity="center"
-                                android:orientation="vertical">
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/dp_50"
-                            android:background="@android:color/transparent"></View>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="已连接WiFi: 一唯科技访客"
-                            android:textSize="@dimen/sp_12"
-                            android:textColor="@color/blue"></TextView>
+                android:background="@android:color/transparent"
+                android:gravity="center_horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_25"
+                        android:layout_marginBottom="@dimen/dp_25"
+                        android:text="已连接WiFi: 一唯科技访客"
+                        android:textColor="@color/blue"
+                        android:textSize="@dimen/sp_12"></TextView>
 
-                        <ImageView
-                            android:layout_width="@dimen/dp_68"
-                            android:layout_height="@dimen/dp_68"
-                            android:src="@drawable/search"></ImageView>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="正在搜索可投屏的设备"
-                            android:textSize="@dimen/sp_12"
-                            android:textColor="@color/Black"></TextView>
-                            </LinearLayout>
-                        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    </LinearLayout>
+                    <ImageView
+                        android:layout_width="@dimen/dp_68"
+
+                        android:layout_marginBottom="@dimen/dp_25"
+                        android:layout_height="@dimen/dp_68"
+                        android:src="@drawable/search"></ImageView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="正在搜索可投屏的设备"
+                        android:textColor="@color/Black"
+
+                        android:layout_marginBottom="@dimen/dp_25"
+                        android:textSize="@dimen/sp_12"></TextView>
+                </LinearLayout>
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

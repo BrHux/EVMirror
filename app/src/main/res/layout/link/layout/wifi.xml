@@ -19,15 +19,13 @@
 
     <LinearLayout
         android:layout_width="@dimen/dp_300"
-        android:layout_height="@dimen/dp_80"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_25"
         android:background="@drawable/shape_corner1"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.059">
+        app:layout_constraintTop_toTopOf="parent">
 
                  <TextView
                     android:id="@+id/search"

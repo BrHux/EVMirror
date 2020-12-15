@@ -40,34 +40,36 @@ public class WifiSearchListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.search_wifi, container, false);
         SwipeRefreshLayout swipeRefreshLayout=view.findViewById(R.id.swipeRedreshLayout);
-        new Thread(
-                new Runnable() {
-            @Override
-            public void run() {
+
                 deviceSearcher = new DeviceSearcher() {
                     @Override
                     public void onSearchStart() {
-                        Log.d( TAG,"onSearchStart:");
+
                     }
                     @Override
                     public void onSearchFinish(Set deviceSet) {
-                        Log.d(TAG," onSearchFinish:" );
+                        Log.d(TAG," onSearchFinish:" +deviceSet);
                         if (getActivity(). isDestroyed()||getActivity(). isFinishing())
                             return;
                         for (Object o: deviceSet){
 
                             DeviceBean bean = (DeviceBean) o;
                             Log.d(TAG,"onSearchFinish:"+ bean.getName());
-                            deviceSearcher.start();
+
 
                         }
                     }
                 };
-                deviceSearcher.run();
-            }
-        }
+                deviceSearcher.start();
+        //下拉刷新获取列表
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //具体操作
 
-        ).start();
+            }
+        });
+
 
         return view;
     }
