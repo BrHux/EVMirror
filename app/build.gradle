@@ -1,3 +1,4 @@
+
 apply plugin: 'com.android.application'
 
 android {
@@ -80,4 +81,7 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.2.71'
     //权限请求框架
     implementation 'com.hjq:xxpermissions:9.5'
+    //Toast工具类
+    implementation 'com.hjq:toast:8.8'
+
 }
