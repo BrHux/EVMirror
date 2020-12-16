@@ -36,6 +36,7 @@ android {
                     'src/main/res/layout/main',
                     'src/main/res/layout/link',
                     'src/main/res/layout/about',
+                    'src/main/res/layout/screenshare',
             ]
         }
     }

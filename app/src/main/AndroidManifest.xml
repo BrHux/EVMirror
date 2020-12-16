@@ -12,11 +12,12 @@
         android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".modules.main.ScanningActivity"></activity>
+        <activity android:name=".modules.screenshare.ScreenShareActivity"></activity>
+        <activity android:name=".modules.main.ScanningActivity" />
         <activity
             android:name=".modules.about.AboutActivity"
             android:screenOrientation="portrait" />
