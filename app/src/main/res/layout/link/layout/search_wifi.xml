@@ -3,76 +3,85 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="@color/transparent"
-    android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="@dimen/dp_300"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/dp_80"
-            android:layout_marginTop="@dimen/dp_80"
-            android:background="@color/White"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-
+    android:layout_marginTop="@dimen/dp_80">
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipeRedreshLayout"
-                android:layout_width="@dimen/dp_300"
-                android:layout_height="@dimen/dp_200"
-
-                android:background="@android:color/transparent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:layout_marginHorizontal="@dimen/dp_30"
                 android:gravity="center_horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-                <LinearLayout
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
                     >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_25"
-                        android:layout_marginBottom="@dimen/dp_25"
-                        android:text="已连接WiFi: 一唯科技访客"
-                        android:textColor="@color/blue"
-                        android:textSize="@dimen/sp_12"></TextView>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/shap_white_round_4dp_bg"
+                        android:layout_marginBottom="@dimen/dp_60"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageView
-                        android:layout_width="@dimen/dp_68"
+                        <LinearLayout
+                            android:id="@+id/ll_status"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        android:layout_marginBottom="@dimen/dp_25"
-                        android:layout_height="@dimen/dp_68"
-                        android:src="@drawable/search"></ImageView>
+                            <TextView
+                                android:id="@+id/tv_wifi_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_25"
+                                android:layout_marginBottom="@dimen/dp_25"
+                                android:text="已连接WiFi: 一唯科技访客"
+                                android:textColor="@color/colorBlue"
+                                android:textSize="@dimen/sp_12"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="正在搜索可投屏的设备"
-                        android:textColor="@color/Black"
+                            <ImageView
+                                android:id="@+id/iv_status_img"
+                                android:layout_width="@dimen/dp_68"
+                                android:layout_height="@dimen/dp_68"
+                                android:layout_marginBottom="@dimen/dp_20"
+                                android:src="@drawable/search"/>
 
-                        android:layout_marginBottom="@dimen/dp_25"
-                        android:textSize="@dimen/sp_12"></TextView>
-                </LinearLayout>
+                            <TextView
+                                android:id="@+id/tv_status"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/dp_25"
+                                android:text="@string/searching_device"
+                                android:textColor="@color/color_text_66"
+                                android:textSize="@dimen/sp_12"/>
+                        </LinearLayout>
 
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/ll_status">
+
+                        </androidx.recyclerview.widget.RecyclerView>
+
+
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            </androidx.recyclerview.widget.RecyclerView>
-        </LinearLayout>
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

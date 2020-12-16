@@ -22,13 +22,16 @@ import static android.content.ContentValues.TAG;
 public class WIfiFSearchragment extends Fragment implements View.OnClickListener {
     TextView search;
     TextView scan;
-    Fragment currentFragment= new Fragment();
-    private WIfiFSearchragment(){
+    Fragment currentFragment = WifiSearchListFragment.getFragment();
+
+    private WIfiFSearchragment() {
 
     }
+
     private static Fragment Wfragment;
+
     public static Fragment getFragment() {
-        if(Wfragment !=null){
+        if (Wfragment != null) {
             return Wfragment;
         }
         Wfragment = new WIfiFSearchragment();
@@ -43,60 +46,55 @@ public class WIfiFSearchragment extends Fragment implements View.OnClickListener
         search = view.findViewById(R.id.search);
         scan.setOnClickListener(this);
         search.setOnClickListener(this);
-        initFragment(WifiSearchListFragment.getFragment());
+        initFragment(currentFragment);
         return view;
     }
 
-    void initFragment(Fragment targetFragment){
-        Log.d(TAG, "changeFragment: "+targetFragment);
+    void initFragment(Fragment targetFragment) {
+        Log.d(TAG, "changeFragment: " + targetFragment);
         FragmentManager fragmentManager = getChildFragmentManager();
-        FragmentTransaction  transaction =fragmentManager.beginTransaction();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
 //        transaction.add(R.id.fragment_container,targetFragment);
 //        transaction.show(targetFragment);
 
-        transaction.replace(R.id.fragment_container,targetFragment);
+        transaction.replace(R.id.fragment_container, targetFragment);
         transaction.commit();
     }
 
     /*
-    * 切換fragment
-    * */
+     * 切換fragment
+     * */
     @NonNull
-    void changeFragment(Fragment fragment){
-        Log.d(TAG, "changeFragment: "+fragment);
+    void changeFragment(Fragment fragment) {
+        Log.d(TAG, "changeFragment: " + fragment);
+        if (currentFragment == fragment) return;//  判断传入的fragment是不是当前的currentFragmentgit
         FragmentManager fragmentManager = getChildFragmentManager();
-        FragmentTransaction  transaction =fragmentManager.beginTransaction();
-//        transaction.add(R.id.fragment_container,targetFragment);
-//        transaction.show(targetFragment);
-
-        transaction.replace(R.id.fragment_container,fragment);
-        transaction.commit();
-//        if (currentFragment != fragment){//  判断传入的fragment是不是当前的currentFragmentgit
-//            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-//            transaction.hide(currentFragment);//  不是则隐藏
-//            currentFragment = fragment;  //  然后将传入的fragment赋值给currentFragment
-//            if (!fragment.isAdded()){ //  判断传入的fragment是否已经被add()过
-//                transaction.add(R.id.fragment_container,fragment).show(fragment).commit();
-//            }else{
-//                transaction.show(fragment).commit();
-//            }
-//        }
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//        transaction.replace(R.id.fragment_container,fragment);
+//        transaction.commit();
+        transaction.hide(currentFragment);//  不是则隐藏
+        currentFragment = fragment;  //  然后将传入的fragment赋值给currentFragment
+        if (!fragment.isAdded()) { //  判断传入的fragment是否已经被add()过
+            transaction.add(R.id.fragment_container, fragment).show(fragment).commit();
+        } else {
+            transaction.show(fragment).commit();
+        }
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId()== R.id.scan) {
-           scan.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner1));
-           search.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner));
-           scan.setTextColor(0xff00ffff);
-           search .setTextColor(0xFFFFFFFF);
-           changeFragment(CaptureFragment.newInstance());
-        }  else if(v.getId()== R.id.search){
-                search.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner1));
-                scan.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner));
-                changeFragment(WifiSearchListFragment.getFragment());
-                search.setTextColor(0xff00ffff);
-                scan.setTextColor(0xFFFFFFFF);
+        if (v.getId() == R.id.scan) {
+            scan.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner1));
+            search.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner));
+            scan.setTextColor(0xff00ffff);
+            search.setTextColor(0xFFFFFFFF);
+            changeFragment(CaptureFragment.newInstance());
+        } else if (v.getId() == R.id.search) {
+            search.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner1));
+            scan.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner));
+            changeFragment(WifiSearchListFragment.getFragment());
+            search.setTextColor(0xff00ffff);
+            scan.setTextColor(0xFFFFFFFF);
         }
-        }
+    }
 }

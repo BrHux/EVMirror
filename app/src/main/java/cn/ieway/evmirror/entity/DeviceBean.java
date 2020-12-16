@@ -8,6 +8,13 @@ public class DeviceBean {
     String name;    // 设备名称
     String url;    // 设备所在房间
 
+    public DeviceBean() {
+    }
+
+    public DeviceBean(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
 
     public String getName() {
         return name;

@@ -16,7 +16,7 @@ import cn.ieway.evmirror.modules.link.fragment.USBLinkFragment;
 import cn.ieway.evmirror.modules.link.fragment.WIfiFSearchragment;
 
 public class LinkActivity extends AppCompatActivity {
-    private SmartTabLayout smartTabLayout=null;
+    private SmartTabLayout smartTabLayout = null;
 
     private ViewPager viewPager;
     private Fragment[] mFragmentArrays = new Fragment[2];
@@ -28,9 +28,10 @@ public class LinkActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.link_activity);
         smartTabLayout = findViewById(R.id.viewpagertab);
-        viewPager=findViewById(R.id.viewpager);
+        viewPager = findViewById(R.id.viewpager);
         initView();
     }
+
     private void initView() {
         mTabTitles[0] = "WiFi连接";
         mTabTitles[1] = "USB连接";
@@ -47,7 +48,6 @@ public class LinkActivity extends AppCompatActivity {
 
     final class MyViewPagerAdapter extends FragmentPagerAdapter {
         public MyViewPagerAdapter(FragmentManager fm) {
-
             super(fm);
         }
 
@@ -55,7 +55,6 @@ public class LinkActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             return mFragmentArrays[position];
         }
-
 
         @Override
         public int getCount() {
