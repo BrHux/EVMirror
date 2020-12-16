@@ -69,6 +69,7 @@ public class WIfiFSearchragment extends Fragment implements View.OnClickListener
 
         transaction.replace(R.id.fragment_container, targetFragment);
         transaction.commit();
+        setWifiSearchView();
     }
 
     /*
@@ -78,10 +79,6 @@ public class WIfiFSearchragment extends Fragment implements View.OnClickListener
     void changeFragment(Fragment fragment) {
         Log.d(TAG, "changeFragment: " + fragment);
         if (currentFragment == fragment) return;//  判断传入的fragment是不是当前的currentFragmentgit
-//        if (fragment instanceof CaptureFragment && !XXPermissions.isGrantedPermission(getActivity(), Permission.CAMERA)) {
-//            goToScanner(getActivity(),fragment);
-//            return;
-//        }
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 //        transaction.replace(R.id.fragment_container,fragment);
@@ -148,7 +145,7 @@ public class WIfiFSearchragment extends Fragment implements View.OnClickListener
     private void setScannerPage() {
         scan.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner1));
         search.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner));
-        scan.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
+        scan.setTextColor(ContextCompat.getColor(getActivity(),R.color.colorBlue));
         search.setTextColor(ContextCompat.getColor(getActivity(),R.color.White));
     }
 
@@ -159,7 +156,7 @@ public class WIfiFSearchragment extends Fragment implements View.OnClickListener
         search.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner1));
         scan.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner));
         changeFragment(WifiSearchListFragment.getFragment());
-        search.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
+        search.setTextColor(ContextCompat.getColor(getActivity(),R.color.colorBlue));
         scan.setTextColor(ContextCompat.getColor(getActivity(),R.color.White));
     }
 

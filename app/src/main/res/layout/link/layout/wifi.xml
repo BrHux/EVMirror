@@ -31,7 +31,6 @@
                     android:id="@+id/search"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                     android:drawableStart="@drawable/search"
                     android:layout_weight="1.0"
                     android:background="@drawable/shape_corner1"
                     android:clickable="true"
@@ -41,7 +40,6 @@
 
                 <TextView
                     android:id="@+id/scan"
-                    android:drawableStart="@drawable/ic_scanning_white"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1.0"
