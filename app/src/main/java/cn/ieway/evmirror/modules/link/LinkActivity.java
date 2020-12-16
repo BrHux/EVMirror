@@ -1,6 +1,8 @@
 package cn.ieway.evmirror.modules.link;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -11,11 +13,14 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
+import butterknife.BindView;
+import butterknife.OnClick;
 import cn.ieway.evmirror.R;
+import cn.ieway.evmirror.base.BaseActivity;
 import cn.ieway.evmirror.modules.link.fragment.USBLinkFragment;
 import cn.ieway.evmirror.modules.link.fragment.WIfiFSearchragment;
 
-public class LinkActivity extends AppCompatActivity {
+public class LinkActivity extends BaseActivity {
     private SmartTabLayout smartTabLayout = null;
 
     private ViewPager viewPager;
@@ -27,15 +32,16 @@ public class LinkActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.link_activity);
-        smartTabLayout = findViewById(R.id.viewpagertab);
-        viewPager = findViewById(R.id.viewpager);
         initView();
     }
 
-    private void initView() {
+    @Override
+    protected void  initView() {
         mTabTitles[0] = "WiFi连接";
         mTabTitles[1] = "USB连接";
 
+        smartTabLayout = findViewById(R.id.viewpagertab);
+        viewPager = findViewById(R.id.viewpager);
         //设置tablayout距离上下左右的距离
         //tab_title.setPadding(20,20,20,20);
         mFragmentArrays[0] = WIfiFSearchragment.getFragment();
@@ -44,6 +50,21 @@ public class LinkActivity extends AppCompatActivity {
         viewPager.setAdapter(pagerAdapter);
         //将ViewPager和TabLayout绑定
         smartTabLayout.setViewPager(viewPager);
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @OnClick({R.id.iv_last_page})
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.iv_last_page:{
+                finish();
+                break;
+            }
+        }
     }
 
     final class MyViewPagerAdapter extends FragmentPagerAdapter {
