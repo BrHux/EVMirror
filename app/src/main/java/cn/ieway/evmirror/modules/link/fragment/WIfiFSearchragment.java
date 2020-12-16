@@ -1,5 +1,7 @@
 package cn.ieway.evmirror.modules.link.fragment;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,8 +16,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
+import com.hjq.toast.ToastUtils;
+
+import java.util.List;
+
 import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.modules.link.zxing.CaptureFragment;
+import cn.ieway.evmirror.util.PermissionUtils;
 
 import static android.content.ContentValues.TAG;
 
@@ -68,6 +78,10 @@ public class WIfiFSearchragment extends Fragment implements View.OnClickListener
     void changeFragment(Fragment fragment) {
         Log.d(TAG, "changeFragment: " + fragment);
         if (currentFragment == fragment) return;//  判断传入的fragment是不是当前的currentFragmentgit
+//        if (fragment instanceof CaptureFragment && !XXPermissions.isGrantedPermission(getActivity(), Permission.CAMERA)) {
+//            goToScanner(getActivity(),fragment);
+//            return;
+//        }
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 //        transaction.replace(R.id.fragment_container,fragment);
@@ -84,17 +98,70 @@ public class WIfiFSearchragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.scan) {
-            scan.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner1));
-            search.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner));
-            scan.setTextColor(0xff00ffff);
-            search.setTextColor(0xFFFFFFFF);
-            changeFragment(CaptureFragment.newInstance());
+
+//            scan.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner1));
+//            search.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner));
+//            scan.setTextColor(0xff00ffff);
+//            search.setTextColor(0xFFFFFFFF);
+            goToScanner(getActivity(), CaptureFragment.newInstance());
+//            changeFragment(CaptureFragment.newInstance());
         } else if (v.getId() == R.id.search) {
-            search.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner1));
-            scan.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner));
-            changeFragment(WifiSearchListFragment.getFragment());
-            search.setTextColor(0xff00ffff);
-            scan.setTextColor(0xFFFFFFFF);
+            setWifiSearchView();
         }
     }
+
+    /**
+     * 相机权限检测及目标页面跳转
+     *
+     * @param context
+     * @param fragment
+     */
+    private void goToScanner(Context context, Fragment fragment) {
+        if (XXPermissions.isGrantedPermission(context, Permission.CAMERA)) {
+            setScannerPage();
+            changeFragment(fragment);
+            return;
+        }
+
+        XXPermissions.with(this).permission(Permission.CAMERA).request(new OnPermissionCallback() {
+            @Override
+            public void onGranted(List<String> permissions, boolean all) {
+                setScannerPage();
+                changeFragment(fragment);
+            }
+
+            @Override
+            public void onDenied(List<String> permissions, boolean never) {
+                if (never) {
+                    PermissionUtils.showPermissionDialog(getActivity(), "重要权限", getString(R.string.denied_permission, "相机", "请手动开启权限"));
+                    return;
+                }
+                ToastUtils.show(getString(R.string.denied_permission, "相机", "无法使用扫码功能"));
+            }
+        });
+
+    }
+
+    /**
+     * 扫码连接样式
+     */
+    private void setScannerPage() {
+        scan.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner1));
+        search.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner));
+        scan.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
+        search.setTextColor(ContextCompat.getColor(getActivity(),R.color.White));
+    }
+
+    /**
+     * wifi搜索连接样式
+     */
+    private void setWifiSearchView() {
+        search.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner1));
+        scan.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner));
+        changeFragment(WifiSearchListFragment.getFragment());
+        search.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
+        scan.setTextColor(ContextCompat.getColor(getActivity(),R.color.White));
+    }
+
+
 }

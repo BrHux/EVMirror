@@ -27,7 +27,7 @@
             android:layout_height="@dimen/dp_70"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dp_60"
-            app:srcCompat="@drawable/copy2x111" />
+            app:srcCompat="@drawable/ic_usb_img" />
 
         <TextView
             android:id="@+id/textView"
