@@ -132,6 +132,7 @@ public class WifiSearchListFragment extends Fragment {
             @Override
             public void onSearchFinish(Set deviceSet) {
                 Log.d(TAG, " onSearchFinish: deviceSet.size" + deviceSet.size());
+                if (getActivity().isFinishing() || getActivity().isDestroyed()) return;
                 if (fragment.isRemoving() || fragment.isDetached()) return;
                 //关闭刷新图标
                 if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);

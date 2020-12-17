@@ -29,8 +29,8 @@ public abstract class DeviceSearcher extends Thread {
     private static final String TAG = DeviceSearcher.class.getSimpleName();
 
     private static final int DEVICE_FIND_PORT = /*5679*/5003; //需要扫描的端口
-    private static final int RECEIVE_TIME_OUT = 500; // 接收超时时间
-    private static final int RESPONSE_DEVICE_MAX = 200; // 响应设备的最大个数，防止UDP广播攻击
+    private static final int RECEIVE_TIME_OUT = 1000; // 接收超时时间
+    private static final int RESPONSE_DEVICE_MAX = 50; // 响应设备的最大个数，防止UDP广播攻击
     private static final int SEND_TIME_MAX = 2; // 广播发送次数
     private DatagramSocket hostSocket;
     private Set<DeviceBean> mDeviceSet;
@@ -111,7 +111,7 @@ public abstract class DeviceSearcher extends Thread {
 
             for (int i = 0; i < SEND_TIME_MAX; i++) {
                 // 发送搜索广播
-                hostSocket.send(sendPack);
+//                hostSocket.send(sendPack);
                 // 监听来信
                 byte[] receData = new byte[1024];
                 DatagramPacket recePack = new DatagramPacket(receData, receData.length);
@@ -145,6 +145,7 @@ public abstract class DeviceSearcher extends Thread {
             if (hostSocket != null) {
                 hostSocket.close();
             }
+            onSearchFinish(mDeviceSet);
         }
     }
 

@@ -3,8 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="cn.ieway.evmirror">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 获取WIFI信息状态的权限 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /><!-- 前台服务 -->
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".application.MirrorApplication"
@@ -16,7 +22,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".modules.screenshare.ScreenShareActivity"></activity>
+        <service
+            android:name=".modules.screenshare.ScreenShareService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="mediaProjection"></service>
+
+        <activity android:name=".modules.screenshare.ScreenShareActivity" />
         <activity android:name=".modules.main.ScanningActivity" />
         <activity
             android:name=".modules.about.AboutActivity"
