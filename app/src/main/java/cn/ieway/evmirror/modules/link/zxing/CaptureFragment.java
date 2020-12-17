@@ -15,6 +15,8 @@
  */
 package cn.ieway.evmirror.modules.link.zxing;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,11 +26,17 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.tamsiree.rxkit.view.RxToast;
+
 import cn.ieway.evmirror.R;
+import cn.ieway.evmirror.modules.link.LinkActivity;
+import cn.ieway.evmirror.modules.link.fragment.WIfiFSearchragment;
 import cn.ieway.evmirror.modules.link.zxing.camera.CameraManager;
+import cn.ieway.evmirror.modules.main.ScanningActivity;
 
 import static android.content.ContentValues.TAG;
 
@@ -60,12 +68,16 @@ public class CaptureFragment extends Fragment implements OnCaptureCallback {
 
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int layoutId = getLayoutId();
-        if(isContentView(layoutId)){
-            mRootView = inflater.inflate(getLayoutId(),container,false);
+        if (isContentView(layoutId)) {
+            mRootView = inflater.inflate(getLayoutId(), container, false);
         }
         initUI();
         return mRootView;
@@ -74,72 +86,78 @@ public class CaptureFragment extends Fragment implements OnCaptureCallback {
     /**
      * 初始化
      */
-    public void initUI(){
+    public void initUI() {
         surfaceView = mRootView.findViewById(getSurfaceViewId());
         int viewfinderViewId = getViewfinderViewId();
-        if(viewfinderViewId != 0){
+        if (viewfinderViewId != 0) {
             viewfinderView = mRootView.findViewById(viewfinderViewId);
         }
         initCaptureHelper();
     }
 
-    public void initCaptureHelper(){
-        mCaptureHelper = new CaptureHelper(this,surfaceView,viewfinderView,ivTorch);
+    public void initCaptureHelper() {
+        mCaptureHelper = new CaptureHelper(this, surfaceView, viewfinderView, ivTorch);
         mCaptureHelper.setOnCaptureCallback(this);
     }
 
     /**
      * 返回true时会自动初始化{@link #mRootView}，返回为false时需自己去通过{@link #setRootView(View)}初始化{@link #mRootView}
+     *
      * @param layoutId
      * @return 默认返回true
      */
-    public boolean isContentView(@LayoutRes int layoutId){
+    public boolean isContentView(@LayoutRes int layoutId) {
         return true;
     }
 
     /**
      * 布局id
+     *
      * @return
      */
-    public int getLayoutId(){
+    public int getLayoutId() {
         return R.layout.scan;
     }
 
     /**
      * {@link ViewfinderView} 的 id
+     *
      * @return 默认返回{@code R.id.viewfinderView}, 如果不需要扫码框可以返回0
      */
-    public int getViewfinderViewId(){
+    public int getViewfinderViewId() {
         return R.id.viewfinderView;
     }
 
     /**
      * 预览界面{@link #surfaceView} 的id
+     *
      * @return
      */
-    public int getSurfaceViewId(){
+    public int getSurfaceViewId() {
         return R.id.surfaceView;
     }
 
     /**
      * 获取 {@link #ivTorch} 的ID
-     * @return  默认返回{@code R.id.ivTorch}, 如果不需要手电筒按钮可以返回0
+     * @return 默认返回{@code R.id.ivTorch}, 如果不需要手电筒按钮可以返回0
      */
 
     /**
      * Get {@link CaptureHelper}
+     *
      * @return {@link #mCaptureHelper}
      */
-    public CaptureHelper getCaptureHelper(){
+    public CaptureHelper getCaptureHelper() {
         return mCaptureHelper;
     }
 
     /**
      * Get {@link CameraManager} use {@link #getCaptureHelper()#getCameraManager()}
+     *
      * @return {@link #mCaptureHelper#getCameraManager()}
      */
     @Deprecated
-    public CameraManager getCameraManager(){
+    public CameraManager getCameraManager() {
         return mCaptureHelper.getCameraManager();
     }
 
@@ -182,14 +200,38 @@ public class CaptureFragment extends Fragment implements OnCaptureCallback {
 
     /**
      * 接收扫码结果回调
+     *
      * @param result 扫码结果
      * @return 返回true表示拦截，将不自动执行后续逻辑，为false表示不拦截，默认不拦截
      */
     @Override
     public boolean onResultCallback(String result) {
-        Log.d(TAG, "onResultCallback:"+result);
-        Toast.makeText(getActivity(),"result:"+result,1);
-        return true;
+        Log.d(TAG, "onResultCallback:" + result);
+        Fragment fragment = CaptureFragment.this.getParentFragment();
+        boolean checked = false;
+        try {
+            if (fragment == null) {
+                Activity activity = CaptureFragment.this.getActivity();
+                if (activity instanceof ScanningActivity) {
+                    checked = ((ScanningActivity) activity).checkConfiguration(result);
+                }
+                return checked;
+            }
+
+            if (fragment instanceof WIfiFSearchragment) {
+                Activity linkActivity = fragment.getActivity();
+                if (linkActivity instanceof LinkActivity) {
+                    checked = ((LinkActivity) linkActivity).checkConfiguration(result);
+                }
+                return checked;
+            }
+
+        } catch (Exception e) {
+        } finally {
+            RxToast.info(result);
+            return checked;
+        }
+
     }
 
 }

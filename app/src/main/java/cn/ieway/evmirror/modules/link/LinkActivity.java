@@ -1,5 +1,6 @@
 package cn.ieway.evmirror.modules.link;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.tamsiree.rxkit.view.RxToast;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -19,8 +21,10 @@ import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.base.BaseActivity;
 import cn.ieway.evmirror.modules.link.fragment.USBLinkFragment;
 import cn.ieway.evmirror.modules.link.fragment.WIfiFSearchragment;
+import cn.ieway.evmirror.modules.link.zxing.CaptureFragment;
+import cn.ieway.evmirror.modules.screenshare.ScreenShareActivity;
 
-public class LinkActivity extends BaseActivity {
+public class LinkActivity extends BaseActivity{
     private SmartTabLayout smartTabLayout = null;
 
     private ViewPager viewPager;
@@ -88,4 +92,25 @@ public class LinkActivity extends BaseActivity {
 
         }
     }
+
+
+    /**
+     * 客户端连接预处理
+     * @param url
+     */
+    public boolean checkConfiguration(String url){
+        showHUD(true,"正在检测连接配置..1");
+        if(url == null || url.isEmpty()){
+            RxToast.error("设备信息识别异常请重试！");
+            return false;
+        }
+        Intent intent = new Intent();
+        intent.setClass(this, ScreenShareActivity.class);
+        intent.putExtra("url",url);
+        startActivity(intent);
+        dismissHUD();
+        return true;
+    }
+
+
 }

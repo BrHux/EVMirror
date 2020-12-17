@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -26,6 +27,7 @@ import butterknife.ButterKnife;
 import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.application.BaseConfig;
 import cn.ieway.evmirror.entity.DeviceBean;
+import cn.ieway.evmirror.modules.link.LinkActivity;
 import cn.ieway.evmirror.modules.link.adapter.IpAddressAdapter;
 import cn.ieway.evmirror.net.DeviceSearcher;
 
@@ -197,8 +199,20 @@ public class WifiSearchListFragment extends Fragment {
     /**
      * 列表点击事件处理
      */
-    private void onSharebtnPress(@NonNull String nickName, @NonNull String ip) {
-        Log.d(TAG, "onSharebtnPress: " + nickName + "  / " + ip);
+    private void onSharebtnPress(@NonNull String nickName, @NonNull String url) {
+        Log.d(TAG, "onSharebtnPress: " + nickName + "  / " + url);
+        if (fragment.isRemoving()) return;
+
+        WIfiFSearchragment wIfiFSearchragment = (WIfiFSearchragment) fragment.getParentFragment();
+        if(wIfiFSearchragment instanceof  WIfiFSearchragment){
+            LinkActivity linkActivity = (LinkActivity) wIfiFSearchragment.getActivity();
+            linkActivity.checkConfiguration(url);
+        }
+//        FragmentManager manager = getFragmentManager();//获取到父fragment的管理器
+//        //获取到父parentFragment
+//        WIfiFSearchragment home = (WIfiFSearchragment) manager.getFragments().get(0);
+        //获取Activit
+
 
     }
 
