@@ -14,7 +14,7 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 import static android.content.Context.WIFI_SERVICE;
-import static cn.ieway.evmirror.base.BaseApplication.sMe;
+import static cn.ieway.evmirror.application.MirrorApplication.sMe;
 
 public class NetWorkUtil {
     /**
