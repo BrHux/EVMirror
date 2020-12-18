@@ -28,6 +28,7 @@ import org.webrtc.EglBase;
 import java.util.Objects;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.application.MirrorApplication;
 import cn.ieway.evmirror.base.BaseActivity;
@@ -136,6 +137,16 @@ public class ScreenShareActivity extends BaseActivity {
         }
     }
 
+    @OnClick({R.id.bt_exit})
+    public void onClock(View view){
+        switch (view.getId()){
+            case R.id.bt_exit:{
+                setExiteActivity();
+                break;
+            }
+        }
+    }
+
     /*录屏请求*/
     public void createScreenCaptureIntent() {
         MediaProjectionManager mediaProjectionManager =
@@ -171,43 +182,43 @@ public class ScreenShareActivity extends BaseActivity {
 
 
     private void setExiteActivity() {
-        if (ScreenShareActivity.this.isDestroyed() || ScreenShareActivity.this.isFinishing()) return;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.Theme_AppCompat_DayNight_Dialog_Alert);
-        builder.setTitle("提示");
-        builder.setMessage("您即将退出投屏");
-        builder.setNegativeButton("取消",null);
-        builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-//        RxDialogSureCancel rxDialogSureCancel = new RxDialogSureCancel(ScreenShareActivity.this);
-//        rxDialogSureCancel.setContent("您即将退出投屏");
-//        rxDialogSureCancel.getContentView().setLinksClickable(true);
-//        rxDialogSureCancel.getContentView().setTextSize(16.0f);
-//        rxDialogSureCancel.setCancel("退出");
-//        rxDialogSureCancel.getCancelView().setTextColor(ContextCompat.getColor(this, R.color.colorBlue));
-//        rxDialogSureCancel.getCancelView().setTextSize(14.0f);
-//        rxDialogSureCancel.getSureView().setTextSize(14.0f);
-//        rxDialogSureCancel.setCancelListener(new View.OnClickListener() {
+//        if (ScreenShareActivity.this.isDestroyed() || ScreenShareActivity.this.isFinishing()) return;
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.Theme_AppCompat_DayNight_Dialog_Alert);
+//        builder.setTitle("提示");
+//        builder.setMessage("您即将退出投屏");
+//        builder.setNegativeButton("取消",null);
+//        builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
 //            @Override
-//            public void onClick(View v) {
-//                rxDialogSureCancel.cancel();
-//            }
-//        });
-//
-//        rxDialogSureCancel.setSure("取消");
-//        rxDialogSureCancel.setSureListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                rxDialogSureCancel.cancel();
+//            public void onClick(DialogInterface dialog, int which) {
 //                finish();
 //            }
 //        });
-//        rxDialogSureCancel.show();
+//        AlertDialog dialog = builder.create();
+//        dialog.show();
+
+        RxDialogSureCancel rxDialogSureCancel = new RxDialogSureCancel(ScreenShareActivity.this);
+        rxDialogSureCancel.setContent("您即将退出投屏");
+        rxDialogSureCancel.getContentView().setLinksClickable(true);
+        rxDialogSureCancel.getContentView().setTextSize(16.0f);
+        rxDialogSureCancel.setCancel("退出");
+        rxDialogSureCancel.getCancelView().setTextColor(ContextCompat.getColor(this, R.color.colorBlue));
+        rxDialogSureCancel.getCancelView().setTextSize(14.0f);
+        rxDialogSureCancel.getSureView().setTextSize(14.0f);
+        rxDialogSureCancel.setCancelListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                rxDialogSureCancel.cancel();
+            }
+        });
+
+        rxDialogSureCancel.setSure("取消");
+        rxDialogSureCancel.setSureListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rxDialogSureCancel.cancel();
+            }
+        });
+        rxDialogSureCancel.show();
     }
 }
