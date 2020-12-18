@@ -97,8 +97,6 @@ public class WifiSearchListFragment extends Fragment {
     }
 
     private void initRecyclerView() {
-        mDeviceList.add(new DeviceBean("EVMirror[PS20190724QWKM]", "ws://192.168.1.128:5002/RVZNaXJyb3JbUFMyMDE5MDcyNFFXS01d"));
-        mDeviceList.add(new DeviceBean("EVMirror[DESKTOP-6GUNUEG]", "ws://192.168.1.56:5002/RVZNaXJyb3JbREVTS1RPUC02R1VOVUVHXQ=="));
         addressAdapter = new IpAddressAdapter(getActivity(), mDeviceList);
         addressAdapter.setItemClickListener(new IpAddressAdapter.OnItemClickListener() {
             @Override
@@ -131,9 +129,8 @@ public class WifiSearchListFragment extends Fragment {
 
             @Override
             public void onSearchFinish(Set deviceSet) {
-                Log.d(TAG, " onSearchFinish: deviceSet.size" + deviceSet.size());
-                if (getActivity().isFinishing() || getActivity().isDestroyed()) return;
-                if (fragment.isRemoving() || fragment.isDetached()) return;
+
+                if (fragment == null || fragment.isRemoving() || fragment.isDetached()) return;
                 //关闭刷新图标
                 if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
 //

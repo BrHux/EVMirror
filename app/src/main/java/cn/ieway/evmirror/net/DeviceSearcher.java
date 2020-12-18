@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -15,6 +16,8 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.ieway.evmirror.entity.DeviceBean;
 import cn.ieway.evmirror.util.LogUtil;
@@ -30,7 +33,8 @@ public abstract class DeviceSearcher extends Thread {
 
     private static final int DEVICE_FIND_PORT = /*5679*/5003; //需要扫描的端口
     private static final int RECEIVE_TIME_OUT = 1000; // 接收超时时间
-    private static final int RESPONSE_DEVICE_MAX = 50; // 响应设备的最大个数，防止UDP广播攻击
+    private static final int TIMER_TIME_OUT = 2000; // 计时器首次执行时间
+    private static final int RESPONSE_DEVICE_MAX = 100; // 响应设备的最大个数，防止UDP广播攻击
     private static final int SEND_TIME_MAX = 2; // 广播发送次数
     private DatagramSocket hostSocket;
     private Set<DeviceBean> mDeviceSet;
@@ -38,6 +42,19 @@ public abstract class DeviceSearcher extends Thread {
     int[] pionts = new int[]{DEVICE_FIND_PORT, 5680, 5681, 5682, 5683, 5684, 5685, 5686, 5687, 5688, 5689};//本地绑定端口
     Gson gson;
     private static final String SERVER_BROADCAST = "ev_screen_share_server_broadcast";
+
+    private long lastAddTime = 0;
+    private Timer timer = new Timer();
+    private TimerTask timerTask = new TimerTask() {
+        @Override
+        public void run() {
+            long temp = System.currentTimeMillis()-lastAddTime;
+            if (lastAddTime != 0 && temp > 1000){
+                interrupt();
+                timer.cancel();
+            }
+        }
+    };
 
     protected DeviceSearcher() {
         mDeviceSet = new HashSet<>();
@@ -87,6 +104,8 @@ public abstract class DeviceSearcher extends Thread {
     public void run() {
         try {
             onSearchStart();
+            timer.schedule(timerTask,TIMER_TIME_OUT,RECEIVE_TIME_OUT);
+
             BroadCastBean broadCastBean = new BroadCastBean();
             broadCastBean.setId(String.valueOf(System.currentTimeMillis()));
             byte[] sendData = gson.toJson(broadCastBean).getBytes();
@@ -102,6 +121,7 @@ public abstract class DeviceSearcher extends Thread {
             // 设置接收超时时间
             hostSocket.setSoTimeout(RECEIVE_TIME_OUT);
             hostSocket.setReuseAddress(true);
+
             for (int p : pionts) {
                 hostSocket.bind(new InetSocketAddress(p));
                 if (hostSocket.isBound()) {
@@ -117,19 +137,24 @@ public abstract class DeviceSearcher extends Thread {
                 DatagramPacket recePack = new DatagramPacket(receData, receData.length);
                 try {
                     // 最多接收RESPONSE_DEVICE_MAX个，或超时跳出循环
-                    int rspCount = RESPONSE_DEVICE_MAX;
-                    while (rspCount-- > 0) {
+                   int rspCount = RESPONSE_DEVICE_MAX;
+                    while (rspCount-- > 0 && !isInterrupted()) {
                         hostSocket.receive(recePack);
                         if (parsePack(recePack)) {
+
                         }
                     }
                 } catch (SocketTimeoutException e) {
                     LogUtil.i("[DeviceSearcher] run() SocketTimeoutException " + e.toString());
 //                    e.printStackTrace();
                 }
+                catch (InterruptedIOException e){
+                    LogUtil.i("[DeviceSearcher] run() InterruptedIOException " + e.toString());
+                    break;
+                }
             }
-            onSearchFinish(mDeviceSet);
-        } catch (UnknownHostException e) {
+//            onSearchFinish(mDeviceSet);
+        }catch (UnknownHostException e) {
             Log.d(TAG, "run: UnknownHostException: " + e.getMessage());
             e.printStackTrace();
         } catch (SocketException e) {
@@ -144,6 +169,9 @@ public abstract class DeviceSearcher extends Thread {
         } finally {
             if (hostSocket != null) {
                 hostSocket.close();
+            }
+            if (timer != null){
+                timer.cancel();
             }
             onSearchFinish(mDeviceSet);
         }
@@ -205,6 +233,7 @@ public abstract class DeviceSearcher extends Thread {
 
         if (device != null) {
             mDeviceSet.add(device);
+            lastAddTime = System.currentTimeMillis();
             return true;
         }
         return false;
