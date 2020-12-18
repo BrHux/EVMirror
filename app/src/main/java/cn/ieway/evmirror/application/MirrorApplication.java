@@ -19,6 +19,7 @@ public class MirrorApplication extends Application {
 
     private boolean isBackGround; //界面是否后台运行
     private Long backGroundTiem;//界面进入后台的时间
+    public boolean isWlanOpen = true;
 
 
     public static WebRtcClient webRtcClient;
