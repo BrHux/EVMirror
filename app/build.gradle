@@ -25,6 +25,23 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    signingConfigs {
+        //======================================================
+        release {
+            storeFile file("update_keystore.jks")
+            storePassword "ieway.cn"
+            keyAlias "key"
+            keyPassword "ieway.cn"
+        }
+
+        debug {
+            storeFile file("update_keystore.jks")
+            storePassword "ieway.cn"
+            keyAlias "key"
+            keyPassword "ieway.cn"
+        }
+    }
+
     //资源
     sourceSets {
         main {
