@@ -63,7 +63,7 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1' //
     //工具类集合
-    implementation 'com.github.tamsiree.RxTool:RxKit:2.4.6'
+    implementation 'com.github.tamsiree.RxTool:RxKit:2.6.2'
     //UI库
     implementation 'com.github.tamsiree.RxTool:RxUI:2.6.2'
     //功能库（Zxing扫描与生成二维码条形码）
@@ -84,4 +84,7 @@ dependencies {
     //权限请求框架
     implementation 'com.hjq:xxpermissions:9.5'
     implementation 'com.hjq:toast:8.8'
+
+    //EventBus
+    implementation 'org.greenrobot:eventbus:3.2.0'
 }
