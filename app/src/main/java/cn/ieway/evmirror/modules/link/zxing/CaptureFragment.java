@@ -18,6 +18,7 @@ package cn.ieway.evmirror.modules.link.zxing;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
@@ -98,6 +99,8 @@ public class CaptureFragment extends Fragment implements OnCaptureCallback {
     public void initCaptureHelper() {
         mCaptureHelper = new CaptureHelper(this, surfaceView, viewfinderView, ivTorch);
         mCaptureHelper.setOnCaptureCallback(this);
+        mCaptureHelper.continuousScan(true);
+        mCaptureHelper.autoRestartPreviewAndDecode(false);
     }
 
     /**
@@ -209,29 +212,40 @@ public class CaptureFragment extends Fragment implements OnCaptureCallback {
         Log.d(TAG, "onResultCallback:" + result);
         Fragment fragment = CaptureFragment.this.getParentFragment();
         boolean checked = false;
-        try {
-            if (fragment == null) {
-                Activity activity = CaptureFragment.this.getActivity();
-                if (activity instanceof ScanningActivity) {
-                    checked = ((ScanningActivity) activity).checkConfiguration(result);
-                }
-                return checked;
-            }
 
-            if (fragment instanceof WIfiFSearchragment) {
-                Activity linkActivity = fragment.getActivity();
-                if (linkActivity instanceof LinkActivity) {
-                    checked = ((LinkActivity) linkActivity).checkConfiguration(result);
+        if (!result.contains("ws://")) {
+            RxToast.error("无效二维码 : " + result);
+        } else {
+            try {
+                if (fragment == null) {
+                    Activity activity = CaptureFragment.this.getActivity();
+                    if (activity instanceof ScanningActivity) {
+                        checked = ((ScanningActivity) activity).checkConfiguration(result);
+                    }
                 }
-                return checked;
-            }
 
-        } catch (Exception e) {
-        } finally {
+                if (fragment instanceof WIfiFSearchragment) {
+                    Activity linkActivity = fragment.getActivity();
+                    if (linkActivity instanceof LinkActivity) {
+                        checked = ((LinkActivity) linkActivity).checkConfiguration(result);
+                    }
+                }
+            } catch (Exception e) {
+
+            }
             RxToast.info(result);
-            return checked;
         }
-
+        if (!checked){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(mCaptureHelper != null) {
+                        mCaptureHelper.restartPreviewAndDecode();
+                    }
+                }
+            },2000);
+        }
+        return checked;
     }
 
 }
