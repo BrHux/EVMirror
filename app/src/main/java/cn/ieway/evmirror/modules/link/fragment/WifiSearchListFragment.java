@@ -1,5 +1,6 @@
 package cn.ieway.evmirror.modules.link.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import cn.ieway.evmirror.entity.DeviceBean;
 import cn.ieway.evmirror.modules.link.LinkActivity;
 import cn.ieway.evmirror.modules.link.adapter.IpAddressAdapter;
 import cn.ieway.evmirror.net.DeviceSearcher;
+import cn.ieway.evmirror.util.NetWorkUtil;
 
 import static android.content.ContentValues.TAG;
 
@@ -80,6 +82,7 @@ public class WifiSearchListFragment extends Fragment {
 
     private void initView(View view) {
         swipeRefreshLayout = view.findViewById(R.id.swipeRedreshLayout);
+        wifiName.setText(getString(R.string.wifi_name, NetWorkUtil.getConnectWifiSsid()));
         initRecyclerView();
     }
 
@@ -129,43 +132,36 @@ public class WifiSearchListFragment extends Fragment {
 
             @Override
             public void onSearchFinish(Set deviceSet) {
-
                 if (fragment == null || fragment.isRemoving() || fragment.isDetached()) return;
-                //关闭刷新图标
-                if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
-//
-//                if (deviceSet == null || deviceSet .size() == 0) {
-//
-//                    return;
-//                }
-
                 mDeviceList.clear();
                 mDeviceList.addAll(deviceSet);
 
-                if (mDeviceList.size() > 0) {
+                try {
+                    if(getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed()) return;
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            updateStatusAre(REFRESHED);
-                            if (addressAdapter != null) {
-                                if (recyclerView.getVisibility() != View.VISIBLE) {
-                                    recyclerView.setVisibility(View.VISIBLE);
+                            //关闭刷新图标
+                            if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
+                            if (mDeviceList.size() > 0){
+                                updateStatusAre(REFRESHED);
+                                if (addressAdapter != null) {
+                                    if (recyclerView.getVisibility() != View.VISIBLE) {
+                                        recyclerView.setVisibility(View.VISIBLE);
+                                    }
+                                    addressAdapter.notifyDataSetChanged();
                                 }
-                                addressAdapter.notifyDataSetChanged();
+                            }else {
+                                updateStatusAre(UNDISCOVERED);
+                                if (recyclerView.getVisibility() == View.VISIBLE) {
+                                    recyclerView.setVisibility(View.GONE);
+                                }
+                                RxToast.normal("未发现设备");
                             }
                         }
                     });
-                } else {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateStatusAre(UNDISCOVERED);
-                            if (recyclerView.getVisibility() == View.VISIBLE) {
-                                recyclerView.setVisibility(View.GONE);
-                            }
-                            RxToast.normal("未发现设备");
-                        }
-                    });
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         };
@@ -174,6 +170,7 @@ public class WifiSearchListFragment extends Fragment {
     }
 
     private void updateStatusAre(int status) {
+
         switch (status) {
             case REFRESHING: {
                 imgStatus.setImageResource(R.drawable.search);

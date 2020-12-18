@@ -18,4 +18,5 @@
     <string name="searching_device">正在搜索可投屏的设备</string>
     <string name="search_again">下拉可再次搜索</string>
     <string name="undiscovered_device">未发现可用的投屏设备，请下拉重新搜索</string>
+    <string name="wifi_name">已连接WiFi: %1$s<!--一唯科技访客--></string>
 </resources>
