@@ -3,9 +3,6 @@ package cn.ieway.evmirror.modules.link;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -15,13 +12,16 @@ import androidx.viewpager.widget.ViewPager;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.tamsiree.rxkit.view.RxToast;
 
-import butterknife.BindView;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.OnClick;
 import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.base.BaseActivity;
+import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
 import cn.ieway.evmirror.modules.link.fragment.USBLinkFragment;
 import cn.ieway.evmirror.modules.link.fragment.WIfiFSearchragment;
-import cn.ieway.evmirror.modules.link.zxing.CaptureFragment;
 import cn.ieway.evmirror.modules.screenshare.ScreenShareActivity;
 
 public class LinkActivity extends BaseActivity{
@@ -61,6 +61,19 @@ public class LinkActivity extends BaseActivity{
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
     @OnClick({R.id.iv_last_page})
     public void onClick(View view){
         switch (view.getId()){
@@ -70,6 +83,27 @@ public class LinkActivity extends BaseActivity{
             }
         }
     }
+
+    private boolean isConnceted;
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NetWorkMessageEvent event){
+        switch (event.creentState) {
+            case DISCONNECTED: {
+                isConnceted = false;
+                break;
+            }
+            case CONNECTED: {
+                isConnceted = true;
+                break;
+            }
+            default: {
+
+                break;
+            }
+        }
+    }
+
+
 
     final class MyViewPagerAdapter extends FragmentPagerAdapter {
         public MyViewPagerAdapter(FragmentManager fm) {
@@ -99,7 +133,12 @@ public class LinkActivity extends BaseActivity{
      * @param url
      */
     public boolean checkConfiguration(String url){
-        showHUD(true,"正在检测连接配置..1");
+        if (!isConnceted) {
+            RxToast.warning("请打开并连接WIFI");
+            return false;
+        }
+
+        showHUD(true,"正在检测连接配置..");
         if(url == null || url.isEmpty()){
             RxToast.error("设备信息识别异常请重试！");
             return false;
