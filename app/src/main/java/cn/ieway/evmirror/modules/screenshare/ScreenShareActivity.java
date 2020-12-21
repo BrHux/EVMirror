@@ -81,12 +81,12 @@ public class ScreenShareActivity extends BaseActivity {
         socketUrl = getIntent().getStringExtra("url");
         socketName = getIntent().getStringExtra("name");
         if (socketUrl == null || socketUrl.isEmpty()) {
-            RxToast.error("设备参数异常请重试！");
+            RxToast.error(getString(R.string.abnormal_device_parameters));
             finish();
         }
 
 //        initTitle("EV投屏");
-//        mTips.setText("正在请求投屏");
+        mTips.setText(R.string.request_mirror);
         mDeviceName.setText(socketName);
     }
 
@@ -97,7 +97,7 @@ public class ScreenShareActivity extends BaseActivity {
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAlertDialog("您即将退出投屏", "退出", "取消", 1);
+                showAlertDialog(getString(R.string.exit_projection_screen), getString(R.string.exit), getString(R.string.cancle), 1);
             }
         });
     }
@@ -110,15 +110,12 @@ public class ScreenShareActivity extends BaseActivity {
                 true, true, false, displaySize.x, displaySize.y,
                 VIDEO_FPS, 1, VIDEO_CODEC_VP9, true, 1,
                 AUDIO_CODEC_OPUS, true);
-//        webRtcClient = new WebRtcClient(webRtcListener, socketUrl, params, eglBaseContext, this);
-//        webRtcClient.initLocalMs();
-//        remoteView.setEnableHardwareScaler(true);
         createScreenCaptureIntent();
     }
 
     @Override
     public void onBackPressed() {
-        showAlertDialog("您即将退出投屏", "退出", "取消", 1);
+        showAlertDialog(getString(R.string.exit_projection_screen), getString(R.string.exit), getString(R.string.cancle), 1);
     }
 
     @Override
@@ -148,11 +145,11 @@ public class ScreenShareActivity extends BaseActivity {
     public void onClock(View view) {
         switch (view.getId()) {
             case R.id.iv_exit: {
-                showAlertDialog("您即将退出投屏", "退出", "取消", 1);
+                showAlertDialog(getString(R.string.exit_projection_screen), getString(R.string.exit), getString(R.string.cancle), 1);
                 break;
             }
             case R.id.iv_audio: {
-                RxToast.info("音频");
+//                RxToast.info("音频");
                 if (webRtcClient == null) return;
                 dealAudioTrack(!webRtcClient.isAudioTrack());
                 break;
@@ -179,7 +176,7 @@ public class ScreenShareActivity extends BaseActivity {
 
                     @Override
                     public void onDenied(List<String> permissions, boolean never) {
-                        showAlertDialog("使用语音需要您授权[录音]权限", "授权", "取消", never ? 3 : 2);
+                        showAlertDialog(getString(R.string.request_audio), getString(R.string.authorization), getString(R.string.cancle), never ? 3 : 2);
                     }
                 });
                 return;
@@ -191,7 +188,7 @@ public class ScreenShareActivity extends BaseActivity {
     private void setAudioTrack(boolean audioTrack) {
         boolean canUse = CommonUtils.validateMicAvailability();
         if (!canUse) {
-            RxToast.error("麦克风被占用。");
+            RxToast.error(getString(R.string.microphone_is_occupied));
             return;
         }
 
@@ -229,12 +226,13 @@ public class ScreenShareActivity extends BaseActivity {
                 } else {
                     mContext.startService(serviceIntent);
                 }
+                mTips.setText(getString(R.string.screen_mirror));
             } else {
-                RxToast.error("启动共享失败,请重新启动");
+                RxToast.error(getString(R.string.retry));
                 initData();
             }
         } else {
-            showAlertDialog("您取消了投屏请求", "继续", "退出投屏", 4);
+            showAlertDialog(getString(R.string.cancelled_screen_request), getString(R.string.continue_to), getString(R.string.exit_for_screen), 4);
         }
     }
 
