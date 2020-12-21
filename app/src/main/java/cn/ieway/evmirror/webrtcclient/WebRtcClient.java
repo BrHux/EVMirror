@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.webrtc.AudioSource;
+import org.webrtc.AudioTrack;
 import org.webrtc.Camera1Enumerator;
 import org.webrtc.DataChannel;
 import org.webrtc.DefaultVideoDecoderFactory;
@@ -85,6 +86,8 @@ public class WebRtcClient {
     public DataChannelAdapter dataChannelAdapter;
     public boolean isRequesting = false;
     private String mHost;
+    private AudioSource audioSource;
+    private AudioTrack audioTrack;
 
     public WebRtcClient(RtcListener listener, String host, PeerConnectionParameters params, EglBase.Context mEGLcontext, Context context) {
         this.rtcListener = listener;
@@ -187,7 +190,33 @@ public class WebRtcClient {
 
     public void initLocalMs() {
         localMS = peerConnectionFactory.createLocalMediaStream("ARDAMS");
+        audioSource = peerConnectionFactory.createAudioSource(new MediaConstraints());
+        audioTrack = peerConnectionFactory.createAudioTrack("ARDAMSa0", audioSource);
         rtcListener.onLocalStream(localMS, false);
+    }
+
+    public boolean setAudioTrack(boolean audio){
+        List<AudioTrack> audioTracks = localMS.audioTracks;
+        if (audioTracks.size()>0){
+            for (AudioTrack track:audioTracks){
+                localMS.removeTrack(track);
+            }
+        }
+
+        if (pcParams.audioCallEnabled && audio) {
+            if (audioSource == null){
+                audioSource = peerConnectionFactory.createAudioSource(new MediaConstraints());
+                audioTrack = peerConnectionFactory.createAudioTrack("ARDAMSa0", audioSource);
+            }
+
+            localMS.addTrack(audioTrack);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isAudioTrack() {
+        return localMS.audioTracks.size() > 0;
     }
 
     public void onStop() {
@@ -558,8 +587,9 @@ public class WebRtcClient {
         }
 
         if (pcParams.audioCallEnabled) {
-            AudioSource audioSource = peerConnectionFactory.createAudioSource(new MediaConstraints());
-            localMS.addTrack(peerConnectionFactory.createAudioTrack("ARDAMSa0", audioSource));
+            audioSource = peerConnectionFactory.createAudioSource(new MediaConstraints());
+            AudioTrack audioTrack = peerConnectionFactory.createAudioTrack("ARDAMSa0", audioSource);
+            localMS.addTrack(audioTrack);
         }
 
         rtcListener.onLocalStream(localMS, true);
@@ -605,9 +635,10 @@ public class WebRtcClient {
             localMS.addTrack(videoTrack);
         }
 
+
         if (pcParams.audioCallEnabled) {
-            AudioSource audioSource = peerConnectionFactory.createAudioSource(new MediaConstraints());
-            localMS.addTrack(peerConnectionFactory.createAudioTrack("ARDAMSa0", audioSource));
+            audioSource = peerConnectionFactory.createAudioSource(new MediaConstraints());
+//            localMS.addTrack(peerConnectionFactory.createAudioTrack("ARDAMSa0", audioSource));
         }
         rtcListener.onLocalStream(localMS, false);
     }
