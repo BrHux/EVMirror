@@ -32,4 +32,6 @@
     <string name="request_audio">使用语音需要您授权[录音]权限</string>
     <string name="authorization">授权</string>
     <string name="abnormal_device_parameters">设备参数异常请重试！</string>
+    <string name="connection_disconnected_please_reconnect">检测到您的WIFI连接已断开，投屏中断，请退出后重新连接。</string>
+    <string name="sure">确定</string>
 </resources>

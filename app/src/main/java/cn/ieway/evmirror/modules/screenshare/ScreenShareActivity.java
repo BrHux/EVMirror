@@ -9,6 +9,7 @@ import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,8 +21,12 @@ import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.tamsiree.rxkit.view.RxToast;
+import com.tamsiree.rxui.view.dialog.RxDialogSure;
 import com.tamsiree.rxui.view.dialog.RxDialogSureCancel;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.webrtc.EglBase;
 
 import java.util.List;
@@ -30,6 +35,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.base.BaseActivity;
+import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
 import cn.ieway.evmirror.modules.about.AboutActivity;
 import cn.ieway.evmirror.util.CommonUtils;
 import cn.ieway.evmirror.webrtcclient.WebRtcClient;
@@ -97,7 +103,7 @@ public class ScreenShareActivity extends BaseActivity {
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAlertDialog(getString(R.string.exit_projection_screen), getString(R.string.exit), getString(R.string.cancle), 1);
+                showSureCancelAlertDialog(getString(R.string.exit_projection_screen), getString(R.string.exit), getString(R.string.cancle), 1);
             }
         });
     }
@@ -114,8 +120,34 @@ public class ScreenShareActivity extends BaseActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().removeAllStickyEvents();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onMessageEvent(NetWorkMessageEvent event) {
+        switch (event.creentState) {
+            case DISCONNECTED: {
+                showCancelAlertDialog(getString(R.string.connection_disconnected_please_reconnect),getString(R.string.sure),0);
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+
+    @Override
     public void onBackPressed() {
-        showAlertDialog(getString(R.string.exit_projection_screen), getString(R.string.exit), getString(R.string.cancle), 1);
+        showSureCancelAlertDialog(getString(R.string.exit_projection_screen), getString(R.string.exit), getString(R.string.cancle), 1);
     }
 
     @Override
@@ -126,7 +158,6 @@ public class ScreenShareActivity extends BaseActivity {
         }
         stopService(new Intent(this, ScreenShareService.class));
         super.onDestroy();
-
     }
 
     @Override
@@ -145,7 +176,7 @@ public class ScreenShareActivity extends BaseActivity {
     public void onClock(View view) {
         switch (view.getId()) {
             case R.id.iv_exit: {
-                showAlertDialog(getString(R.string.exit_projection_screen), getString(R.string.exit), getString(R.string.cancle), 1);
+                showSureCancelAlertDialog(getString(R.string.exit_projection_screen), getString(R.string.exit), getString(R.string.cancle), 1);
                 break;
             }
             case R.id.iv_audio: {
@@ -176,7 +207,7 @@ public class ScreenShareActivity extends BaseActivity {
 
                     @Override
                     public void onDenied(List<String> permissions, boolean never) {
-                        showAlertDialog(getString(R.string.request_audio), getString(R.string.authorization), getString(R.string.cancle), never ? 3 : 2);
+                        showSureCancelAlertDialog(getString(R.string.request_audio), getString(R.string.authorization), getString(R.string.cancle), never ? 3 : 2);
                     }
                 });
                 return;
@@ -232,20 +263,20 @@ public class ScreenShareActivity extends BaseActivity {
                 initData();
             }
         } else {
-            showAlertDialog(getString(R.string.cancelled_screen_request), getString(R.string.continue_to), getString(R.string.exit_for_screen), 4);
+            showSureCancelAlertDialog(getString(R.string.cancelled_screen_request), getString(R.string.continue_to), getString(R.string.exit_for_screen), 4);
         }
     }
 
 
     /**
-     * 界面对话框
+     * 界面对话框（双按钮）
      *
      * @param content
      * @param cancel
      * @param sure
-     * @param type    1：退出界面；2：声音通道设置 3：打开权限详情页面；4：截屏请求
+     * @param type    1：退出界面；2：声音通道设置 3：打开权限详情页面；4：截屏请求 5:wifi断开连接
      */
-    private void showAlertDialog(String content, String cancel, String sure, int type) {
+    private void showSureCancelAlertDialog(String content, String cancel, String sure, int type) {
         RxDialogSureCancel rxDialogSureCancel = new RxDialogSureCancel(ScreenShareActivity.this);
         rxDialogSureCancel.setContent(content);
         rxDialogSureCancel.getContentView().setLinksClickable(true);
@@ -299,4 +330,36 @@ public class ScreenShareActivity extends BaseActivity {
         });
         rxDialogSureCancel.show();
     }
+
+
+    /**界面对话框(单按钮)
+     * @param content
+     * @param sure
+     * @param type  0：退出投屏；
+     */
+    private void showCancelAlertDialog(String content,String sure, int type){
+        RxDialogSure rxDialogSure = new RxDialogSure(ScreenShareActivity.this);
+        rxDialogSure.setCancelable(false);
+        rxDialogSure.setContent(content);
+        rxDialogSure.getContentView().setLinksClickable(true);
+        rxDialogSure.getContentView().setTextSize(16.0f);
+        rxDialogSure.getSureView().setTextSize(14.0f);
+        rxDialogSure.getSureView().setTextColor(ContextCompat.getColor(this, R.color.colorBlue));
+        rxDialogSure.setSure(sure);
+
+        rxDialogSure.setSureListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (type){
+                    case 0:{
+                        finish();
+                        break;
+                    }
+                }
+                rxDialogSure.cancel();
+            }
+        });
+        rxDialogSure.show();
+    }
+
 }
