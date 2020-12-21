@@ -85,7 +85,7 @@ public class LinkActivity extends BaseActivity{
         }
     }
 
-    private boolean isConnceted;
+    private boolean isConnceted = true;
     @Subscribe(threadMode = ThreadMode.MAIN , sticky = true)
     public void onMessageEvent(NetWorkMessageEvent event){
         switch (event.creentState) {

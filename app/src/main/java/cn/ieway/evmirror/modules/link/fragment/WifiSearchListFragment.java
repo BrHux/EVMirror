@@ -1,6 +1,7 @@
 package cn.ieway.evmirror.modules.link.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,10 +100,11 @@ public class WifiSearchListFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        EventBus.getDefault().removeAllStickyEvents();
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
     public void onMessageEvent(NetWorkMessageEvent event){
         setWifiName();
     }
@@ -121,12 +123,18 @@ public class WifiSearchListFragment extends Fragment {
     }
 
     private void setWifiName(){
-        int state = NetWorkUtil.getNetWorkState(getContext());
-        if (state != 1){
-            wifiName.setText("未连接Wifi");
-            return;
-        }
-        wifiName.setText(getString(R.string.wifi_name, NetWorkUtil.getConnectWifiSsid()));
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int state = NetWorkUtil.getNetWorkState(getContext());
+                if (state != 1){
+                    wifiName.setText("未连接Wifi");
+                    return;
+                }
+                search();
+                wifiName.setText(getString(R.string.wifi_name, NetWorkUtil.getConnectWifiSsid()));
+            }
+        },500);
     }
 
     private void initRecyclerView() {
