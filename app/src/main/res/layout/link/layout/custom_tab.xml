@@ -9,7 +9,7 @@
   android:paddingLeft="@dimen/dp_0"
   android:paddingRight="@dimen/dp_0"
   android:textColor="@color/custom_tab"
-  android:textSize="@dimen/sp_16"
+  android:textSize="@dimen/sp_20"
   >
 
 </TextView>

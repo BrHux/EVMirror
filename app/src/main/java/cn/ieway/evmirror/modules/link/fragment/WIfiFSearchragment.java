@@ -143,7 +143,7 @@ public class WIfiFSearchragment extends Fragment implements View.OnClickListener
      * 扫码连接样式
      */
     private void setScannerPage() {
-        scan.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner1));
+        scan.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shap_white_round_40dp_bg));
         search.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner));
         scan.setTextColor(ContextCompat.getColor(getActivity(),R.color.colorBlue));
         search.setTextColor(ContextCompat.getColor(getActivity(),R.color.White));
@@ -153,7 +153,7 @@ public class WIfiFSearchragment extends Fragment implements View.OnClickListener
      * wifi搜索连接样式
      */
     private void setWifiSearchView() {
-        search.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner1));
+        search.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shap_white_round_40dp_bg));
         scan.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.shape_corner));
         changeFragment(WifiSearchListFragment.getFragment());
         search.setTextColor(ContextCompat.getColor(getActivity(),R.color.colorBlue));

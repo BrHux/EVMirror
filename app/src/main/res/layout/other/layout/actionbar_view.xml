@@ -31,7 +31,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:textColor="@color/White"
-        android:textSize="@dimen/sp_16"
+        android:textSize="@dimen/sp_22"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

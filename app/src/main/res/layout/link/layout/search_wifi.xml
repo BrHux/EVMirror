@@ -48,7 +48,7 @@
                                 android:layout_marginBottom="@dimen/dp_25"
                                 android:text=""
                                 android:textColor="@color/colorBlue"
-                                android:textSize="@dimen/sp_12"/>
+                                android:textSize="@dimen/sp_14"/>
 
                             <ImageView
                                 android:id="@+id/iv_status_img"
@@ -64,7 +64,7 @@
                                 android:layout_marginBottom="@dimen/dp_25"
                                 android:text="@string/searching_device"
                                 android:textColor="@color/color_text_66"
-                                android:textSize="@dimen/sp_12"/>
+                                android:textSize="@dimen/sp_14"/>
                         </LinearLayout>
 
                         <androidx.recyclerview.widget.RecyclerView

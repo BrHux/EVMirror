@@ -32,7 +32,7 @@
             android:layout_width="@dimen/dp_45"
             android:layout_height="match_parent"
             android:clickable="true"
-            android:paddingHorizontal="@dimen/dp_13"
+            android:paddingHorizontal="@dimen/dp_10"
             android:src="@drawable/ic_about" />
 
         <TextView
@@ -42,21 +42,21 @@
             android:gravity="center"
             android:text="@string/app_name"
             android:textColor="@color/White"
-            android:textSize="@dimen/sp_16" />
+            android:textSize="@dimen/sp_22" />
 
         <ImageView
             android:id="@+id/iv_scanning"
             android:layout_width="@dimen/dp_45"
             android:layout_height="match_parent"
             android:clickable="true"
-            android:paddingHorizontal="@dimen/dp_13"
+            android:paddingHorizontal="@dimen/dp_10"
             android:src="@drawable/ic_scanning_white" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_start_btn"
-        android:layout_width="@dimen/dp_250"
-        android:layout_height="@dimen/dp_250"
+        android:layout_width="@dimen/dp_300"
+        android:layout_height="@dimen/dp_300"
         android:src="@drawable/selector_main_btn"
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -79,18 +79,18 @@
             android:id="@+id/tv_device_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/text_device_id"
+            android:text=""
             android:textColor="@color/colorBlue"
-            android:textSize="@dimen/sp_14" />
+            android:textSize="@dimen/sp_16" />
 
         <TextView
             android:id="@+id/tv_net_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/dp_10"
-            android:text="@string/network_name"
+            android:text=""
             android:textColor="@color/colorBlue"
-            android:textSize="@dimen/sp_14" />
+            android:textSize="@dimen/sp_16" />
 
         <TextView
             android:id="@+id/tv_instruction_book"
@@ -99,7 +99,7 @@
             android:padding="@dimen/dp_10"
             android:text="@string/text_instruction_book"
             android:textColor="@color/color_text_99"
-            android:textSize="@dimen/sp_11" />
+            android:textSize="@dimen/sp_14" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

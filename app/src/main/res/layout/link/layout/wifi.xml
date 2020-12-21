@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/fragment_container"
@@ -27,26 +26,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-                 <TextView
-                    android:id="@+id/search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.0"
-                    android:background="@drawable/shape_corner1"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:text="搜索连接"
-                    android:textColor="@color/blue" />
+        <TextView
+            android:id="@+id/search"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:background="@drawable/shap_white_round_40dp_bg"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="搜索连接"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/dp_16" />
 
-                <TextView
-                    android:id="@+id/scan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.0"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:text="扫码连接"
-                    android:textColor="@color/White" />
+        <TextView
+            android:id="@+id/scan"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="扫码连接"
+            android:textColor="@color/White"
+            android:textSize="@dimen/dp_16" />
 
     </LinearLayout>
 

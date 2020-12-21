@@ -87,6 +87,7 @@ public class WifiSearchListFragment extends Fragment {
 
     private void initView(View view) {
         swipeRefreshLayout = view.findViewById(R.id.swipeRedreshLayout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent,R.color.colorPrimaryDark);
         setWifiName();
         initRecyclerView();
     }

@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/dp_55"
     android:padding="@dimen/dp_5"
     android:layout_marginHorizontal="@dimen/dp_15"
     android:layout_marginBottom="@dimen/dp_5"
@@ -14,8 +14,8 @@
 
     <ImageView
         android:id="@+id/iv_icon"
-        android:layout_width="@dimen/dp_30"
-        android:layout_height="@dimen/dp_30"
+        android:layout_width="@dimen/dp_35"
+        android:layout_height="@dimen/dp_35"
         android:padding="@dimen/dp_5"
         android:src="@drawable/ic_windows"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_5"
         android:text="设备名称SADASDASDASDASDASS"
-        android:textSize="@dimen/sp_12"
+        android:textSize="@dimen/sp_16"
         android:textColor="@color/color_text_33"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
