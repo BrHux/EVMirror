@@ -71,6 +71,7 @@ public class LinkActivity extends BaseActivity{
     @Override
     protected void onStop() {
         super.onStop();
+        EventBus.getDefault().removeAllStickyEvents();
         EventBus.getDefault().unregister(this);
     }
 
@@ -85,7 +86,7 @@ public class LinkActivity extends BaseActivity{
     }
 
     private boolean isConnceted;
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN , sticky = true)
     public void onMessageEvent(NetWorkMessageEvent event){
         switch (event.creentState) {
             case DISCONNECTED: {
@@ -127,12 +128,18 @@ public class LinkActivity extends BaseActivity{
         }
     }
 
-
     /**
      * 客户端连接预处理
      * @param url
      */
     public boolean checkConfiguration(String url){
+       return checkConfiguration("",url);
+    }
+    /**
+     * 客户端连接预处理
+     * @param url
+     */
+    public boolean checkConfiguration(String name,String url){
         if (!isConnceted) {
             RxToast.warning("请打开并连接WIFI");
             return false;
@@ -145,6 +152,7 @@ public class LinkActivity extends BaseActivity{
         }
         Intent intent = new Intent();
         intent.setClass(this, ScreenShareActivity.class);
+        intent.putExtra("name",name);
         intent.putExtra("url",url);
         startActivity(intent);
         dismissHUD();

@@ -134,7 +134,7 @@ public class WifiSearchListFragment extends Fragment {
         addressAdapter.setItemClickListener(new IpAddressAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                onSharebtnPress(getString(R.string.text_device_id, BaseConfig.brandModel), mDeviceList.get(position).getUrl());
+                onSharebtnPress(mDeviceList.get(position).getName(), mDeviceList.get(position).getUrl());
             }
         });
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -231,7 +231,7 @@ public class WifiSearchListFragment extends Fragment {
         WIfiFSearchragment wIfiFSearchragment = (WIfiFSearchragment) fragment.getParentFragment();
         if(wIfiFSearchragment instanceof  WIfiFSearchragment){
             LinkActivity linkActivity = (LinkActivity) wIfiFSearchragment.getActivity();
-            linkActivity.checkConfiguration(url);
+            linkActivity.checkConfiguration(nickName,url);
         }
 //        FragmentManager manager = getFragmentManager();//获取到父fragment的管理器
 //        //获取到父parentFragment
