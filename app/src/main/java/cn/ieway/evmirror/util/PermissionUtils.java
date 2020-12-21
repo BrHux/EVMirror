@@ -5,7 +5,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
+import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.XXPermissions;
+
+import java.util.Collections;
+import java.util.List;
 
 import cn.ieway.evmirror.R;
 
@@ -34,5 +38,17 @@ public class PermissionUtils {
             }
         });
         builder.setNegativeButton("取消",null);
+    }
+
+    public static boolean hasPermissionGranted(Context context,String permission){
+        return XXPermissions.isGrantedPermission(context,permission);
+    }
+
+    public static void checPermission(Activity activity,String permission,OnPermissionCallback onPermission){
+        if (hasPermissionGranted(activity,permission)) {
+            onPermission.onGranted(Collections.singletonList(permission),true);
+            return;
+        }
+        XXPermissions.with(activity).permission(permission).request(onPermission);
     }
 }

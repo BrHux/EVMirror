@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shap_white_round_10dp_bg">
+
+    <!--标题-->
+
+    <!--分割线-->
+    <TextView
+        android:id="@+id/share_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/dp_5"
+        android:layout_marginTop="4dp"
+        android:gravity="center_horizontal"
+        android:text="分享"
+        android:textColor="#333"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/share_division_line"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/color_light_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/share_title" />
+
+    <!--分享到哪里-->
+    <GridView
+        android:id="@+id/dialog_share_grid_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintHeight_max="@dimen/dp_430"
+        android:horizontalSpacing="@dimen/dp_5"
+        android:listSelector="#00000000"
+        android:numColumns="4"
+        android:verticalSpacing="@dimen/dp_5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/share_division_line" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,11 +1,13 @@
 package cn.ieway.evmirror.modules.about;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -17,12 +19,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hjq.toast.ToastUtils;
 import com.tamsiree.rxkit.view.RxToast;
 import com.tamsiree.rxui.view.dialog.RxDialogSureCancel;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -31,13 +36,11 @@ import cn.ieway.evmirror.application.BaseConfig;
 import cn.ieway.evmirror.base.BaseActivity;
 import cn.ieway.evmirror.entity.AppVersion;
 import cn.ieway.evmirror.modules.other.WebViewActivity;
-import cn.ieway.evmirror.modules.welcome.SplashActivity;
 import cn.ieway.evmirror.net.CommonRequest;
 import cn.ieway.evmirror.net.okhttp.CallBackUtil;
 import cn.ieway.evmirror.net.util.DataUtils;
 import cn.ieway.evmirror.util.CommonUtils;
 import okhttp3.Call;
-import okhttp3.Response;
 
 public class AboutActivity extends BaseActivity {
     private static final String TAG = AboutActivity.class.getSimpleName();
@@ -163,27 +166,46 @@ public class AboutActivity extends BaseActivity {
         Log.d(TAG, "starApp: ");
         try {
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse("market://details?id="+mContext.getPackageName()));
+            i.setData(Uri.parse("market://details?id=" + mContext.getPackageName()));
             startActivity(i);
         } catch (Exception e) {
-            ToastUtils.show( "您的手机上没有安装应用市场");
+            ToastUtils.show("您的手机上没有安装应用市场");
             e.printStackTrace();
         }
     }
 
     private void shareToOther() {
         Log.d(TAG, "shareToOther: ");
+        getShareTargets(this,IntentShareActivity.TYPE_TEXT,getString(R.string.app_download,getString(R.string.app_download_url)));
+    }
+
+    public static List<ResolveInfo> getShareTargets(Context context, String type, String file){
+        List<ResolveInfo> mApps =  new ArrayList<ResolveInfo>();
+        Intent intent= new Intent(Intent.ACTION_SEND, null);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setType(type);
+        PackageManager pm=context.getPackageManager();
+        mApps=pm.queryIntentActivities(intent,PackageManager.GET_SHARED_LIBRARY_FILES);
+
+        Intent activity = new Intent(context, IntentShareActivity.class);
+        activity.putExtra("shareTargets",(Serializable)mApps);
+        activity.putExtra("shareType",type);
+        activity.putExtra("filePath",file);
+        activity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(activity);
+        return mApps;
     }
 
     private String html;
+
     private void checkAppVersion() {
         Log.d(TAG, "checkAppVersion: ");
 
         try {
-            CommonRequest.checkAPPVersion(new CallBackUtil.CallBackString()  {
+            CommonRequest.checkAPPVersion(new CallBackUtil.CallBackString() {
                 @Override
                 public void onFailure(Call call, Exception e) {
-                   ToastUtils.show("未检测到新版本");
+                    ToastUtils.show("未检测到新版本");
                 }
 
                 @Override
@@ -219,7 +241,7 @@ public class AboutActivity extends BaseActivity {
             });
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
 
         }
 

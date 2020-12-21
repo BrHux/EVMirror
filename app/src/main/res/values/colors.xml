@@ -9,6 +9,7 @@
     <color name="text_enabled">#FFFFFFFF</color>
     <color name="text_disabled">#4DFFFFFF</color>
     <color name="color_light_gray">#E3E3E3</color>
+    <color name="color_gray_ccc">#ccc</color>
 
     <color name="color_text_33">#333333</color>
     <color name="color_text_66">#666666</color>

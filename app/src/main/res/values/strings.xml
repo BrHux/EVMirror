@@ -34,4 +34,6 @@
     <string name="abnormal_device_parameters">设备参数异常请重试！</string>
     <string name="connection_disconnected_please_reconnect">检测到您的WIFI连接已断开，投屏中断，请退出后重新连接。</string>
     <string name="sure">确定</string>
+    <string name="more">更多</string>
+    <string name="app_download">下载EV投屏，快速开启投屏时代：\n %1$s</string>
 </resources>

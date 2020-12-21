@@ -31,6 +31,10 @@
             android:exported="false"
             android:foregroundServiceType="mediaProjection"></service>
 
+        <activity
+            android:name=".modules.about.IntentShareActivity"
+            android:theme="@style/activity_dialog" />
+
         <activity android:name=".modules.screenshare.ScreenShareActivity" />
         <activity android:name=".modules.main.ScanningActivity" />
         <activity
