@@ -76,7 +76,7 @@ public class WIfiFSearchragment extends Fragment implements View.OnClickListener
      * 切換fragment
      * */
     @NonNull
-    void changeFragment(Fragment fragment) {
+   public void changeFragment(Fragment fragment) {
         Log.d(TAG, "changeFragment: " + fragment);
         if (currentFragment == fragment) return;//  判断传入的fragment是不是当前的currentFragmentgit
         FragmentManager fragmentManager = getChildFragmentManager();
@@ -113,7 +113,7 @@ public class WIfiFSearchragment extends Fragment implements View.OnClickListener
      * @param context
      * @param fragment
      */
-    private void goToScanner(Context context, Fragment fragment) {
+    public void goToScanner(Context context, Fragment fragment) {
         if (XXPermissions.isGrantedPermission(context, Permission.CAMERA)) {
             setScannerPage();
             changeFragment(fragment);

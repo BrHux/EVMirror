@@ -28,12 +28,14 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.application.BaseConfig;
 import cn.ieway.evmirror.entity.DeviceBean;
 import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
 import cn.ieway.evmirror.modules.link.LinkActivity;
 import cn.ieway.evmirror.modules.link.adapter.IpAddressAdapter;
+import cn.ieway.evmirror.modules.link.zxing.CaptureFragment;
 import cn.ieway.evmirror.net.DeviceSearcher;
 import cn.ieway.evmirror.util.NetWorkUtil;
 
@@ -87,7 +89,7 @@ public class WifiSearchListFragment extends Fragment {
 
     private void initView(View view) {
         swipeRefreshLayout = view.findViewById(R.id.swipeRedreshLayout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent,R.color.colorPrimaryDark);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimaryDark);
         setWifiName();
         initRecyclerView();
     }
@@ -105,10 +107,24 @@ public class WifiSearchListFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
-    public void onMessageEvent(NetWorkMessageEvent event){
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onMessageEvent(NetWorkMessageEvent event) {
         setWifiName();
     }
+
+    @OnClick({R.id.tv_scanner})
+    public void OnClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_scanner: {
+                Fragment fragment = getParentFragment();
+                if (fragment !=null && fragment instanceof WIfiFSearchragment) {
+                    ((WIfiFSearchragment) fragment).goToScanner(getActivity(), CaptureFragment.newInstance());
+                }
+                break;
+            }
+        }
+    }
+
 
     private void initData() {
         search();
@@ -123,19 +139,19 @@ public class WifiSearchListFragment extends Fragment {
         });
     }
 
-    private void setWifiName(){
+    private void setWifiName() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 int state = NetWorkUtil.getNetWorkState(getContext());
-                if (state != 1){
+                if (state != 1) {
                     wifiName.setText("未连接Wifi");
                     return;
                 }
                 search();
                 wifiName.setText(getString(R.string.wifi_name, NetWorkUtil.getConnectWifiSsid()));
             }
-        },500);
+        }, 500);
     }
 
     private void initRecyclerView() {
@@ -176,13 +192,15 @@ public class WifiSearchListFragment extends Fragment {
                 mDeviceList.addAll(deviceSet);
 
                 try {
-                    if(getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed()) return;
+                    if (getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed())
+                        return;
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             //关闭刷新图标
-                            if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
-                            if (mDeviceList.size() > 0){
+                            if (swipeRefreshLayout.isRefreshing())
+                                swipeRefreshLayout.setRefreshing(false);
+                            if (mDeviceList.size() > 0) {
                                 updateStatusAre(REFRESHED);
                                 if (addressAdapter != null) {
                                     if (recyclerView.getVisibility() != View.VISIBLE) {
@@ -190,16 +208,16 @@ public class WifiSearchListFragment extends Fragment {
                                     }
                                     addressAdapter.notifyDataSetChanged();
                                 }
-                            }else {
+                            } else {
                                 updateStatusAre(UNDISCOVERED);
                                 if (recyclerView.getVisibility() == View.VISIBLE) {
                                     recyclerView.setVisibility(View.GONE);
                                 }
-                                RxToast.normal("未发现设备");
+//                                RxToast.normal("未发现设备");
                             }
                         }
                     });
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -238,9 +256,9 @@ public class WifiSearchListFragment extends Fragment {
         if (fragment.isRemoving()) return;
 
         WIfiFSearchragment wIfiFSearchragment = (WIfiFSearchragment) fragment.getParentFragment();
-        if(wIfiFSearchragment instanceof  WIfiFSearchragment){
+        if (wIfiFSearchragment instanceof WIfiFSearchragment) {
             LinkActivity linkActivity = (LinkActivity) wIfiFSearchragment.getActivity();
-            linkActivity.checkConfiguration(nickName,url);
+            linkActivity.checkConfiguration(nickName, url);
         }
 //        FragmentManager manager = getFragmentManager();//获取到父fragment的管理器
 //        //获取到父parentFragment
