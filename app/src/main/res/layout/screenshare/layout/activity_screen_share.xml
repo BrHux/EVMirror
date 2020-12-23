@@ -108,6 +108,7 @@
             android:layout_height="@dimen/dp_100"
             android:layout_weight="1"
             android:layout_marginVertical="@dimen/dp_10"
+            android:visibility="gone"
             android:src="@drawable/selector_silence_voice_op"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
