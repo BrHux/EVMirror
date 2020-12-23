@@ -22,11 +22,14 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hjq.toast.ToastUtils;
+import com.tamsiree.rxkit.RxDataTool;
 import com.tamsiree.rxkit.view.RxToast;
 import com.tamsiree.rxui.view.dialog.RxDialogSureCancel;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -176,21 +179,21 @@ public class AboutActivity extends BaseActivity {
 
     private void shareToOther() {
         Log.d(TAG, "shareToOther: ");
-        getShareTargets(this,IntentShareActivity.TYPE_TEXT,getString(R.string.app_download,getString(R.string.app_download_url)));
+        getShareTargets(this, IntentShareActivity.TYPE_TEXT, getString(R.string.app_download, getString(R.string.app_download_url)));
     }
 
-    public static List<ResolveInfo> getShareTargets(Context context, String type, String file){
-        List<ResolveInfo> mApps =  new ArrayList<ResolveInfo>();
-        Intent intent= new Intent(Intent.ACTION_SEND, null);
+    public static List<ResolveInfo> getShareTargets(Context context, String type, String file) {
+        List<ResolveInfo> mApps = new ArrayList<ResolveInfo>();
+        Intent intent = new Intent(Intent.ACTION_SEND, null);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.setType(type);
-        PackageManager pm=context.getPackageManager();
-        mApps=pm.queryIntentActivities(intent,PackageManager.GET_SHARED_LIBRARY_FILES);
+        PackageManager pm = context.getPackageManager();
+        mApps = pm.queryIntentActivities(intent, PackageManager.GET_SHARED_LIBRARY_FILES);
 
         Intent activity = new Intent(context, IntentShareActivity.class);
-        activity.putExtra("shareTargets",(Serializable)mApps);
-        activity.putExtra("shareType",type);
-        activity.putExtra("filePath",file);
+        activity.putExtra("shareTargets", (Serializable) mApps);
+        activity.putExtra("shareType", type);
+        activity.putExtra("filePath", file);
         activity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(activity);
         return mApps;
@@ -223,11 +226,30 @@ public class AboutActivity extends BaseActivity {
                             ToastUtils.show("未检测到新版本");
                             return;
                         }
+
+                        //检测版本有效期
+                        String dateTime = version.getEnd_time();
+                        dateTime = dateTime.replace("Z", " UTC");
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");
+                        SimpleDateFormat defaultFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        try {
+                            Date time = format.parse(dateTime);
+                            String timeStr = defaultFormat.format(time);
+                            Date endTime = defaultFormat.parse(timeStr);
+                            Date currentTime = new Date();
+                            if (currentTime.after(endTime)) {
+                                ToastUtils.show(version.getEnd_error());
+                                return;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        //检测版本更新计划
                         String currentVer = version.getCurrent_version().replace(".", "");
                         String localVer = BaseConfig.appVersionName.replace(".", "");
                         int cv = Integer.parseInt(currentVer);
                         int lv = Integer.parseInt(localVer);
-
                         if (version.getForce_update() == 1) { //需强制更新
                             html = version.getDownload_url();
                             showTips(version.getEnd_error(), "下载新版本", 1);

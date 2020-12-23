@@ -201,4 +201,29 @@ public class AppVersion {
     public void setRemark1(Object remark1) {
         this.remark1 = remark1;
     }
+
+    @Override
+    public String toString() {
+        return "AppVersion{" +
+                "id=" + id +
+                ", app_name='" + app_name + '\'' +
+                ", app_version='" + app_version + '\'' +
+                ", platform=" + platform +
+                ", current_version='" + current_version + '\'' +
+                ", img_url=" + img_url +
+                ", download_url='" + download_url + '\'' +
+                ", brief='" + brief + '\'' +
+                ", configs='" + configs + '\'' +
+                ", update_brief='" + update_brief + '\'' +
+                ", force_update=" + force_update +
+                ", pay_time=" + pay_time +
+                ", logic_del=" + logic_del +
+                ", end_time='" + end_time + '\'' +
+                ", start_time='" + start_time + '\'' +
+                ", end_error='" + end_error + '\'' +
+                ", create_time='" + create_time + '\'' +
+                ", update_time='" + update_time + '\'' +
+                ", remark1=" + remark1 +
+                '}';
+    }
 }
