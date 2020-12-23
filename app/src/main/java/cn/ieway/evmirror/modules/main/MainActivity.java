@@ -26,6 +26,8 @@ import com.tamsiree.rxkit.RxTool;
 import com.tamsiree.rxkit.view.RxToast;
 import com.tamsiree.rxui.view.dialog.RxDialogEditSureCancel;
 import com.tamsiree.rxui.view.dialog.RxDialogSureCancel;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.commonsdk.UMConfigure;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,6 +50,8 @@ import cn.ieway.evmirror.modules.other.WebViewActivity;
 import cn.ieway.evmirror.net.DeviceSearcher;
 import cn.ieway.evmirror.receiver.NetWorkStateReceiver;
 import cn.ieway.evmirror.util.NetWorkUtil;
+
+import static cn.ieway.evmirror.application.MirrorApplication.sMe;
 
 public class MainActivity extends BaseActivity {
     private static String TAG = "huangx";
@@ -74,6 +78,9 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //友盟统计初始化
+        umInit();
     }
 
     @Override
@@ -159,7 +166,7 @@ public class MainActivity extends BaseActivity {
             }
             case R.id.iv_start_btn: {
 //                Toast.makeText(MainActivity.this, "开始", Toast.LENGTH_LONG).show();
-                if (MirrorApplication.sMe.isWlanOpen) {
+                if (sMe.isWlanOpen) {
                     Intent intent = new Intent(MainActivity.this, LinkActivity.class);
                     intent.setPackage(mContext.getPackageName());
                     MainActivity.this.startActivity(intent);
@@ -279,6 +286,23 @@ public class MainActivity extends BaseActivity {
             });
         }
         rxDialogSureCancel.show();
+    }
+
+    private void umInit() {
+        //初始化组件化基础库, 所有友盟业务SDK都必须调用此初始化接口。
+        UMConfigure.init(sMe, null, null, UMConfigure.DEVICE_TYPE_PHONE, "");
+        //选择AUTO页面采集模式，统计SDK基础指标无需手动埋点可自动采集。
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+        // 打开统计SDK调试模式
+//        UMConfigure.setLogEnabled(true);
+        //获取 --设备识别信息-- 用于集成测试
+//        String[] listStr = UMConfigure.getTestDeviceInfo(sMe);
+//        if (listStr != null && listStr.length > 0){
+//            for (String str : listStr){
+//                Log.d("huangx", "umInit: "+str);
+//            }
+//        }
+
     }
 
 }

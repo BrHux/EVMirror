@@ -65,6 +65,15 @@
         <activity
             android:name=".modules.welcome.ShowClauseActivity"
             android:theme="@style/activity_dialog_un" />
+
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="${UMENG_APPKEY}" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL}" />
+
     </application>
 
 </manifest>

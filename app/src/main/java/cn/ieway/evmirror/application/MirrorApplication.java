@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.hjq.toast.ToastUtils;
 import com.tamsiree.rxkit.RxTool;
+import com.umeng.commonsdk.UMConfigure;
 
 import cn.ieway.evmirror.util.AppFrontBackHelper;
 import cn.ieway.evmirror.webrtcclient.WebRtcClient;
@@ -24,6 +25,7 @@ public class MirrorApplication extends Application {
 
     public static WebRtcClient webRtcClient;
     public static MirrorApplication sMe;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -44,6 +46,11 @@ public class MirrorApplication extends Application {
         RxTool.init(application);
         ToastUtils.init(this);
         BaseConfig.init(application);
+
+        // 友盟SDK预初始化函数
+        // preInit预初始化函数耗时极少，不会影响App首次冷启动用户体验
+        UMConfigure.preInit(application, null, null);
+
     }
 
     /**

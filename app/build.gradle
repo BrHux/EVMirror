@@ -12,6 +12,90 @@ android {
         versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        flavorDimensions "default"
+        manifestPlaceholders = [
+                UMENG_APPKEY      : "5fe2c0f7d1c1ad39854e151c",
+        ]
+    }
+    productFlavors {
+        //ieway
+        ieway {
+            manifestPlaceholders = [
+                    UMENG_CHANNEL    : "ieway",
+            ]
+        }
+        //应用宝
+        tencent {
+            manifestPlaceholders = [
+                    UMENG_CHANNEL    : "tencent",
+            ]
+        }
+        //魅族
+        meizu {
+            manifestPlaceholders = [
+                    UMENG_CHANNEL    : "meizu",
+            ]
+        }
+        //OPPO
+        oppo {
+            manifestPlaceholders = [
+                    UMENG_CHANNEL    : "oppo",
+            ]
+        }
+        //VIVO
+        vivo {
+            manifestPlaceholders = [
+                    UMENG_CHANNEL    : "vivo",
+            ]
+        }
+        //qihu360
+        _360 {
+            manifestPlaceholders = [
+                    UMENG_CHANNEL    : "qihu360",
+            ]
+        }
+        //samsung
+        samsung {
+            manifestPlaceholders = [
+                    UMENG_CHANNEL    : "sumsung",
+            ]
+        }
+        //soguo
+        soguo {
+            manifestPlaceholders = [
+                    UMENG_CHANNEL    : "soguo",
+            ]
+        }
+        //百度
+        baidu {
+            manifestPlaceholders = [
+                    UMENG_CHANNEL    : "baidu",
+            ]
+        }
+        //联想
+        lenovo {
+            manifestPlaceholders = [
+                    UMENG_CHANNEL    : "lenovo",
+            ]
+        }
+        //阿里平台
+        ali {
+            manifestPlaceholders = [
+                    UMENG_CHANNEL    : "ali",
+            ]
+        }
+        //华为
+        huawei {
+            manifestPlaceholders = [
+                    UMENG_CHANNEL    : "huawei",
+            ]
+        }
+        //小米
+        xiaomi {
+            manifestPlaceholders = [
+                    UMENG_CHANNEL    : "xiaomi",
+            ]
+        }
     }
 
     buildTypes {
@@ -115,4 +199,14 @@ dependencies {
 
     //EventBus
     implementation 'org.greenrobot:eventbus:3.2.0'
+
+    // 友盟基础组件库（所有友盟业务SDK都依赖基础组件库）
+    // OAID目前为目前国内市场主流的Android Q设备标识，可根据需要选择。
+    implementation "com.umeng.umsdk:common:9.1.0" //（必选）
+    implementation "com.umeng.umsdk:asms:1.1.3" // asms包依赖(必选)
+    implementation "com.umeng.umsdk:crash:0.0.4" // native crash包依赖(必选)
+    implementation "com.umeng.umsdk:oaid_lenovo:1.0.0" // (可选)
+    implementation "com.umeng.umsdk:oaid_mi:1.0.0" // (可选)
+    implementation "com.umeng.umsdk:oaid_oppo:1.0.4" // (可选)
+    implementation "com.umeng.umsdk:oaid_vivo:1.0.0.1" // (可选)
 }
