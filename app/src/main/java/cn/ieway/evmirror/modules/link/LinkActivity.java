@@ -156,6 +156,7 @@ public class LinkActivity extends BaseActivity{
         intent.putExtra("url",url);
         startActivity(intent);
         dismissHUD();
+        onBackPressed();
         return true;
     }
 
