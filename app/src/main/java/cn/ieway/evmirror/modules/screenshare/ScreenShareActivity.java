@@ -53,6 +53,7 @@ public class ScreenShareActivity extends BaseActivity {
     private static final String AUDIO_CODEC_OPUS = "opus";
     private static final int CAPTURE_PERMISSION_REQUEST_CODE = 100;
     public static final int EXITE_ACTIVITY = 101;
+    private static int DISCONNECT_DIALOG = 1001;
     private int VIDEO_FPS = 24;
 
     private String socketUrl;
@@ -81,7 +82,7 @@ public class ScreenShareActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case -1:{
-                    showCancelAlertDialog(getString(R.string.remote_disconnect),getString(R.string.sure),0);
+                    disConnection(getString(R.string.remote_disconnect),getString(R.string.sure),0);
                     break;
                 }
             }
@@ -155,7 +156,7 @@ public class ScreenShareActivity extends BaseActivity {
     public void onMessageEvent(NetWorkMessageEvent event) {
         switch (event.creentState) {
             case DISCONNECTED: {
-                showCancelAlertDialog(getString(R.string.connection_disconnected_please_reconnect),getString(R.string.sure),0);
+                disConnection(getString(R.string.connection_disconnected_please_reconnect),getString(R.string.sure),0);
                 break;
             }
             default: {
@@ -188,6 +189,9 @@ public class ScreenShareActivity extends BaseActivity {
             startScreenCapture(mMediaProjectionPermissionResultData, mMediaProjectionPermissionResultCode);
         } else if (requestCode == EXITE_ACTIVITY && resultCode == EXITE_ACTIVITY) {
 
+        }
+        else if(requestCode == DISCONNECT_DIALOG){
+            finish();
         }
     }
 
@@ -381,6 +385,18 @@ public class ScreenShareActivity extends BaseActivity {
             }
         });
         rxDialogSure.show();
+    }
+
+
+    private int dialogCount = 0;
+    private void disConnection(String content,String sure, int type ){
+        if (dialogCount > 0) return;
+        dialogCount ++;
+        Intent intent = new Intent(this,DisConnectDialog.class);
+        intent.putExtra("content",content);
+        intent.putExtra("sure",sure);
+        intent.putExtra("type",type);
+        startActivityForResult(intent, DISCONNECT_DIALOG);
     }
 
 
