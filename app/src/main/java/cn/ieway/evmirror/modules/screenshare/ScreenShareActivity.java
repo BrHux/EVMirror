@@ -8,12 +8,16 @@ import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
@@ -29,6 +33,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.webrtc.EglBase;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import butterknife.BindView;
@@ -68,6 +73,20 @@ public class ScreenShareActivity extends BaseActivity {
     private PeerConnectionParameters params;
     private Intent serviceIntent;
     private String socketName = "";
+
+
+    private Handler jHandler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case -1:{
+                    showCancelAlertDialog(getString(R.string.remote_disconnect),getString(R.string.sure),0);
+                    break;
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +129,7 @@ public class ScreenShareActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        webRtcListener = new WebRtcListener();
+        webRtcListener = new WebRtcListener(jHandler);
         eglBaseContext = EglBase.create().getEglBaseContext();
         params = new PeerConnectionParameters(
                 true, true, false, displaySize.x, displaySize.y,
@@ -277,6 +296,7 @@ public class ScreenShareActivity extends BaseActivity {
      * @param type    1：退出界面；2：声音通道设置 3：打开权限详情页面；4：截屏请求 5:wifi断开连接
      */
     private void showSureCancelAlertDialog(String content, String cancel, String sure, int type) {
+        if (ScreenShareActivity.this.isFinishing() || ScreenShareActivity.this.isDestroyed()) return;
         RxDialogSureCancel rxDialogSureCancel = new RxDialogSureCancel(ScreenShareActivity.this);
         rxDialogSureCancel.setContent(content);
         rxDialogSureCancel.getContentView().setLinksClickable(true);
@@ -338,6 +358,7 @@ public class ScreenShareActivity extends BaseActivity {
      * @param type  0：退出投屏；
      */
     private void showCancelAlertDialog(String content,String sure, int type){
+        if (ScreenShareActivity.this.isFinishing() || ScreenShareActivity.this.isDestroyed()) return;
         RxDialogSure rxDialogSure = new RxDialogSure(ScreenShareActivity.this);
         rxDialogSure.setCancelable(false);
         rxDialogSure.setContent(content);
@@ -361,5 +382,6 @@ public class ScreenShareActivity extends BaseActivity {
         });
         rxDialogSure.show();
     }
+
 
 }

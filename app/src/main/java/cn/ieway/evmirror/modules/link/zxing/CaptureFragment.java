@@ -33,7 +33,11 @@ import androidx.fragment.app.Fragment;
 
 import com.tamsiree.rxkit.view.RxToast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.ieway.evmirror.R;
+import cn.ieway.evmirror.entity.DeviceBean;
 import cn.ieway.evmirror.modules.link.LinkActivity;
 import cn.ieway.evmirror.modules.link.fragment.WIfiFSearchragment;
 import cn.ieway.evmirror.modules.link.zxing.camera.CameraManager;
@@ -212,38 +216,49 @@ public class CaptureFragment extends Fragment implements OnCaptureCallback {
         Log.d(TAG, "onResultCallback:" + result);
         Fragment fragment = CaptureFragment.this.getParentFragment();
         boolean checked = false;
+        DeviceBean deviceBean = null;
+        try {
+            JSONObject jsonObject = new JSONObject(result);
+            String name = jsonObject.optString("serverName");
+            String url = jsonObject.optString("url");
+            if (name.isEmpty() || url.isEmpty()) return false;
+            if (!url.startsWith("ws://")) return false;
+            deviceBean = new DeviceBean(name,url);
 
-        if (!result.contains("ws://")) {
-            RxToast.error("无效二维码 : " + result);
-        } else {
-            try {
-                if (fragment == null) {
-                    Activity activity = CaptureFragment.this.getActivity();
-                    if (activity instanceof ScanningActivity) {
-                        checked = ((ScanningActivity) activity).checkConfiguration(result);
-                    }
-                }
-
-                if (fragment instanceof WIfiFSearchragment) {
-                    Activity linkActivity = fragment.getActivity();
-                    if (linkActivity instanceof LinkActivity) {
-                        checked = ((LinkActivity) linkActivity).checkConfiguration(result);
-                    }
-                }
-            } catch (Exception e) {
-
-            }
-            RxToast.info(result);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            RxToast.error("二维码解析失败：" + e.getMessage());
+            return false;
         }
-        if (!checked){
+
+        try {
+            if (fragment == null) {
+                Activity activity = CaptureFragment.this.getActivity();
+                if (activity instanceof ScanningActivity) {
+                    checked = ((ScanningActivity) activity).checkConfiguration(deviceBean);
+                }
+            }
+
+            if (fragment instanceof WIfiFSearchragment) {
+                Activity linkActivity = fragment.getActivity();
+                if (linkActivity instanceof LinkActivity) {
+                    checked = ((LinkActivity) linkActivity).checkConfiguration(deviceBean);
+                }
+            }
+        } catch (Exception e) {
+
+        }
+        RxToast.info(result);
+
+        if (!checked) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(mCaptureHelper != null) {
+                    if (mCaptureHelper != null) {
                         mCaptureHelper.restartPreviewAndDecode();
                     }
                 }
-            },2000);
+            }, 2000);
         }
         return checked;
     }

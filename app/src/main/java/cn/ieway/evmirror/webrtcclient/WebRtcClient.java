@@ -160,6 +160,7 @@ public class WebRtcClient {
                     rtcListener.onConnectError(-1, "连接主机失败 信息：" + ex.getMessage(), false);
                 }
             };
+            webSocket.setConnectionLostTimeout(10);
             webSocket.connectBlocking();
         } catch (InterruptedException e) {
             Log.d(TAG, "[WebRTCClient]  initSocket: Exception " + e.getMessage());

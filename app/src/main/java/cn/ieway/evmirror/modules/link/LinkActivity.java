@@ -19,6 +19,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.OnClick;
 import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.base.BaseActivity;
+import cn.ieway.evmirror.entity.DeviceBean;
 import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
 import cn.ieway.evmirror.modules.link.fragment.USBLinkFragment;
 import cn.ieway.evmirror.modules.link.fragment.WIfiFSearchragment;
@@ -130,10 +131,10 @@ public class LinkActivity extends BaseActivity{
 
     /**
      * 客户端连接预处理
-     * @param url
+     * @param bean
      */
-    public boolean checkConfiguration(String url){
-       return checkConfiguration("",url);
+    public boolean checkConfiguration(DeviceBean bean){
+       return checkConfiguration(bean.getName(),bean.getUrl());
     }
     /**
      * 客户端连接预处理
