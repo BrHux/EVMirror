@@ -29,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private long sysTimeTag;
     private String html;
-    private long defaultDelay = 2000;
+    private long defaultDelay = 3500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

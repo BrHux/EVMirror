@@ -65,7 +65,8 @@
                 android:id="@+id/tv_text_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="我已阅读并同意服务协议与隐私政策。"
+                android:textSize="@dimen/sp_14"
+                android:text=""
                 android:textColor="#333"/>
         </LinearLayout>
 
