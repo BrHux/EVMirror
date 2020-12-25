@@ -390,6 +390,7 @@ public class ScreenShareActivity extends BaseActivity {
 
     private int dialogCount = 0;
     private void disConnection(String content,String sure, int type ){
+        if (ScreenShareActivity.this.isFinishing() || ScreenShareActivity.this.isDestroyed()) return;
         if (dialogCount > 0) return;
         dialogCount ++;
         Intent intent = new Intent(this,DisConnectDialog.class);
