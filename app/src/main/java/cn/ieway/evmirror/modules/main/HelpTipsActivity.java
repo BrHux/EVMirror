@@ -3,6 +3,8 @@ package cn.ieway.evmirror.modules.main;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -25,6 +27,9 @@ import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.base.BaseActivity;
 import cn.ieway.evmirror.modules.other.WebViewActivity;
 import cn.ieway.evmirror.modules.welcome.ShowClauseActivity;
+import cn.ieway.evmirror.util.CommonUtils;
+
+import static cn.ieway.evmirror.application.MirrorApplication.sMe;
 
 public class HelpTipsActivity extends BaseActivity {
 
@@ -93,7 +98,9 @@ public class HelpTipsActivity extends BaseActivity {
                 break;
             }
             case R.id.tv_download_url: {
-                ToastUtils.show("iewayaskdj");
+                // 得到剪贴板管理器
+                CommonUtils.copyContentToClipboard(getString(R.string.app_download_url),sMe);
+                ToastUtils.show("下载地址已复制到剪切板。");
                 break;
             }
             default:
