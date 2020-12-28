@@ -43,12 +43,10 @@ public class WebRtcListener implements RtcListener {
 
     @Override
     public void onRemoveRemoteStream(int endPoint) {
-        Log.d("huangx", "onRemoveRemoteStream: ");
     }
 
     @Override
     public void onConnectError(int code, String reason, boolean remote) {
-        Log.d("huangx", "onConnectError: "+reason);
         Message message = Message.obtain();
         message.what = -1;
         jHandler.sendMessage(message);

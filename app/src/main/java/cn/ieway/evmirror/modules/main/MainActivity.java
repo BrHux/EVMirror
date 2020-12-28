@@ -63,7 +63,6 @@ import cn.ieway.evmirror.util.NetWorkUtil;
 import static cn.ieway.evmirror.application.MirrorApplication.sMe;
 
 public class MainActivity extends BaseActivity {
-    private static String TAG = "huangx";
 
     @BindView(R.id.iv_about)
     ImageView mAbout;
