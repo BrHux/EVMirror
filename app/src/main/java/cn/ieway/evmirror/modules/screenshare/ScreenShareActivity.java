@@ -1,8 +1,10 @@
 package cn.ieway.evmirror.modules.screenshare;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
@@ -11,6 +13,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.PowerManager;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -46,15 +51,17 @@ import cn.ieway.evmirror.util.CommonUtils;
 import cn.ieway.evmirror.webrtcclient.WebRtcClient;
 import cn.ieway.evmirror.webrtcclient.entity.PeerConnectionParameters;
 
+import static cn.ieway.evmirror.application.MirrorApplication.sMe;
 import static cn.ieway.evmirror.application.MirrorApplication.webRtcClient;
 
 public class ScreenShareActivity extends BaseActivity {
     private static final String VIDEO_CODEC_VP9 = "VP9";
+    private static final String VIDEO_CODEC_H264 = "H264";
     private static final String AUDIO_CODEC_OPUS = "opus";
     private static final int CAPTURE_PERMISSION_REQUEST_CODE = 100;
     public static final int EXITE_ACTIVITY = 101;
     private static int DISCONNECT_DIALOG = 1001;
-    private int VIDEO_FPS = 24;
+    private int VIDEO_FPS = 20;
 
     private String socketUrl;
     private Point displaySize;
@@ -92,9 +99,9 @@ public class ScreenShareActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //        屏幕常亮
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-//                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //  屏幕常亮
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_screen_share);
     }
@@ -133,11 +140,13 @@ public class ScreenShareActivity extends BaseActivity {
         webRtcListener = new WebRtcListener(jHandler);
         eglBaseContext = EglBase.create().getEglBaseContext();
         params = new PeerConnectionParameters(
-                true, true, false, displaySize.x, displaySize.y,
-                VIDEO_FPS, 1, VIDEO_CODEC_VP9, true, 1,
+                true, true, false, sMe.screenWidth, sMe.screenHeight,
+                sMe.getVideo_fps(), 1, VIDEO_CODEC_H264, true, 1,
                 AUDIO_CODEC_OPUS, true);
         createScreenCaptureIntent();
     }
+
+
 
     @Override
     protected void onStart() {
@@ -147,6 +156,7 @@ public class ScreenShareActivity extends BaseActivity {
 
     @Override
     protected void onStop() {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onStop();
         EventBus.getDefault().removeAllStickyEvents();
         EventBus.getDefault().unregister(this);
@@ -172,6 +182,7 @@ public class ScreenShareActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        Settings.System.putInt(sMe.getContentResolver(),Settings.Global.WIFI_SLEEP_POLICY,Settings.Global.WIFI_SLEEP_POLICY_NEVER_WHILE_PLUGGED);
         if (webRtcClient != null) {
             webRtcClient.onDestroy();
             webRtcClient = null;
@@ -269,6 +280,9 @@ public class ScreenShareActivity extends BaseActivity {
 
     public void startScreenCapture(Intent mMediaProjectionPermissionResultData, int mMediaProjectionPermissionResultCode) {
         if (mMediaProjectionPermissionResultCode == Activity.RESULT_OK && mMediaProjectionPermissionResultData != null) {
+
+            Settings.System.putInt(sMe.getContentResolver(),Settings.Global.WIFI_SLEEP_POLICY,Settings.Global.WIFI_SLEEP_POLICY_NEVER);
+
             webRtcClient = new WebRtcClient(webRtcListener, socketUrl, params, eglBaseContext, this);
             webRtcClient.initLocalMs();
             if (webRtcClient != null) {
@@ -280,6 +294,7 @@ public class ScreenShareActivity extends BaseActivity {
                 } else {
                     mContext.startService(serviceIntent);
                 }
+
                 mTips.setText(getString(R.string.screen_mirror));
             } else {
                 RxToast.error(getString(R.string.retry));
@@ -387,17 +402,22 @@ public class ScreenShareActivity extends BaseActivity {
         rxDialogSure.show();
     }
 
-
     private int dialogCount = 0;
     private void disConnection(String content,String sure, int type ){
         if (ScreenShareActivity.this.isFinishing() || ScreenShareActivity.this.isDestroyed()) return;
         if (dialogCount > 0) return;
         dialogCount ++;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            RxToast.warning(content,4000);
+        }
+
         Intent intent = new Intent(this,DisConnectDialog.class);
         intent.putExtra("content",content);
         intent.putExtra("sure",sure);
         intent.putExtra("type",type);
         startActivityForResult(intent, DISCONNECT_DIALOG);
+
     }
 
 

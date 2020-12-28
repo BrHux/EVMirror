@@ -5,9 +5,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Paint;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
+import android.net.NetworkSpecifier;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WifiNetworkSpecifier;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PatternMatcher;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 
 import com.hjq.permissions.OnPermissionCallback;
@@ -256,6 +265,13 @@ public class MainActivity extends BaseActivity {
         rxDialogSureCancel.setCancelListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS)); //直接进入手机中的wifi网络设置界面
+                    rxDialogSureCancel.cancel();
+                    return;
+                }
+
                 //获取wifi管理服务
                 WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                 //获取wifi开关状态
@@ -287,6 +303,7 @@ public class MainActivity extends BaseActivity {
         }
         rxDialogSureCancel.show();
     }
+
 
     private void umInit() {
         //初始化组件化基础库, 所有友盟业务SDK都必须调用此初始化接口。

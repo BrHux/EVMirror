@@ -3,6 +3,7 @@ package cn.ieway.evmirror.webrtcclient;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjection.Callback;
 import android.util.Log;
@@ -110,6 +111,7 @@ public class WebRtcClient {
         pcConstraints.optional.add(new MediaConstraints.KeyValuePair("DtlsSrtpKeyAgreement", "true"));
         pcConstraints.optional.add(new MediaConstraints.KeyValuePair("enable_rtp_data_channel", "false"));
         pcConstraints.optional.add(new MediaConstraints.KeyValuePair("enable_dtls_srtp", "true"));
+        pcConstraints.optional.add(new MediaConstraints.KeyValuePair("googCpuOveruseDetection", "false"));
 
         createPeerConnectionFactory();
         initSocket(host);
@@ -191,7 +193,7 @@ public class WebRtcClient {
 
     public void initLocalMs() {
         localMS = peerConnectionFactory.createLocalMediaStream("ARDAMS");
-        audioSource = peerConnectionFactory.createAudioSource(new MediaConstraints());
+        audioSource = peerConnectionFactory.createAudioSource(pcConstraints);
         audioTrack = peerConnectionFactory.createAudioTrack("ARDAMSa0", audioSource);
         rtcListener.onLocalStream(localMS, false);
     }
@@ -206,7 +208,7 @@ public class WebRtcClient {
 
         if (pcParams.audioCallEnabled && audio) {
             if (audioSource == null){
-                audioSource = peerConnectionFactory.createAudioSource(new MediaConstraints());
+                audioSource = peerConnectionFactory.createAudioSource(pcConstraints);
                 audioTrack = peerConnectionFactory.createAudioTrack("ARDAMSa0", audioSource);
             }
 
@@ -468,6 +470,7 @@ public class WebRtcClient {
                     this.pc = peerConnectionFactory.createPeerConnection(iceServers, this);
                     this.id = id;
                     this.endPoint = endPoint;
+//                    pc.setBitrate(8*1024*1024,10*1024*1024,12*1024*1024);
                     pc.addStream(localMS); //, new MediaConstraints()
                     rtcListener.onStatusChanged("CONNECTING");
                 } catch (Exception e) {
@@ -588,7 +591,7 @@ public class WebRtcClient {
         }
 
         if (pcParams.audioCallEnabled) {
-            audioSource = peerConnectionFactory.createAudioSource(new MediaConstraints());
+            audioSource = peerConnectionFactory.createAudioSource(pcConstraints);
             AudioTrack audioTrack = peerConnectionFactory.createAudioTrack("ARDAMSa0", audioSource);
             localMS.addTrack(audioTrack);
         }
@@ -631,14 +634,14 @@ public class WebRtcClient {
             screenCapturerAndroid = getScreen(mMediaProjectionPermissionResultData, mMediaProjection);
             videoSource = peerConnectionFactory.createVideoSource(screenCapturerAndroid.isScreencast());
             screenCapturerAndroid.initialize(surfaceTextureHelper, ctx, videoSource.getCapturerObserver());
-            screenCapturerAndroid.startCapture(mWidth, mHeight, pcParams.videoFps - 5);
+            screenCapturerAndroid.startCapture(mWidth, mHeight, pcParams.videoFps);
             videoTrack = peerConnectionFactory.createVideoTrack("ARDAMSv0", videoSource);
             localMS.addTrack(videoTrack);
         }
 
 
         if (pcParams.audioCallEnabled) {
-            audioSource = peerConnectionFactory.createAudioSource(new MediaConstraints());
+            audioSource = peerConnectionFactory.createAudioSource(pcConstraints);
 //            localMS.addTrack(peerConnectionFactory.createAudioTrack("ARDAMSa0", audioSource));
         }
         rtcListener.onLocalStream(localMS, false);
@@ -703,6 +706,12 @@ public class WebRtcClient {
             }
         }
         return null;
+    }
+
+
+    public void changeCaptureFormat(int width,int height,int frame){
+        if (screenCapturerAndroid == null) return;
+        screenCapturerAndroid.changeCaptureFormat(width,height,frame);
     }
 
 

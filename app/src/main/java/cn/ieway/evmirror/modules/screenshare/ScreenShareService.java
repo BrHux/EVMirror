@@ -7,17 +7,26 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 
 import java.util.Objects;
 
 import cn.ieway.evmirror.R;
+import cn.ieway.evmirror.application.MirrorApplication;
 import cn.ieway.evmirror.util.LogUtil;
 
+import static cn.ieway.evmirror.application.MirrorApplication.sMe;
 import static cn.ieway.evmirror.application.MirrorApplication.webRtcClient;
 
 public class ScreenShareService extends Service {
@@ -26,6 +35,11 @@ public class ScreenShareService extends Service {
     Intent mResultData;
     MediaProjection mMediaProjection;
     MediaProjectionManager mMediaProjectionManager;
+    private NotificationManager mNotificationManager;
+    private NotificationChannel notificationChannel;
+    private static final int CODE_NOTIFICATION_1 = android.os.Process.myPid();
+    private WindowManager windowManager;
+    private Point mPoint = new Point();
 
     public ScreenShareService() {
     }
@@ -44,12 +58,16 @@ public class ScreenShareService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        setForeground();
+        createCustomNotification();
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        createNotificationChannel("");
+//        createNotificationChannel("");
         if (intent != null) {
             mResultCode = intent.getIntExtra("code", -1);
             mResultData = intent.getParcelableExtra("data");
@@ -70,6 +88,21 @@ public class ScreenShareService extends Service {
             }
         }
         return START_STICKY;
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (windowManager == null) return;
+        Point outSize = new Point();
+        windowManager.getDefaultDisplay().getRealSize(outSize);
+        if (outSize.equals(mPoint)) return;
+        if (webRtcClient == null) return;
+
+        int width = outSize.x > outSize.y ? sMe.screenHeight: sMe.screenWidth;
+        int height = outSize.x > outSize.y ? sMe.screenWidth : sMe.screenHeight;
+
+        webRtcClient.changeCaptureFormat(width, height, sMe.getVideo_fps());
     }
 
     @Override
@@ -106,5 +139,63 @@ public class ScreenShareService extends Service {
         notification.defaults = Notification.DEFAULT_SOUND; //设置为默认的声音
         startForeground(110, notification);
 
+    }
+
+
+    private void setForeground() {
+        initNotificationManager();
+        //createCustomNotification(BaseApplication.isCapturing());
+    }
+
+    private void initNotificationManager() {
+
+        if (mNotificationManager == null) {
+            mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+    }
+
+
+    private void destoryCustomNotification() {
+        mNotificationManager.cancel(CODE_NOTIFICATION_1);
+    }
+
+    public void createCustomNotification() {
+        //先刪除之前的通知
+        mNotificationManager.cancel(CODE_NOTIFICATION_1);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getChannelId())
+                .setSmallIcon(R.mipmap.ic_logo)
+                .setContentTitle("EV投屏")
+                .setContentIntent(null)
+                .setPriority(Notification.PRIORITY_MAX)
+                .setContentText("投屏正在投屏中...");
+
+        Notification notification = builder.build();
+        notification.flags |= Notification.FLAG_ONGOING_EVENT | Notification.FLAG_AUTO_CANCEL;
+        //打开/更新通知
+        mNotificationManager.notify(CODE_NOTIFICATION_1, notification);
+        startForeground(CODE_NOTIFICATION_1, notification);
+    }
+
+    public String getChannelId() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "channel01";
+            CharSequence channelName = "服务";
+            String description = "维护投屏功能的稳定性";
+            int channelImportance = NotificationManager.IMPORTANCE_LOW;
+
+            notificationChannel = new NotificationChannel(channelId, channelName, channelImportance);
+            // 设置描述 最长30字符
+            notificationChannel.setDescription(description);
+            // 设置显示模式
+            notificationChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+            mNotificationManager.createNotificationChannel(notificationChannel);
+
+            notificationChannel = mNotificationManager.getNotificationChannel(channelId);
+
+            //  Log.d(TAG, "[GuarderService] createNotificationChannel: Importance = " + notificationChannel.getImportance());
+            return channelId;
+        } else {
+            return null;
+        }
     }
 }

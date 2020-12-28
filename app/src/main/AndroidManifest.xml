@@ -16,6 +16,8 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
+
     <application
         android:name=".application.MirrorApplication"
         android:allowBackup="false"
@@ -26,8 +28,14 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".modules.screenshare.DisConnectDialog"
-            android:theme="@style/activity_dialog"></activity>
+        <service
+            android:name=".modules.screenshare.GrardService"
+            android:enabled="true"
+            android:exported="false"></service>
+
+        <activity
+            android:name=".modules.screenshare.DisConnectDialog"
+            android:theme="@style/activity_dialog" />
 
         <service
             android:name=".modules.screenshare.ScreenShareService"
@@ -40,7 +48,8 @@
             android:theme="@style/activity_dialog" />
         <activity
             android:name=".modules.screenshare.ScreenShareActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity
             android:name=".modules.main.ScanningActivity"
             android:screenOrientation="portrait" />
@@ -56,7 +65,8 @@
         <activity android:name=".modules.link.LinkActivity" />
         <activity
             android:name=".modules.welcome.SplashActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
