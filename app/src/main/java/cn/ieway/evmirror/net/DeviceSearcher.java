@@ -32,14 +32,14 @@ public abstract class DeviceSearcher extends Thread {
     private static final String TAG = DeviceSearcher.class.getSimpleName();
 
     private static final int DEVICE_FIND_PORT = /*5679*/5003; //需要扫描的端口
-    private static final int RECEIVE_TIME_OUT = 1000; // 接收超时时间
+    private static final int RECEIVE_TIME_OUT = 2000; // 接收超时时间
     private static final int TIMER_TIME_OUT = 2000; // 计时器首次执行时间
     private static final int RESPONSE_DEVICE_MAX = 100; // 响应设备的最大个数，防止UDP广播攻击
     private static final int SEND_TIME_MAX = 2; // 广播发送次数
     private DatagramSocket hostSocket;
     private Set<DeviceBean> mDeviceSet;
     private String ipAddress = ""; //本机ip地址
-    int[] pionts = new int[]{DEVICE_FIND_PORT, 5680, 5681, 5682, 5683, 5684, 5685, 5686, 5687, 5688, 5689};//本地绑定端口
+    int[] pionts = new int[]{DEVICE_FIND_PORT, /*5680, 5681, 5682, 5683, 5684, 5685, 5686, 5687, 5688, 5689*/};//本地绑定端口
     Gson gson;
     private static final String SERVER_BROADCAST = "ev_screen_share_server_broadcast";
 
@@ -220,7 +220,6 @@ public abstract class DeviceSearcher extends Thread {
         byte[] data = new byte[dataLen];
         System.arraycopy(pack.getData(), pack.getOffset(), data, 0, dataLen);//获取有效data
         String dataStr = new String(data);
-        Log.d(TAG, "parsePack: "+dataStr);
         BroadCastBean bean = gson.fromJson(new String(data), BroadCastBean.class);
 
 //        if (!bean.getMsg_type().equals(SERVER_BROADCAST)) {
@@ -231,6 +230,7 @@ public abstract class DeviceSearcher extends Thread {
         device.setName(bean.getName());
         device.setUrl(bean.getUrl());
 
+        Log.d(TAG, "parsePack: "+device.getName());
         if (device != null) {
             mDeviceSet.add(device);
             lastAddTime = System.currentTimeMillis();
