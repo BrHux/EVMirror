@@ -24,7 +24,6 @@ import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -33,11 +32,15 @@ import androidx.fragment.app.Fragment;
 
 import com.tamsiree.rxkit.view.RxToast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.ieway.evmirror.R;
-import cn.ieway.evmirror.entity.DeviceBean;
+import cn.ieway.evmirror.entity.DeviceBeanMult;
 import cn.ieway.evmirror.modules.link.LinkActivity;
 import cn.ieway.evmirror.modules.link.fragment.WIfiFSearchragment;
 import cn.ieway.evmirror.modules.link.zxing.camera.CameraManager;
@@ -216,20 +219,43 @@ public class CaptureFragment extends Fragment implements OnCaptureCallback {
         Log.d(TAG, "onResultCallback:" + result);
         Fragment fragment = CaptureFragment.this.getParentFragment();
         boolean checked = false;
-        DeviceBean deviceBean = null;
+        DeviceBeanMult deviceBean = null;
+
+//        RxToast.info(result,5000);
         try {
             JSONObject jsonObject = new JSONObject(result);
             String name = jsonObject.optString("serverName");
-            String url = jsonObject.optString("url");
-            if (name.isEmpty() || url.isEmpty()) return false;
-            if (!url.startsWith("ws://")) return false;
-            deviceBean = new DeviceBean(name,url);
+            String urls = jsonObject.optString("url");
+            if (name.isEmpty() || urls.isEmpty()) {
+                scanContinue();
+                return false;
+            }
+
+            //地址数组
+            JSONArray array = new JSONArray(urls);
+            List<String> arrayList = new ArrayList<>();
+            for (int i = 0;i<array.length();i++){
+                String u = array.optString(i);
+                if (!u.isEmpty() && u.startsWith("ws://")){
+                    arrayList.add(u);
+                }
+                Log.d(TAG, "onResultCallback: array:"+array.get(i));
+            }
+
+            if (arrayList.size() == 0) {
+                scanContinue();
+                return false;
+            }
+
+            deviceBean = new DeviceBeanMult(name,arrayList);
 
         } catch (JSONException e) {
             e.printStackTrace();
             RxToast.error("二维码解析失败：" + e.getMessage());
+            scanContinue();
             return false;
         }
+
 
         try {
             if (fragment == null) {
@@ -248,19 +274,23 @@ public class CaptureFragment extends Fragment implements OnCaptureCallback {
         } catch (Exception e) {
 
         }
-        RxToast.info(result);
 
         if (!checked) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (mCaptureHelper != null) {
-                        mCaptureHelper.restartPreviewAndDecode();
-                    }
-                }
-            }, 2000);
+            scanContinue();
         }
         return checked;
+    }
+
+    public void scanContinue() {
+//        RxToast.info("扫码失败");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mCaptureHelper != null) {
+                    mCaptureHelper.restartPreviewAndDecode();
+                }
+            }
+        }, 1000);
     }
 
 }

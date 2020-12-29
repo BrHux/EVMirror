@@ -15,15 +15,24 @@ import com.tamsiree.rxkit.view.RxToast;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.java_websocket.handshake.ServerHandshake;
+
+import java.net.URI;
+import java.util.List;
 
 import butterknife.OnClick;
 import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.base.BaseActivity;
 import cn.ieway.evmirror.entity.DeviceBean;
+import cn.ieway.evmirror.entity.DeviceBeanMult;
 import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
 import cn.ieway.evmirror.modules.link.fragment.USBLinkFragment;
 import cn.ieway.evmirror.modules.link.fragment.WIfiFSearchragment;
 import cn.ieway.evmirror.modules.screenshare.ScreenShareActivity;
+import cn.ieway.evmirror.util.NetWorkUtil;
+import cn.ieway.evmirror.webrtcclient.JWebSocketClient;
+
+import static cn.ieway.evmirror.application.MirrorApplication.sMe;
 
 public class LinkActivity extends BaseActivity{
     private SmartTabLayout smartTabLayout = null;
@@ -131,11 +140,66 @@ public class LinkActivity extends BaseActivity{
 
     /**
      * 客户端连接预处理
-     * @param bean
+     * @param beanMult
      */
-    public boolean checkConfiguration(DeviceBean bean){
-       return checkConfiguration(bean.getName(),bean.getUrl());
+    public boolean checkConfiguration(DeviceBeanMult beanMult){
+//        showHUD(true, "正在检测连接配置.." + beanMult.getName());
+        if (NetWorkUtil.getNetWorkState(sMe) != 1){
+            RxToast.warning("请打开并连接WIFI");
+            dismissHUD();
+            return false;
+        }
+
+        if (beanMult == null || beanMult.getUrl().size() == 0) {
+            RxToast.error("设备信息未识别请重试！");
+            dismissHUD();
+            return false;
+        }
+
+        checkSocket(beanMult.getName(),beanMult.getUrl(),0);
+
+       return true;
     }
+
+
+    private void checkSocket(String name , List<String> urls, int index){
+        if(index >= urls.size()) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    RxToast.info("连接失败，请重试。");
+                    onBackPressed();
+                }
+            });
+
+            return;
+        }
+        String url = urls.get(index);
+        try {
+            JWebSocketClient jWebSocketClient = new JWebSocketClient(URI.create(url)){
+                @Override
+                public void onOpen(ServerHandshake handshakedata) {
+                    super.onOpen(handshakedata);
+                    checkConfiguration(name,url);
+                    this.close();
+                }
+
+                @Override
+                public void onError(Exception ex) {
+                    super.onError(ex);
+                    ex.printStackTrace();
+                    this.close();
+                    checkSocket(name,urls,index+1);
+                }
+            };
+            jWebSocketClient.setConnectionLostTimeout(3);
+            jWebSocketClient.connectBlocking();
+        }catch (Exception e){
+            checkSocket(name,urls,index+1);
+        }
+    }
+
+
     /**
      * 客户端连接预处理
      * @param url
@@ -146,7 +210,13 @@ public class LinkActivity extends BaseActivity{
             return false;
         }
 
-        showHUD(true,"正在检测连接配置..");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showHUD(true,"正在检测连接配置..");
+            }
+        });
+
         if(url == null || url.isEmpty()){
             RxToast.error("设备信息识别异常请重试！");
             return false;
