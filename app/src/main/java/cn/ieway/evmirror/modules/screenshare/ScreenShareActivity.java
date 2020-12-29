@@ -408,7 +408,7 @@ public class ScreenShareActivity extends BaseActivity {
         if (dialogCount > 0) return;
         dialogCount ++;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && sMe.isBackGround()){
             RxToast.warning(content,4000);
         }
 
