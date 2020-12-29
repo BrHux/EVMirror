@@ -221,7 +221,6 @@ public class CaptureFragment extends Fragment implements OnCaptureCallback {
         boolean checked = false;
         DeviceBeanMult deviceBean = null;
 
-//        RxToast.info(result,5000);
         try {
             JSONObject jsonObject = new JSONObject(result);
             String name = jsonObject.optString("serverName");

@@ -65,7 +65,7 @@
                 android:id="@+id/tv_text_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp_14"
+                android:textSize="14sp"
                 android:text=""
                 android:textColor="#333"/>
         </LinearLayout>
@@ -78,7 +78,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_50"
+            android:layout_height="@dimen/dp_45"
             android:paddingTop="@dimen/dp_10"
             android:gravity="center"
             android:orientation="horizontal">
@@ -87,7 +87,7 @@
                 android:id="@+id/tv_exit"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/dp_10"
+                android:layout_marginHorizontal="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/shap_lightblue_10dp_bg"
                 android:gravity="center"
@@ -99,7 +99,7 @@
                 android:id="@+id/tv_agree"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/dp_10"
+                android:layout_marginHorizontal="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/shap_blue_10dp_bg"
                 android:gravity="center"

@@ -3,6 +3,8 @@ package cn.ieway.evmirror.modules.link;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -34,7 +36,7 @@ import cn.ieway.evmirror.webrtcclient.JWebSocketClient;
 
 import static cn.ieway.evmirror.application.MirrorApplication.sMe;
 
-public class LinkActivity extends BaseActivity{
+public class LinkActivity extends AppCompatActivity {
     private SmartTabLayout smartTabLayout = null;
 
     private ViewPager viewPager;
@@ -49,7 +51,7 @@ public class LinkActivity extends BaseActivity{
         initView();
     }
 
-    @Override
+
     protected void  initView() {
         mTabTitles[0] = "WiFi连接";
         mTabTitles[1] = "USB连接";
@@ -64,11 +66,6 @@ public class LinkActivity extends BaseActivity{
         viewPager.setAdapter(pagerAdapter);
         //将ViewPager和TabLayout绑定
         smartTabLayout.setViewPager(viewPager);
-    }
-
-    @Override
-    protected void initData() {
-
     }
 
     @Override
@@ -146,17 +143,20 @@ public class LinkActivity extends BaseActivity{
 //        showHUD(true, "正在检测连接配置.." + beanMult.getName());
         if (NetWorkUtil.getNetWorkState(sMe) != 1){
             RxToast.warning("请打开并连接WIFI");
-            dismissHUD();
             return false;
         }
 
         if (beanMult == null || beanMult.getUrl().size() == 0) {
             RxToast.error("设备信息未识别请重试！");
-            dismissHUD();
             return false;
         }
 
-        checkSocket(beanMult.getName(),beanMult.getUrl(),0);
+        if(beanMult.getUrl().size() == 1){
+            checkConfiguration(beanMult.getName(),beanMult.getUrl().get(0));
+        }else {
+            checkSocket(beanMult.getName(),beanMult.getUrl(),0);
+        }
+
 
        return true;
     }
@@ -168,10 +168,9 @@ public class LinkActivity extends BaseActivity{
                 @Override
                 public void run() {
                     RxToast.info("连接失败，请重试。");
-                    onBackPressed();
+                    finish();
                 }
             });
-
             return;
         }
         String url = urls.get(index);
@@ -183,6 +182,8 @@ public class LinkActivity extends BaseActivity{
                     checkConfiguration(name,url);
                     this.close();
                 }
+
+
 
                 @Override
                 public void onError(Exception ex) {
@@ -210,13 +211,6 @@ public class LinkActivity extends BaseActivity{
             return false;
         }
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                showHUD(true,"正在检测连接配置..");
-            }
-        });
-
         if(url == null || url.isEmpty()){
             RxToast.error("设备信息识别异常请重试！");
             return false;
@@ -226,8 +220,7 @@ public class LinkActivity extends BaseActivity{
         intent.putExtra("name",name);
         intent.putExtra("url",url);
         startActivity(intent);
-        dismissHUD();
-        onBackPressed();
+        finish();
         return true;
     }
 

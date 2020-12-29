@@ -74,7 +74,12 @@ public class ScanningActivity extends BaseActivity {
             return false;
         }
 
-        checkSocket(beanMult.getName(),beanMult.getUrl(),0);
+        if(beanMult.getUrl().size() == 1){
+            startShare(new DeviceBean(beanMult.getName(),beanMult.getUrl().get(0)));
+        }else {
+            checkSocket(beanMult.getName(),beanMult.getUrl(),0);
+        }
+
 
         return true;
     }
@@ -85,7 +90,7 @@ public class ScanningActivity extends BaseActivity {
                 @Override
                 public void run() {
                     RxToast.info("连接失败，请重试。");
-                    onBackPressed();
+                    finish();
                 }
             });
 

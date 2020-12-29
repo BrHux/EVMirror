@@ -99,7 +99,7 @@ public class HelpTipsActivity extends BaseActivity {
             }
             case R.id.tv_download_url: {
                 // 得到剪贴板管理器
-                CommonUtils.copyContentToClipboard(getString(R.string.app_download_url),sMe);
+                CommonUtils.copyContentToClipboard(getString(R.string.pc_download_url),sMe);
                 ToastUtils.show("下载地址已复制到剪切板。");
                 break;
             }
