@@ -4,7 +4,7 @@
 
     <string name="privacy_policy">https://www.ieway.cn/privacy-policy-mobile.html</string>
     <string name="service_agreement">https://www.ieway.cn/user-agreement-mobile.html</string>
-    <string name="app_download_url">https://www.ieway.cn/</string>
-    <string name="pc_download_url">https://www.ieway.cn/</string>
+    <string name="app_download_url">https://www.ieway.cn/evscreenmirror.html</string>
+    <string name="pc_download_url">https://www.ieway.cn/evscreenmirror.html</string>
 
 </resources>
