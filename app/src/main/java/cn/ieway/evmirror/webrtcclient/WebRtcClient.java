@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.ieway.evmirror.webrtcclient.entity.DataChannelBean;
 import cn.ieway.evmirror.webrtcclient.entity.MessageBean;
@@ -198,16 +200,16 @@ public class WebRtcClient {
         rtcListener.onLocalStream(localMS, false);
     }
 
-    public boolean setAudioTrack(boolean audio){
+    public boolean setAudioTrack(boolean audio) {
         List<AudioTrack> audioTracks = localMS.audioTracks;
-        if (audioTracks.size()>0){
-            for (AudioTrack track:audioTracks){
+        if (audioTracks.size() > 0) {
+            for (AudioTrack track : audioTracks) {
                 localMS.removeTrack(track);
             }
         }
 
         if (pcParams.audioCallEnabled && audio) {
-            if (audioSource == null){
+            if (audioSource == null) {
                 audioSource = peerConnectionFactory.createAudioSource(pcConstraints);
                 audioTrack = peerConnectionFactory.createAudioTrack("ARDAMSa0", audioSource);
             }
@@ -271,15 +273,7 @@ public class WebRtcClient {
 
         if (entity == null) return;
         if (entity.getType().equals("responce")) {
-            if (!peers.containsKey(from)) {
-                int endPoint = findEndPoint();
-                if (endPoint != MAX_PEER) {
-                    Peer peer = addPeer(from, endPoint);
-                    commandMap.get("owner").execute(from, null);
-                }
-            } else {
-                commandMap.get("owner").execute(from, null);
-            }
+            setResponse(from);
             return;
         }
         if (entity.getType().equals("sdp")) {
@@ -313,8 +307,29 @@ public class WebRtcClient {
             }
             return;
         }
+    }
 
-
+    private void setResponse(String from) {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    if (!peers.containsKey(from)) {
+                        int endPoint = findEndPoint();
+                        if (endPoint != MAX_PEER) {
+                            Peer peer = addPeer(from, endPoint);
+                            commandMap.get("owner").execute(from, null);
+                        }
+                    } else {
+                        commandMap.get("owner").execute(from, null);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        timer.schedule(task, 1000);
     }
 
     public void requestShare() {
@@ -709,9 +724,9 @@ public class WebRtcClient {
     }
 
 
-    public void changeCaptureFormat(int width,int height,int frame){
+    public void changeCaptureFormat(int width, int height, int frame) {
         if (screenCapturerAndroid == null) return;
-        screenCapturerAndroid.changeCaptureFormat(width,height,frame);
+        screenCapturerAndroid.changeCaptureFormat(width, height, frame);
     }
 
 
