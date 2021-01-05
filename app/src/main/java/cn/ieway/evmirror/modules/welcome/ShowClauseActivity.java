@@ -66,7 +66,7 @@ public class ShowClauseActivity extends AppCompatActivity implements View.OnClic
         tv_text_content.setText(
                 "欢迎使用EV投屏 ！\n" +
                         "\n" +
-                        "为了保障EV录屏的正常运行，我们需要以下权限。请放心，我们会严格保护您的隐私。\n" +
+                        "为了保障EV投屏的正常运行，我们需要以下权限。请放心，我们会严格保护您的隐私。\n" +
                         "\n" +
                         "访问网络、获取网络状态、读取系统日志，用于版本升级及崩溃日志上报；\n" +
 //                        "SD卡读写数据功能，用于文件储存；\n" +
