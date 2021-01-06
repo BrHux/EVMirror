@@ -33,8 +33,8 @@ public class MirrorApplication extends Application {
     public static MirrorApplication sMe;
     private int video_fps = 30;
     private WindowManager windowManager;
-    public int screenWidth = 720;
-    public int screenHeight = 1280;
+    public int screenWidth = 1080;
+    public int screenHeight = 1920;
 
     public int getVideo_fps() {
         return video_fps;
@@ -58,23 +58,26 @@ public class MirrorApplication extends Application {
         windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getRealSize(mPoint);
 
-        if(mPoint.x>mPoint.y){
-            if(mPoint.y > 720){
-                screenHeight = 720;
-                screenWidth = mPoint.x*screenHeight/mPoint.y;
-                return;
-            }
-            screenWidth = 720;
-            screenHeight = mPoint.x*screenWidth/mPoint.y;
-        }else {
-            if(mPoint.x > 720){
-                screenWidth = 720;
-                screenHeight = mPoint.y*screenWidth/mPoint.x;
-                return;
-            }
-            screenHeight = 720;
-            screenWidth = mPoint.y*screenHeight/mPoint.x;
-        }
+        screenWidth = mPoint.x;
+        screenHeight = mPoint.y;
+
+//        if(mPoint.x>mPoint.y){
+//            if(mPoint.y > 720){
+//                screenHeight = 720;
+//                screenWidth = mPoint.x*screenHeight/mPoint.y;
+//                return;
+//            }
+//            screenWidth = 720;
+//            screenHeight = mPoint.x*screenWidth/mPoint.y;
+//        }else {
+//            if(mPoint.x > 720){
+//                screenWidth = 720;
+//                screenHeight = mPoint.y*screenWidth/mPoint.x;
+//                return;
+//            }
+//            screenHeight = 720;
+//            screenWidth = mPoint.y*screenHeight/mPoint.x;
+//        }
     }
 
 
