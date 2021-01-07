@@ -108,12 +108,11 @@ public class WebRtcClient {
         commandMap.put("answer", new SetRemoteSDPCommand());
         commandMap.put("candidate", new AddIceCandidateCommand());
 
-        pcConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"));
+        pcConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "false"));
         pcConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"));
         pcConstraints.optional.add(new MediaConstraints.KeyValuePair("DtlsSrtpKeyAgreement", "true"));
         pcConstraints.optional.add(new MediaConstraints.KeyValuePair("enable_rtp_data_channel", "false"));
         pcConstraints.optional.add(new MediaConstraints.KeyValuePair("enable_dtls_srtp", "true"));
-        pcConstraints.optional.add(new MediaConstraints.KeyValuePair("googCpuOveruseDetection", "false"));
 
         createPeerConnectionFactory();
         initSocket(host);
@@ -195,8 +194,8 @@ public class WebRtcClient {
 
     public void initLocalMs() {
         localMS = peerConnectionFactory.createLocalMediaStream("ARDAMS");
-        audioSource = peerConnectionFactory.createAudioSource(pcConstraints);
-        audioTrack = peerConnectionFactory.createAudioTrack("ARDAMSa0", audioSource);
+//        audioSource = peerConnectionFactory.createAudioSource(pcConstraints);
+//        audioTrack = peerConnectionFactory.createAudioTrack("ARDAMSa0", audioSource);
         rtcListener.onLocalStream(localMS, false);
     }
 
@@ -482,7 +481,9 @@ public class WebRtcClient {
                 Log.d(TAG, "[WebRTCClient]  new Peer: localMS == null");
             } else {
                 try {
-                    this.pc = peerConnectionFactory.createPeerConnection(iceServers, this);
+                    PeerConnection.RTCConfiguration configuration = new PeerConnection.RTCConfiguration(iceServers);
+                    configuration.enableCpuOveruseDetection = false;
+                    this.pc = peerConnectionFactory.createPeerConnection(configuration, this);
                     this.id = id;
                     this.endPoint = endPoint;
 //                    pc.setBitrate(8*1024*1024,10*1024*1024,12*1024*1024);
@@ -504,16 +505,19 @@ public class WebRtcClient {
         @Override
         public void onCreateSuccess(final SessionDescription sdp) {
             try {
+
+                String description = Tools.getInstance().sortVideoCodec(sdp.description, Tools.VIDEO_CODEC_VP9, "");
+                SessionDescription newSdp = new SessionDescription(sdp.type, description);
+//                SessionDescription newSdp = sdp;
                 JSONObject object = new JSONObject();
-                object.put("type", sdp.type.canonicalForm());
-                object.put("sdp", sdp.description);
-
+                object.put("type", newSdp.type.canonicalForm());
+                object.put("sdp", newSdp.description);
                 JSONObject payload = new JSONObject();
-
                 payload.put("type", "sdp");
                 payload.put("data", object.toString());
-                pc.setLocalDescription(Peer.this, sdp);
-                sendMessage(id, sdp.type.canonicalForm(), payload);
+
+                pc.setLocalDescription(Peer.this, newSdp);
+                sendMessage(id, newSdp.type.canonicalForm(), payload);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

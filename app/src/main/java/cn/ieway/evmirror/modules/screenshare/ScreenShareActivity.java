@@ -140,7 +140,7 @@ public class ScreenShareActivity extends BaseActivity {
         webRtcListener = new WebRtcListener(jHandler);
         eglBaseContext = EglBase.create().getEglBaseContext();
         params = new PeerConnectionParameters(
-                true, true, false, sMe.screenWidth, sMe.screenHeight,
+                true, false, false, sMe.screenWidth, sMe.screenHeight,
                 sMe.getVideo_fps(), 1, VIDEO_CODEC_H264, true, 1,
                 AUDIO_CODEC_OPUS, true);
         createScreenCaptureIntent();
