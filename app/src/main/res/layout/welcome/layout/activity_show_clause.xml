@@ -11,7 +11,7 @@
         android:background="@drawable/shap_white_round_10dp_bg"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/dp_20"
+        android:padding="@dimen/dp_15"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:text="权限请求"
             android:textColor="#333"
-            android:textSize="18sp"
+            android:textSize="@dimen/sp_16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -39,7 +39,7 @@
                 android:scrollbars="vertical"
                 android:singleLine="false"
                 android:textColor="#333"
-                android:textSize="12sp"
+                android:textSize="@dimen/sp_13"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -55,7 +55,7 @@
            <CheckBox
                android:id="@+id/checkbox"
                android:checked="true"
-               android:padding="@dimen/dp_3"
+               android:padding="@dimen/dp_5"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:theme="@style/MyCheckBox"
@@ -65,8 +65,7 @@
                 android:id="@+id/tv_text_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:text=""
+                android:textSize="@dimen/sp_14"
                 android:textColor="#333"/>
         </LinearLayout>
 
