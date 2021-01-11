@@ -67,6 +67,7 @@ public class ScreenShareActivityNew extends BaseActivity {
     private ControlHandler controlHandler;
 
     private int socketPort;
+    private int requestPort;
     private String socketKey;
 
 
@@ -86,8 +87,9 @@ public class ScreenShareActivityNew extends BaseActivity {
     protected void initView() {
         displaySize = new Point();
         getWindowManager().getDefaultDisplay().getRealSize(displaySize);
-//        socketUrl = getIntent().getStringExtra("url");
+        socketUrl = getIntent().getStringExtra("url");
         socketName = getIntent().getStringExtra("name");
+        requestPort = getIntent().getIntExtra("port",-1);
         if (socketUrl == null || socketUrl.isEmpty()) {
             RxToast.error(getString(R.string.abnormal_device_parameters));
             exitActivity();
@@ -102,19 +104,6 @@ public class ScreenShareActivityNew extends BaseActivity {
         controlHandler = new ControlHandler();
         requestScreenMirror();
     }
-
-
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//    }
-//
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//
-//    }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onMessageEvent(NetWorkMessageEvent event) {
@@ -191,7 +180,7 @@ public class ScreenShareActivityNew extends BaseActivity {
      * 创建投屏请求
      */
     private void requestScreenMirror() {
-        socketThread = new ControlSocketThread(socketUrl, 12808, controlHandler);
+        socketThread = new ControlSocketThread(socketUrl, requestPort, controlHandler);
         socketThread.start();
     }
 
@@ -249,7 +238,7 @@ public class ScreenShareActivityNew extends BaseActivity {
             serviceIntent.putExtra("md_code", mMediaProjectionPermissionResultCode);
             serviceIntent.putExtra("md_data", mMediaProjectionPermissionResultData);
             serviceIntent.putExtra("socket_point", socketPort);
-            serviceIntent.putExtra("socket_url", "192.168.1.128");
+            serviceIntent.putExtra("socket_url", socketUrl);
             serviceIntent.putExtra("socket_key", socketKey);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 mContext.startForegroundService(serviceIntent);

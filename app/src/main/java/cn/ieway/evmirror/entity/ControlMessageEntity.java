@@ -25,6 +25,7 @@ class ControlMessageEntity implements Serializable {
     private Integer type;
     private String version;
 
+
     public ControlMessageEntity() {
     }
 
@@ -33,6 +34,11 @@ class ControlMessageEntity implements Serializable {
      * type : 0
      * version : 1.0
      */
+    public ControlMessageEntity(Integer type, String version) {
+        this.type = type;
+        this.version = version;
+    }
+
 
 
     public ControlMessageEntity(String version, Integer type) {
@@ -72,12 +78,11 @@ class ControlMessageEntity implements Serializable {
     @Override
     public String toString() {
         return "ControlMessageEntity{" +
-                "version='" + version + '\'' +
+                "data=" + data +
                 ", type=" + type +
-                ", data='" + data + '\'' +
+                ", version='" + version + '\'' +
                 '}';
     }
-
 
     /**
      * 打包命令协议 (4个字节头 + json字符串)
@@ -151,6 +156,9 @@ class ControlMessageEntity implements Serializable {
 
         private String key;
         private Integer port;
+        private String serial;
+        private String name;
+        private String bite_rate;
 
         public DataBean() {
         }
@@ -158,6 +166,35 @@ class ControlMessageEntity implements Serializable {
         public DataBean(String key, Integer port) {
             this.key = key;
             this.port = port;
+        }
+
+        public DataBean(String serial, String name) {
+            this.serial = serial;
+            this.name = name;
+        }
+
+        public String getSerial() {
+            return serial;
+        }
+
+        public void setSerial(String serial) {
+            this.serial = serial;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getBite_rate() {
+            return bite_rate;
+        }
+
+        public void setBite_rate(String bite_rate) {
+            this.bite_rate = bite_rate;
         }
 
         public String getKey() {
@@ -176,19 +213,6 @@ class ControlMessageEntity implements Serializable {
             this.port = port;
         }
     }
-
-//    public static class DataBean {
-//        /**
-//         * key : qwertyuiop
-//         * port : 10001
-//         */
-//
-//        private String key;
-//        private Integer port;
-//    }
-
-
-
 }
 
 

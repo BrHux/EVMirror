@@ -66,6 +66,14 @@ public abstract class DeviceSearcher extends Thread {
         String id;
         String name;
         String url;
+        /**
+         * ip : 192.168.1.209
+         * port : 10020
+         */
+
+        private String ip;
+        private Integer port;
+
 
         public String getId() {
             return id;
@@ -97,6 +105,22 @@ public abstract class DeviceSearcher extends Thread {
 
         public void setUrl(String url) {
             this.url = url;
+        }
+
+        public String getIp() {
+            return ip;
+        }
+
+        public void setIp(String ip) {
+            this.ip = ip;
+        }
+
+        public Integer getPort() {
+            return port;
+        }
+
+        public void setPort(Integer port) {
+            this.port = port;
         }
     }
 
@@ -156,7 +180,7 @@ public abstract class DeviceSearcher extends Thread {
 //            onSearchFinish(mDeviceSet);
         }catch (UnknownHostException e) {
             Log.d(TAG, "run: UnknownHostException: " + e.getMessage());
-            e.printStackTrace();
+//            e.printStackTrace();
         } catch (SocketException e) {
             Log.d(TAG, "run: SocketException: " + e.getMessage());
             e.printStackTrace();
@@ -206,7 +230,7 @@ public abstract class DeviceSearcher extends Thread {
         }
 
         for (DeviceBean d : mDeviceSet) { //过滤重复广播
-            if (d.getUrl().contains(ip)) {
+            if (d.getIp().contains(ip)) {
                 return false;
             }
         }
@@ -220,15 +244,14 @@ public abstract class DeviceSearcher extends Thread {
         byte[] data = new byte[dataLen];
         System.arraycopy(pack.getData(), pack.getOffset(), data, 0, dataLen);//获取有效data
         String dataStr = new String(data);
-        BroadCastBean bean = gson.fromJson(new String(data), BroadCastBean.class);
 
-//        if (!bean.getMsg_type().equals(SERVER_BROADCAST)) {
-//            return false;
-//        }
+        BroadCastBean bean = gson.fromJson(dataStr, BroadCastBean.class);
+
 
         device = new DeviceBean();
         device.setName(bean.getName());
-        device.setUrl(bean.getUrl());
+        device.setIp(bean.getIp());
+        device.setPort(bean.getPort());
 
         Log.d(TAG, "parsePack: "+device.getName());
         if (device != null) {

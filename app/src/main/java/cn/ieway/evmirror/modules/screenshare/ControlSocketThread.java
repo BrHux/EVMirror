@@ -19,6 +19,9 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.Arrays;
+
+import cn.ieway.evmirror.R;
+import cn.ieway.evmirror.application.BaseConfig;
 import cn.ieway.evmirror.entity.ControlMessageEntity;
 import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
 import cn.ieway.evmirror.util.DataTool;
@@ -39,6 +42,7 @@ class ControlSocketThread extends Thread {
     private int socketPort;
     private OutputStream socketOutputStream;
     private ScreenShareActivityNew.ControlHandler handler ;
+    private int timeout = 15000;
 
     public ControlSocketThread( String url, int port, ScreenShareActivityNew.ControlHandler controlHandler){
         this.socketUrl=url;
@@ -51,16 +55,18 @@ class ControlSocketThread extends Thread {
     public void run() {
         try {
             SocketAddress remoteAddr = new InetSocketAddress(socketUrl, socketPort);
-            socket.connect(remoteAddr, 10000);  //等待建立连接的超时时间为1分钟
+            socket.connect(remoteAddr, timeout);  //等待建立连接的超时时间为1分钟
             socket.setKeepAlive(true);
             socketOutputStream = socket.getOutputStream();
-            byte[] msg = sendSocketMsg("1.0", 0, null);
+
+            ControlMessageEntity.DataBean bean = new ControlMessageEntity.DataBean(BaseConfig.serialId, BaseConfig.brandModel);
+
+            byte[] msg = sendSocketMsg("1.0", 0, bean);
             //接受主机发送的指令
             InputStream is = socket.getInputStream();
             DataInputStream dis = new DataInputStream(is);
             byte[] b = new byte[4];
             dis.read(b, 0, 4);
-            Log.d("huangx", "run: 收到的信息是 head ：" + Arrays.toString(b));
             int size = DataTool.byte2Int(b);
             byte[] bytes = new byte[size];
             dis.read(bytes, 0, size);
@@ -121,6 +127,7 @@ class ControlSocketThread extends Thread {
         } else {
             control = new ControlMessageEntity(version, type, data);
         }
+
         byte[] message = control.getSendMsg(control);
 
         if(socketOutputStream != null){
