@@ -36,6 +36,7 @@ import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
 import cn.ieway.evmirror.modules.link.LinkActivity;
 import cn.ieway.evmirror.modules.link.adapter.IpAddressAdapter;
 import cn.ieway.evmirror.modules.link.zxing.CaptureFragment;
+import cn.ieway.evmirror.modules.screenshare.ScreenShareActivity;
 import cn.ieway.evmirror.net.DeviceSearcher;
 import cn.ieway.evmirror.util.NetWorkUtil;
 
@@ -143,6 +144,9 @@ public class WifiSearchListFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                if(getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed()){
+                    return;
+                }
                 int state = NetWorkUtil.getNetWorkState(getContext());
                 if (state != 1) {
                     wifiName.setText("未连接Wifi");
