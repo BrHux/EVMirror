@@ -5,35 +5,23 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Paint;
 import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.net.NetworkRequest;
-import android.net.NetworkSpecifier;
-import android.net.Uri;
 import android.net.wifi.WifiManager;
-import android.net.wifi.WifiNetworkSpecifier;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PatternMatcher;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 
 import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
-import com.tamsiree.rxkit.RxNetTool;
 import com.tamsiree.rxkit.RxTool;
 import com.tamsiree.rxkit.view.RxToast;
-import com.tamsiree.rxui.view.dialog.RxDialogEditSureCancel;
 import com.tamsiree.rxui.view.dialog.RxDialogSureCancel;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
@@ -43,20 +31,15 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.application.BaseConfig;
-import cn.ieway.evmirror.application.MirrorApplication;
 import cn.ieway.evmirror.base.BaseActivity;
-import cn.ieway.evmirror.entity.DeviceBean;
 import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
 import cn.ieway.evmirror.modules.link.LinkActivity;
 import cn.ieway.evmirror.modules.about.AboutActivity;
-import cn.ieway.evmirror.modules.other.WebViewActivity;
-import cn.ieway.evmirror.net.DeviceSearcher;
 import cn.ieway.evmirror.receiver.NetWorkStateReceiver;
 import cn.ieway.evmirror.util.NetWorkUtil;
 
@@ -139,7 +122,7 @@ public class MainActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onMessageEvent(NetWorkMessageEvent event) {
-        switch (event.creentState) {
+        switch (event.currentState) {
             case DISCONNECTED: {
                 mNetName.setText(getString(R.string.network_name, "WIFI已断开"));
                 RxToast.info("WIFI未连接或WIFI已关闭");

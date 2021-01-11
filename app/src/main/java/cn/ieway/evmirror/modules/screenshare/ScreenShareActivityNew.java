@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
-import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,13 +23,11 @@ import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.tamsiree.rxkit.view.RxToast;
-import com.tamsiree.rxui.view.dialog.RxDialogSure;
 import com.tamsiree.rxui.view.dialog.RxDialogSureCancel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.webrtc.EglBase;
 
 import java.util.List;
 
@@ -39,29 +35,25 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.base.BaseActivity;
+import cn.ieway.evmirror.entity.ControlMessageEntity;
 import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
 import cn.ieway.evmirror.modules.about.AboutActivity;
 import cn.ieway.evmirror.util.CommonUtils;
-import cn.ieway.evmirror.webrtcclient.WebRtcClient;
-import cn.ieway.evmirror.webrtcclient.entity.PeerConnectionParameters;
 
 import static cn.ieway.evmirror.application.MirrorApplication.sMe;
 import static cn.ieway.evmirror.application.MirrorApplication.webRtcClient;
+public class ScreenShareActivityNew extends BaseActivity {
 
-public class ScreenShareActivity extends BaseActivity {
-    private static final String VIDEO_CODEC_VP9 = "VP9";
-    private static final String VIDEO_CODEC_H264 = "H264";
-    private static final String AUDIO_CODEC_OPUS = "opus";
+    private String TAG = sMe.TAG + "shareAct";
+
     private static final int CAPTURE_PERMISSION_REQUEST_CODE = 100;
     public static final int EXITE_ACTIVITY = 101;
     private static int DISCONNECT_DIALOG = 1001;
-    private int VIDEO_FPS = 20;
 
-    private String socketUrl;
+    private Intent serviceIntent;
     private Point displaySize;
-    private EglBase.Context eglBaseContext;
-    private WebRtcListener webRtcListener;
-
+    private String socketUrl = "192.168.1.128";
+    private String socketName = "";
 
     @BindView(R.id.tv_tips)
     TextView mTips;
@@ -72,23 +64,11 @@ public class ScreenShareActivity extends BaseActivity {
 
     private int mMediaProjectionPermissionResultCode;
     private Intent mMediaProjectionPermissionResultData;
-    private PeerConnectionParameters params;
-    private Intent serviceIntent;
-    private String socketName = "";
+    private ControlHandler controlHandler;
 
+    private int socketPort;
+    private String socketKey;
 
-    private Handler jHandler = new Handler(){
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what){
-                case -1:{
-                    disConnection(getString(R.string.remote_disconnect),getString(R.string.sure),0);
-                    break;
-                }
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,76 +78,60 @@ public class ScreenShareActivity extends BaseActivity {
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_screen_share);
+
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void initView() {
         displaySize = new Point();
         getWindowManager().getDefaultDisplay().getRealSize(displaySize);
-
-        socketUrl = getIntent().getStringExtra("url");
+//        socketUrl = getIntent().getStringExtra("url");
         socketName = getIntent().getStringExtra("name");
         if (socketUrl == null || socketUrl.isEmpty()) {
             RxToast.error(getString(R.string.abnormal_device_parameters));
-            finish();
+            exitActivity();
         }
-
-//        initTitle("EV投屏");
         mTips.setText(R.string.request_mirror);
         mDeviceName.setText(socketName);
     }
 
-    private void initTitle(String title) {
-        TextView pageTitle = findViewById(R.id.tv_title);
-        LinearLayout layout = findViewById(R.id.left_img);
-        pageTitle.setText(title);
-        layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSureCancelAlertDialog(getString(R.string.exit_projection_screen), getString(R.string.exit), getString(R.string.cancle), 1);
-            }
-        });
-    }
 
     @Override
     protected void initData() {
-        webRtcListener = new WebRtcListener(jHandler);
-        eglBaseContext = EglBase.create().getEglBaseContext();
-        params = new PeerConnectionParameters(
-                true, false, false, sMe.screenWidth, sMe.screenHeight,
-                sMe.getVideo_fps(), 1, VIDEO_CODEC_H264, true, 1,
-                AUDIO_CODEC_OPUS, true);
-        createScreenCaptureIntent();
+        controlHandler = new ControlHandler();
+        requestScreenMirror();
     }
 
 
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//
+//    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        super.onStop();
-        EventBus.getDefault().removeAllStickyEvents();
-        EventBus.getDefault().unregister(this);
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onMessageEvent(NetWorkMessageEvent event) {
         switch (event.currentState) {
             case DISCONNECTED: {
-                disConnection(getString(R.string.connection_disconnected_please_reconnect),getString(R.string.sure),0);
+                disConnection(getString(R.string.connection_disconnected_please_reconnect), getString(R.string.sure), 0);
                 break;
+            }
+            case UNKNOWN:{
+                disConnection(getString(R.string.remote_disconnect), getString(R.string.sure), 0);
             }
             default: {
                 break;
             }
         }
     }
+
 
     @Override
     public void onBackPressed() {
@@ -176,13 +140,12 @@ public class ScreenShareActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        Settings.System.putInt(sMe.getContentResolver(),Settings.Global.WIFI_SLEEP_POLICY,Settings.Global.WIFI_SLEEP_POLICY_NEVER_WHILE_PLUGGED);
-        if (webRtcClient != null) {
-            webRtcClient.onDestroy();
-            webRtcClient = null;
-        }
+        Settings.System.putInt(sMe.getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, Settings.Global.WIFI_SLEEP_POLICY_NEVER_WHILE_PLUGGED);
         stopService(new Intent(this, ScreenShareService.class));
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onDestroy();
+        EventBus.getDefault().removeAllStickyEvents();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -194,9 +157,8 @@ public class ScreenShareActivity extends BaseActivity {
             startScreenCapture(mMediaProjectionPermissionResultData, mMediaProjectionPermissionResultCode);
         } else if (requestCode == EXITE_ACTIVITY && resultCode == EXITE_ACTIVITY) {
 
-        }
-        else if(requestCode == DISCONNECT_DIALOG){
-            finish();
+        } else if (requestCode == DISCONNECT_DIALOG) {
+            exitActivity();
         }
     }
 
@@ -208,7 +170,6 @@ public class ScreenShareActivity extends BaseActivity {
                 break;
             }
             case R.id.iv_audio: {
-//                RxToast.info("音频");
                 if (webRtcClient == null) return;
                 dealAudioTrack(!webRtcClient.isAudioTrack());
                 break;
@@ -222,6 +183,18 @@ public class ScreenShareActivity extends BaseActivity {
             }
         }
     }
+
+
+    private ControlSocketThread socketThread;
+
+    /**
+     * 创建投屏请求
+     */
+    private void requestScreenMirror() {
+        socketThread = new ControlSocketThread(socketUrl, 12808, controlHandler);
+        socketThread.start();
+    }
+
 
     private void dealAudioTrack(boolean audioTrack) {
         if (audioTrack) {
@@ -250,15 +223,6 @@ public class ScreenShareActivity extends BaseActivity {
             RxToast.error(getString(R.string.microphone_is_occupied));
             return;
         }
-
-        if (webRtcClient != null) {
-            webRtcClient.setAudioTrack(audioTrack);
-        }
-        if (webRtcClient.isAudioTrack()) {
-            mVoice.setImageResource(R.drawable.selector_voice_op);
-        } else {
-            mVoice.setImageResource(R.drawable.selector_silence_voice_op);
-        }
     }
 
     /*录屏请求*/
@@ -269,36 +233,33 @@ public class ScreenShareActivity extends BaseActivity {
                 mediaProjectionManager.createScreenCaptureIntent(), CAPTURE_PERMISSION_REQUEST_CODE);
     }
 
-    MediaProjection mMediaProjection;
-    MediaProjectionManager mMediaProjectionManager;
 
+    /**
+     * 启动截屏服务
+     *
+     * @param mMediaProjectionPermissionResultData
+     * @param mMediaProjectionPermissionResultCode
+     */
     public void startScreenCapture(Intent mMediaProjectionPermissionResultData, int mMediaProjectionPermissionResultCode) {
         if (mMediaProjectionPermissionResultCode == Activity.RESULT_OK && mMediaProjectionPermissionResultData != null) {
+            Settings.System.putInt(sMe.getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, Settings.Global.WIFI_SLEEP_POLICY_NEVER);
 
-            Settings.System.putInt(sMe.getContentResolver(),Settings.Global.WIFI_SLEEP_POLICY,Settings.Global.WIFI_SLEEP_POLICY_NEVER);
-
-            webRtcClient = new WebRtcClient(webRtcListener, socketUrl, params, eglBaseContext, this);
-            webRtcClient.initLocalMs();
-            if (webRtcClient != null) {
-                serviceIntent = new Intent(mContext, ScreenShareService.class);
-                serviceIntent.putExtra("code", mMediaProjectionPermissionResultCode);
-                serviceIntent.putExtra("data", mMediaProjectionPermissionResultData);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    mContext.startForegroundService(serviceIntent);
-                } else {
-                    mContext.startService(serviceIntent);
-                }
-
-                mTips.setText(getString(R.string.screen_mirror));
+            serviceIntent = new Intent(mContext, ScreenShareService.class);
+            serviceIntent.putExtra(ScreenShareService.EXTRA_CDM, ScreenShareService.POP_START);
+            serviceIntent.putExtra("md_code", mMediaProjectionPermissionResultCode);
+            serviceIntent.putExtra("md_data", mMediaProjectionPermissionResultData);
+            serviceIntent.putExtra("socket_point", socketPort);
+            serviceIntent.putExtra("socket_url", "192.168.1.128");
+            serviceIntent.putExtra("socket_key", socketKey);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                mContext.startForegroundService(serviceIntent);
             } else {
-                RxToast.error(getString(R.string.retry));
-                initData();
+                mContext.startService(serviceIntent);
             }
         } else {
             showSureCancelAlertDialog(getString(R.string.cancelled_screen_request), getString(R.string.continue_to), getString(R.string.exit_for_screen), 4);
         }
     }
-
 
     /**
      * 界面对话框（双按钮）
@@ -309,8 +270,9 @@ public class ScreenShareActivity extends BaseActivity {
      * @param type    1：退出界面；2：声音通道设置 3：打开权限详情页面；4：截屏请求 5:wifi断开连接
      */
     private void showSureCancelAlertDialog(String content, String cancel, String sure, int type) {
-        if (ScreenShareActivity.this.isFinishing() || ScreenShareActivity.this.isDestroyed()) return;
-        RxDialogSureCancel rxDialogSureCancel = new RxDialogSureCancel(ScreenShareActivity.this);
+        if (ScreenShareActivityNew.this.isFinishing() || ScreenShareActivityNew.this.isDestroyed())
+            return;
+        RxDialogSureCancel rxDialogSureCancel = new RxDialogSureCancel(ScreenShareActivityNew.this);
         rxDialogSureCancel.setContent(content);
         rxDialogSureCancel.getContentView().setLinksClickable(true);
         rxDialogSureCancel.getContentView().setTextSize(16.0f);
@@ -324,7 +286,7 @@ public class ScreenShareActivity extends BaseActivity {
                 switch (type) {
                     case 1: {
                         //退出界面(取消投屏)
-                        finish();
+                        exitActivity();
                         break;
                     }
                     case 2: {
@@ -343,7 +305,6 @@ public class ScreenShareActivity extends BaseActivity {
                         break;
                     }
                 }
-
                 rxDialogSureCancel.cancel();
             }
         });
@@ -355,7 +316,7 @@ public class ScreenShareActivity extends BaseActivity {
                 switch (type) {
                     case 4: {
                         //退出界面(取消投屏)
-                        finish();
+                        exitActivity();
                     }
                 }
                 rxDialogSureCancel.cancel();
@@ -365,53 +326,50 @@ public class ScreenShareActivity extends BaseActivity {
     }
 
 
-    /**界面对话框(单按钮)
-     * @param content
-     * @param sure
-     * @param type  0：退出投屏；
-     */
-    private void showCancelAlertDialog(String content,String sure, int type){
-        if (ScreenShareActivity.this.isFinishing() || ScreenShareActivity.this.isDestroyed()) return;
-        RxDialogSure rxDialogSure = new RxDialogSure(ScreenShareActivity.this);
-        rxDialogSure.setCancelable(false);
-        rxDialogSure.setContent(content);
-        rxDialogSure.getContentView().setLinksClickable(true);
-        rxDialogSure.getContentView().setTextSize(16.0f);
-        rxDialogSure.getSureView().setTextSize(14.0f);
-        rxDialogSure.getSureView().setTextColor(ContextCompat.getColor(this, R.color.colorBlue));
-        rxDialogSure.setSure(sure);
+    private int dialogCount = 0;
 
-        rxDialogSure.setSureListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (type){
-                    case 0:{
-                        finish();
-                        break;
-                    }
-                }
-                rxDialogSure.cancel();
-            }
-        });
-        rxDialogSure.show();
+    private void disConnection(String content, String sure, int type) {
+        if (ScreenShareActivityNew.this.isFinishing() || ScreenShareActivityNew.this.isDestroyed())
+            return;
+        if (dialogCount > 0) return;
+        dialogCount++;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && sMe.isBackGround()) {
+            RxToast.warning(content, 4000);
+        }
+        Intent intent = new Intent(this, DisConnectDialog.class);
+        intent.putExtra("content", content);
+        intent.putExtra("sure", sure);
+        intent.putExtra("type", type);
+        startActivityForResult(intent, DISCONNECT_DIALOG);
     }
 
-    private int dialogCount = 0;
-    private void disConnection(String content,String sure, int type ){
-        if (ScreenShareActivity.this.isFinishing() || ScreenShareActivity.this.isDestroyed()) return;
-        if (dialogCount > 0) return;
-        dialogCount ++;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && sMe.isBackGround()){
-            RxToast.warning(content,4000);
+    private void exitActivity() {
+        ScreenShareActivityNew.this.finish();
+    }
+
+
+    public static final int HANDLER_START = 2001;
+    class ControlHandler extends Handler {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case HANDLER_START: {
+                    ControlMessageEntity.DataBean bean = (ControlMessageEntity.DataBean) msg.obj;
+
+                    if (bean == null) {
+                        return;
+                    }
+
+                    socketPort = bean.getPort();
+                    socketKey = bean.getKey();
+
+                    createScreenCaptureIntent();
+                    break;
+                }
+            }
         }
-
-        Intent intent = new Intent(this,DisConnectDialog.class);
-        intent.putExtra("content",content);
-        intent.putExtra("sure",sure);
-        intent.putExtra("type",type);
-        startActivityForResult(intent, DISCONNECT_DIALOG);
-
     }
 
 

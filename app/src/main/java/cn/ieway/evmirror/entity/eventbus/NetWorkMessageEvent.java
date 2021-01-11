@@ -14,10 +14,10 @@ class NetWorkMessageEvent {
         CONNECTING, CONNECTED, SUSPENDED, DISCONNECTING, DISCONNECTED, UNKNOWN
     }
 
-    public State creentState;
+    public State currentState;
 
     public NetWorkMessageEvent(State state) {
-        creentState = state;
+        currentState = state;
     }
 
 

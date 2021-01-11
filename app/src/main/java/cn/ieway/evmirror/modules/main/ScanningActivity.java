@@ -20,6 +20,7 @@ import cn.ieway.evmirror.base.BaseActivity;
 import cn.ieway.evmirror.entity.DeviceBean;
 import cn.ieway.evmirror.entity.DeviceBeanMult;
 import cn.ieway.evmirror.modules.screenshare.ScreenShareActivity;
+import cn.ieway.evmirror.modules.screenshare.ScreenShareActivityNew;
 import cn.ieway.evmirror.util.NetWorkUtil;
 import cn.ieway.evmirror.webrtcclient.JWebSocketClient;
 
@@ -122,7 +123,7 @@ public class ScanningActivity extends BaseActivity {
 
     private void startShare(DeviceBean bean){
         Intent intent = new Intent();
-        intent.setClass(this, ScreenShareActivity.class);
+        intent.setClass(this, ScreenShareActivityNew.class);
         intent.putExtra("name", bean.getName());
         intent.putExtra("url", bean.getUrl());
         startActivity(intent);

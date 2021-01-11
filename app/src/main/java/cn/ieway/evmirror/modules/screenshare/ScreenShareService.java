@@ -3,7 +3,6 @@ package cn.ieway.evmirror.modules.screenshare;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +13,7 @@ import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
@@ -23,13 +22,15 @@ import androidx.core.app.NotificationCompat;
 import java.util.Objects;
 
 import cn.ieway.evmirror.R;
-import cn.ieway.evmirror.application.MirrorApplication;
-import cn.ieway.evmirror.util.LogUtil;
+import cn.ieway.evmirror.screencapture.ScreenRecord;
 
 import static cn.ieway.evmirror.application.MirrorApplication.sMe;
-import static cn.ieway.evmirror.application.MirrorApplication.webRtcClient;
 
 public class ScreenShareService extends Service {
+
+    public static final String EXTRA_CDM = "extra_cmd";
+    public static final int POP_START = 100;
+    public static final int POP_QUIT = 102;
 
     int mResultCode;
     Intent mResultData;
@@ -40,6 +41,10 @@ public class ScreenShareService extends Service {
     private static final int CODE_NOTIFICATION_1 = android.os.Process.myPid();
     private WindowManager windowManager;
     private Point mPoint = new Point();
+    private ScreenRecord screenRecord;
+    private int socket_point;
+    private String socket_url;
+    private String socket_key;
 
     public ScreenShareService() {
     }
@@ -58,7 +63,6 @@ public class ScreenShareService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
         windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         setForeground();
         createCustomNotification();
@@ -67,48 +71,74 @@ public class ScreenShareService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        createNotificationChannel("");
-        if (intent != null) {
-            mResultCode = intent.getIntExtra("code", -1);
-            mResultData = intent.getParcelableExtra("data");
-            if (mResultData == null) {
-                return START_STICKY;
-            }
 
-            try {
-                mMediaProjectionManager =
-                        (MediaProjectionManager) getApplication().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-                mMediaProjection = mMediaProjectionManager.getMediaProjection(mResultCode, Objects.requireNonNull(mResultData));
-                if (webRtcClient != null && mMediaProjection != null) {
-                    webRtcClient.screenCapturer(mResultData, mMediaProjection);
+        if (intent == null) return START_STICKY;
+        int order = intent.getIntExtra(EXTRA_CDM, -1);
+        switch (order) {
+            case POP_START: {
+                try {
+                    startRecord(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                LogUtil.i("MediaProjection Exception : " + e.toString());
-                return START_STICKY;
+                break;
             }
         }
         return START_STICKY;
     }
 
+    private void startRecord(Intent intent) throws Exception {
+        if (intent != null) {
+            mResultCode = intent.getIntExtra("md_code", -1);
+            mResultData = intent.getParcelableExtra("md_data");
+
+            socket_point = intent.getIntExtra("socket_point", 0);
+            socket_url = intent.getStringExtra("socket_url");
+            socket_key = intent.getStringExtra("socket_key");
+
+            if (mResultData == null || socket_point == 0 || socket_url.isEmpty() || socket_key.isEmpty()) {
+                //参数异常
+                return;
+            }
+
+            mMediaProjectionManager = (MediaProjectionManager) getApplication().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+            mMediaProjection = mMediaProjectionManager.getMediaProjection(mResultCode, Objects.requireNonNull(mResultData));
+            if (mMediaProjection == null) return;
+            if (screenRecord != null) {
+                screenRecord.release();
+            }
+
+            screenRecord = new ScreenRecord(mMediaProjection, socket_key);
+            screenRecord.setSocket(socket_url, socket_point);
+            screenRecord.start();
+        }
+    }
+
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        Log.d("huangx", "onConfigurationChanged:  service ");
         super.onConfigurationChanged(newConfig);
         if (windowManager == null) return;
-        Point outSize = new Point();
-        windowManager.getDefaultDisplay().getRealSize(outSize);
-        if (outSize.equals(mPoint)) return;
-        if (webRtcClient == null) return;
+        if (mMediaProjection == null) return;
+//        Point outSize = new Point();
+//        windowManager.getDefaultDisplay().getRealSize(outSize);
+//        sMe.setScreenSize(outSize);
+        screenRecord.surfaceChange();
 
-        int width = outSize.x > outSize.y ? sMe.screenHeight: sMe.screenWidth;
-        int height = outSize.x > outSize.y ? sMe.screenWidth : sMe.screenHeight;
-
-        webRtcClient.changeCaptureFormat(width, height, sMe.getVideo_fps());
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        destoryCustomNotification();
+        if (screenRecord != null) {
+            screenRecord.release();
+            screenRecord = null;
+        }
     }
+
+
+    //=====================================  Notification  =========================================================
 
     private void createNotificationChannel(String msg) {
         Notification.Builder builder = new Notification.Builder(this.getApplicationContext()); //获取一个Notification构造器
@@ -148,7 +178,6 @@ public class ScreenShareService extends Service {
     }
 
     private void initNotificationManager() {
-
         if (mNotificationManager == null) {
             mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         }

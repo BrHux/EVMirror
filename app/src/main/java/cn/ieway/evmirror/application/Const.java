@@ -39,4 +39,27 @@ public class Const {
     public static final int LIST_NORMAL = 0; //设备列表以精简样式展示
     public static final int LIST_DEFAULT = LIST_THUMB; //设备列表以缩略图卡片样式展示
 
+
+    public static final String AMIME_VIDEO_VP8 = "video/x-vnd.on2.vp8";   //- VP8 video (i.e. video in .webm)
+    public static final String AMIME_VIDEO_VP9 = "video/x-vnd.on2.vp9";   //- VP9 video (i.e. video in .webm)
+    public static final String AMIME_VIDEO_AVC = "video/avc";             //- H.264/AVC video
+    public static final String AMIME_VIDEO_HEVC = "video/hevc";            //- H.265/HEVC video
+    public static final String AMIME_VIDEO_MPEG4 = "video/mp4v-es";         //- MPEG4 video
+    public static final String AMIME_VIDEO_H264 = "video/3gpp";            //- H.263 video
+    public static final String AMIME_AUDIO_AMR_NB = "audio/3gpp";            //- AMR narrowband audio
+    public static final String AMIME_AUDIO_AMR_WB = "audio/amr-wb";          //- AMR wideband audio
+    public static final String AMIME_AUDIO_MP3 = "audio/mpeg";            //- MPEG1/2 audio layer III
+    public static final String AMIME_AUDIO_RAW_AAC = "audio/mp4a-latm";       //- AAC audio(note,this is raw AAC packets,not packaged in LATM!)
+    public static final String AMIME_AUDIO_VORBIS = "audio/vorbis";          //- vorbis audio
+    public static final String AMIME_AUDIO_G711_ALAW = "audio/g711-alaw";       //- G.711 alaw audio
+
+
+    public static final String MIME_TYPE = AMIME_VIDEO_AVC;
+
+    public static final int VIDEO_BITRATE = 10*1000*1000;
+
+    public static final int VIDEO_FRAMERATE = 25;
+
+    public static final int VIDEO_IFRAME_INTER = 10;
+
 }

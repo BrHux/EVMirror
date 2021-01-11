@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".modules.screenshare.ScreenShareActivity">
+    android:layout_height="match_parent">
 
     <!-- 顶部导航栏 -->
     <LinearLayout
@@ -112,15 +111,15 @@
             android:src="@drawable/selector_silence_voice_op"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
+
         <ImageView
             android:id="@+id/iv_exit"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_100"
-            android:layout_weight="1"
             android:layout_marginVertical="@dimen/dp_10"
             android:src="@drawable/selector_close_mirror_op"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
     </LinearLayout>
 

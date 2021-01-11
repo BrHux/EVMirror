@@ -24,13 +24,11 @@ import java.util.List;
 
 import butterknife.OnClick;
 import cn.ieway.evmirror.R;
-import cn.ieway.evmirror.base.BaseActivity;
-import cn.ieway.evmirror.entity.DeviceBean;
 import cn.ieway.evmirror.entity.DeviceBeanMult;
 import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
 import cn.ieway.evmirror.modules.link.fragment.USBLinkFragment;
 import cn.ieway.evmirror.modules.link.fragment.WIfiFSearchragment;
-import cn.ieway.evmirror.modules.screenshare.ScreenShareActivity;
+import cn.ieway.evmirror.modules.screenshare.ScreenShareActivityNew;
 import cn.ieway.evmirror.util.NetWorkUtil;
 import cn.ieway.evmirror.webrtcclient.JWebSocketClient;
 
@@ -95,7 +93,7 @@ public class LinkActivity extends AppCompatActivity {
     private boolean isConnceted = true;
     @Subscribe(threadMode = ThreadMode.MAIN , sticky = true)
     public void onMessageEvent(NetWorkMessageEvent event){
-        switch (event.creentState) {
+        switch (event.currentState) {
             case DISCONNECTED: {
                 isConnceted = false;
                 break;
@@ -216,7 +214,7 @@ public class LinkActivity extends AppCompatActivity {
             return false;
         }
         Intent intent = new Intent();
-        intent.setClass(this, ScreenShareActivity.class);
+        intent.setClass(this, ScreenShareActivityNew.class);
         intent.putExtra("name",name);
         intent.putExtra("url",url);
         startActivity(intent);

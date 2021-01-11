@@ -24,6 +24,7 @@ public class NetWorkUtil {
      * @Description: 获取当前网络状态
      */
     public static int getNetWorkState(Context context) {
+
         final int network_none = -1;// 没有连接网络
 
         final int network_mobile = 0;// 移动网络

@@ -17,7 +17,10 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".application.MirrorApplication"
@@ -47,6 +50,10 @@
         <activity
             android:name=".modules.about.IntentShareActivity"
             android:theme="@style/activity_dialog" />
+        <activity
+            android:name=".modules.screenshare.ScreenShareActivityNew"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".modules.screenshare.ScreenShareActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
