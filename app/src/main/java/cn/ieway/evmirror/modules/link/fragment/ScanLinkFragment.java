@@ -20,9 +20,7 @@ public class ScanLinkFragment extends Fragment {
         if(fragment !=null){
             return  fragment;
         }
-        Log.d(TAG, "getFragment: "+fragment);
         fragment  = new ScanLinkFragment();
-        Log.d(TAG, "getFragment: "+fragment);
         return fragment;
     }
 

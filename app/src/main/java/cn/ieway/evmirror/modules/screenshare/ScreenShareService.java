@@ -116,7 +116,6 @@ public class ScreenShareService extends Service {
 
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        Log.d("huangx", "onConfigurationChanged:  service ");
         super.onConfigurationChanged(newConfig);
         if (windowManager == null) return;
         if (mMediaProjection == null) return;

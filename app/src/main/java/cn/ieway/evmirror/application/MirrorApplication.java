@@ -65,8 +65,6 @@ public class MirrorApplication extends Application {
         Point outSize = new Point();
         windowManager.getDefaultDisplay().getRealSize(outSize);
         setScreenSize(outSize);
-        Log.d("huangx", "onConfigurationChanged:  Application ");
-
     }
 
     private void initScreenSize(MirrorApplication mirrorApplication) {
