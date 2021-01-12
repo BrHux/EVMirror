@@ -124,7 +124,7 @@ public class ScanningActivity extends BaseActivity {
         intent.setClass(this, ScreenShareActivityNew.class);
         intent.putExtra("name", bean.getName());
         intent.putExtra("url", bean.getIp());
-        intent.putExtra("port", bean.getIp());
+        intent.putExtra("port", bean.getPort());
         startActivity(intent);
         finish();
     }
