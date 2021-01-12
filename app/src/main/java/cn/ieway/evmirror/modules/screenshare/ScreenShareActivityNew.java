@@ -29,6 +29,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -42,6 +43,7 @@ import cn.ieway.evmirror.util.CommonUtils;
 
 import static cn.ieway.evmirror.application.MirrorApplication.sMe;
 import static cn.ieway.evmirror.application.MirrorApplication.webRtcClient;
+
 public class ScreenShareActivityNew extends BaseActivity {
 
     private String TAG = sMe.TAG + "shareAct";
@@ -89,7 +91,7 @@ public class ScreenShareActivityNew extends BaseActivity {
         getWindowManager().getDefaultDisplay().getRealSize(displaySize);
         socketUrl = getIntent().getStringExtra("url");
         socketName = getIntent().getStringExtra("name");
-        requestPort = getIntent().getIntExtra("port",-1);
+        requestPort = getIntent().getIntExtra("port", -1);
         if (socketUrl == null || socketUrl.isEmpty()) {
             RxToast.error(getString(R.string.abnormal_device_parameters));
             exitActivity();
@@ -112,7 +114,7 @@ public class ScreenShareActivityNew extends BaseActivity {
                 disConnection(getString(R.string.connection_disconnected_please_reconnect), getString(R.string.sure), 0);
                 break;
             }
-            case UNKNOWN:{
+            case UNKNOWN: {
                 disConnection(getString(R.string.remote_disconnect), getString(R.string.sure), 0);
             }
             default: {
@@ -334,11 +336,16 @@ public class ScreenShareActivityNew extends BaseActivity {
 
 
     private void exitActivity() {
+        if (controlHandler != null) {
+            controlHandler.sendEmptyMessage(HANDLER_STOP);
+        }
         ScreenShareActivityNew.this.finish();
     }
 
 
     public static final int HANDLER_START = 2001;
+    public static final int HANDLER_STOP = 2002;
+
     class ControlHandler extends Handler {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -355,6 +362,24 @@ public class ScreenShareActivityNew extends BaseActivity {
                     socketKey = bean.getKey();
 
                     createScreenCaptureIntent();
+                    break;
+                }
+                case HANDLER_STOP: {
+                    if (socketThread == null) return;
+                    if (socketThread.isInterrupted()) return;
+
+                    new Thread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        socketThread.sendSocketMsg("1.0", 2, null);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                    ).start();
                     break;
                 }
             }

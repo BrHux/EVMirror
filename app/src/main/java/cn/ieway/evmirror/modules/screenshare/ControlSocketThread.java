@@ -124,7 +124,7 @@ class ControlSocketThread extends Thread {
      * @param type
      * @param data
      */
-    private byte[] sendSocketMsg(String version, int type, @Nullable ControlMessageEntity.DataBean data) throws IOException {
+    public byte[] sendSocketMsg(String version, int type, @Nullable ControlMessageEntity.DataBean data) throws IOException {
         ControlMessageEntity control;
         if (data == null) {
             control = new ControlMessageEntity(version, type);
