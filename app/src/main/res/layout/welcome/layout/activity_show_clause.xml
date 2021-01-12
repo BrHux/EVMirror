@@ -65,7 +65,7 @@
                 android:id="@+id/tv_text_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp_14"
+                android:textSize="@dimen/sp_13"
                 android:textColor="#333"/>
         </LinearLayout>
 
