@@ -250,15 +250,6 @@ public class ScreenRecord extends Thread {
             });
             mVideoMediaCodec.getBuffer();
         }
-
-
-        public void change() {
-            if(mVideoMediaCodec != null){
-                mVideoMediaCodec.isRun(false);
-                mVideoMediaCodec.updateEnCoder();
-                mVideoMediaCodec.getBuffer();
-            }
-        }
     }
 
 

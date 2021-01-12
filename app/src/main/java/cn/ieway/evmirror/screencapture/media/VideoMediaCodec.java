@@ -64,6 +64,9 @@ public class VideoMediaCodec extends MediaCodecBase {
     }
 
     public void isRun(boolean isR) {
+        if (isR == isRun) {
+            return;
+        }
         this.isRun = isR;
     }
 
@@ -80,40 +83,22 @@ public class VideoMediaCodec extends MediaCodecBase {
                 mEncoder.stop();
             }
             MediaFormat format = MediaFormat.createVideoFormat(Const.MIME_TYPE, sMe.screenWidth, sMe.screenHeight);
-            Log.d(TAG, "prepare: ============ "+sMe.screenWidth+"  "+sMe.screenHeight);
+            Log.d(TAG, "prepare: ============ " + sMe.screenWidth + "  " + sMe.screenHeight);
             format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
             format.setInteger(MediaFormat.KEY_BITRATE_MODE, MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CBR);
-            format.setInteger(MediaFormat.KEY_BIT_RATE, Const.VIDEO_BITRATE);
+            format.setInteger(MediaFormat.KEY_BIT_RATE, sMe.biteRate);
             format.setInteger(MediaFormat.KEY_FRAME_RATE, Const.VIDEO_FRAMERATE);
             format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, Const.VIDEO_IFRAME_INTER);
             mEncoder = MediaCodec.createEncoderByType(Const.MIME_TYPE);
             mEncoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
 
             mSurface = mEncoder.createInputSurface();
-            mEncoder.start();
             isRun = true;
+            mEncoder.start();
         } catch (IOException e) {
 
         }
     }
-
-    public void updateEnCoder() {
-        if (mEncoder != null) {
-            MediaFormat format = MediaFormat.createVideoFormat(Const.MIME_TYPE, sMe.screenWidth, sMe.screenHeight);
-            format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
-            format.setInteger(MediaFormat.KEY_BITRATE_MODE, MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_VBR);
-            format.setInteger(MediaFormat.KEY_BIT_RATE, Const.VIDEO_BITRATE);
-            format.setInteger(MediaFormat.KEY_FRAME_RATE, Const.VIDEO_FRAMERATE);
-            format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, Const.VIDEO_IFRAME_INTER);
-            isRun = false;
-            mEncoder.stop();
-            mEncoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
-            mSurface = mEncoder.createInputSurface();
-            isRun = true;
-            mEncoder.start();
-        }
-    }
-
 
     @Override
     public void release() {
@@ -133,7 +118,7 @@ public class VideoMediaCodec extends MediaCodecBase {
      **/
     public void getBuffer() {
         try {
-            Log.d(TAG, "getBuffer  isRun: "+isRun);
+            Log.d(TAG, "getBuffer  isRun: " + isRun);
             while (isRun) {
                 if (mEncoder == null) break;
                 MediaCodec.BufferInfo mBufferInfo = new MediaCodec.BufferInfo();
@@ -158,17 +143,13 @@ public class VideoMediaCodec extends MediaCodecBase {
                             mediaCodecCallBack.onVideoFrameMessage(outData, 1, 0);
                         }
                     }
-                    //以字符串的方式写入
-//                    writeContent(outData);
-                    //写成 文件  我们就能够播放起来
-//                    writeBytes(outData);
 
                     mEncoder.releaseOutputBuffer(outputBufferIndex, false);
                     outputBufferIndex = mEncoder.dequeueOutputBuffer(mBufferInfo, TIMEOUT_USEC);
                 }
             }
         } catch (Exception e) {
-            Log.d(TAG, "getBuffer: "+e.getMessage());
+            Log.d(TAG, "getBuffer: " + e.getMessage());
         }
     }
 

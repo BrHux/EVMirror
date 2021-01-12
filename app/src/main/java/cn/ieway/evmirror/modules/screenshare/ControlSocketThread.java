@@ -22,6 +22,7 @@ import java.util.Arrays;
 
 import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.application.BaseConfig;
+import cn.ieway.evmirror.application.Const;
 import cn.ieway.evmirror.entity.ControlMessageEntity;
 import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
 import cn.ieway.evmirror.util.DataTool;
@@ -36,16 +37,16 @@ public
  * Description: 
  */
 class ControlSocketThread extends Thread {
-    private String TAG = sMe.TAG+"control_thread";
+    private String TAG = sMe.TAG + "control_thread";
     private Socket socket;
     private String socketUrl;
     private int socketPort;
     private OutputStream socketOutputStream;
-    private ScreenShareActivityNew.ControlHandler handler ;
+    private ScreenShareActivityNew.ControlHandler handler;
     private int timeout = 15000;
 
-    public ControlSocketThread( String url, int port, ScreenShareActivityNew.ControlHandler controlHandler){
-        this.socketUrl=url;
+    public ControlSocketThread(String url, int port, ScreenShareActivityNew.ControlHandler controlHandler) {
+        this.socketUrl = url;
         this.socketPort = port;
         this.handler = controlHandler;
         socket = new Socket();
@@ -71,13 +72,11 @@ class ControlSocketThread extends Thread {
             byte[] bytes = new byte[size];
             dis.read(bytes, 0, size);
             onSocketMessage(new String(bytes));
-        }
-        catch (ConnectException e){
-            Log.d(TAG, "run ConnectException:  "+e.getMessage());
+        } catch (ConnectException e) {
+            Log.d(TAG, "run ConnectException:  " + e.getMessage());
             EventBus.getDefault().postSticky(new NetWorkMessageEvent(NetWorkMessageEvent.State.UNKNOWN));
-        }
-        catch (IOException e) {
-            Log.d(TAG, "run IOException:  "+e.getMessage());
+        } catch (IOException e) {
+            Log.d(TAG, "run IOException:  " + e.getMessage());
             EventBus.getDefault().postSticky(new NetWorkMessageEvent(NetWorkMessageEvent.State.UNKNOWN));
         }
     }
@@ -94,7 +93,7 @@ class ControlSocketThread extends Thread {
         if (entity == null) {
             return;
         }
-        Log.d(TAG, "onSocketMessage: "+entity.toString());
+        Log.d(TAG, "onSocketMessage: " + entity.toString());
         // 0: [ok] 1:[拒绝] 2:[错误]
         switch (entity.getType()) {
             case 0: {
@@ -103,6 +102,11 @@ class ControlSocketThread extends Thread {
                     //参数异常
                     break;
                 }
+
+                if (!data.getBite_rate().isEmpty()) {
+                    sMe.biteRate = Integer.valueOf(data.getBite_rate()) * Const.VIDEO_BITRATE;
+                }
+
                 Message msg = Message.obtain();
                 msg.what = ScreenShareActivityNew.HANDLER_START;
                 msg.obj = data;
@@ -130,7 +134,7 @@ class ControlSocketThread extends Thread {
 
         byte[] message = control.getSendMsg(control);
 
-        if(socketOutputStream != null){
+        if (socketOutputStream != null) {
             socketOutputStream.write(message);
             socketOutputStream.flush();
         }

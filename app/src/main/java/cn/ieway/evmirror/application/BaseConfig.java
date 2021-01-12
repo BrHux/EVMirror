@@ -23,7 +23,7 @@ public class BaseConfig {
     public final static String deviceName = RxDeviceTool.getBuildBrand() + " " + RxDeviceTool.getBuildBrandModel(); //设备名
     public final static String brandModel = RxDeviceTool.getBuildBrandModel(); //型号名
     public final static String machineId = MachineCodeUtils.getMachineId(); //机器码
-    public final static String serialId = RxDeviceTool.getSerialNumber(); //序列号
+    public  static String serialId = "123456";//序列号(android_id)
 
     //Coturn信息
     public static String TurnURL = "turn:124.232.150.19";
@@ -38,7 +38,7 @@ public class BaseConfig {
      * @param mContext
      */
     public static void init(Context mContext) {
-
+        serialId = RxDeviceTool.getAndroidId(mContext);
     }
 
 

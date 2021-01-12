@@ -56,7 +56,7 @@ public class Const {
 
     public static final String MIME_TYPE = AMIME_VIDEO_AVC;
 
-    public static final int VIDEO_BITRATE = 10*1000*1000;
+    public static int VIDEO_BITRATE = 1000*1000;
 
     public static final int VIDEO_FRAMERATE = 25;
 
