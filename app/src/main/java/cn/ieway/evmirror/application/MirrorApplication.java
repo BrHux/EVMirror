@@ -42,7 +42,7 @@ public class MirrorApplication extends Application {
     private int W = 720;
     private int H = 1080;
 
-    public int biteRate = 3*Const.VIDEO_BITRATE;
+    public int biteRate = 4*Const.VIDEO_BITRATE;
 
     public int screenWidth = W;
     public int screenHeight = H;
