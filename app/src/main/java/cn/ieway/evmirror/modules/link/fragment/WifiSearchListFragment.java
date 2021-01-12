@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.tamsiree.rxkit.view.RxToast;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -30,13 +28,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ieway.evmirror.R;
-import cn.ieway.evmirror.application.BaseConfig;
 import cn.ieway.evmirror.entity.DeviceBean;
 import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
 import cn.ieway.evmirror.modules.link.LinkActivity;
 import cn.ieway.evmirror.modules.link.adapter.IpAddressAdapter;
 import cn.ieway.evmirror.modules.link.zxing.CaptureFragment;
-import cn.ieway.evmirror.modules.screenshare.ScreenShareActivity;
 import cn.ieway.evmirror.net.DeviceSearcher;
 import cn.ieway.evmirror.util.NetWorkUtil;
 
@@ -177,10 +173,10 @@ public class WifiSearchListFragment extends Fragment {
      */
     private void search() {
         if(deviceSearcher != null && deviceSearcher.isAlive()) {
-            Log.d(TAG, "search: ===========  0000 "+deviceSearcher.isAlive());
+//            Log.d(TAG, "search: ===========  0000 "+deviceSearcher.isAlive());
             return;
         }
-        Log.d(TAG, "search: =========== 1111 ");
+//        Log.d(TAG, "search: =========== 1111 ");
         deviceSearcher = new DeviceSearcher() {
             @Override
             public void onSearchStart() {

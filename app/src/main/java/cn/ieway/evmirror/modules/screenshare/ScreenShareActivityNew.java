@@ -42,7 +42,6 @@ import cn.ieway.evmirror.modules.about.AboutActivity;
 import cn.ieway.evmirror.util.CommonUtils;
 
 import static cn.ieway.evmirror.application.MirrorApplication.sMe;
-import static cn.ieway.evmirror.application.MirrorApplication.webRtcClient;
 
 public class ScreenShareActivityNew extends BaseActivity {
 
@@ -161,8 +160,6 @@ public class ScreenShareActivityNew extends BaseActivity {
                 break;
             }
             case R.id.iv_audio: {
-                if (webRtcClient == null) return;
-                dealAudioTrack(!webRtcClient.isAudioTrack());
                 break;
             }
             case R.id.iv_about: {

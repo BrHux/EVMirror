@@ -15,12 +15,10 @@ import androidx.annotation.NonNull;
 import com.hjq.toast.ToastUtils;
 import com.tamsiree.rxkit.RxTool;
 import com.umeng.commonsdk.UMConfigure;
-import com.zhangke.websocket.WebSocketSetting;
 
 import java.util.List;
 
 import cn.ieway.evmirror.util.AppFrontBackHelper;
-import cn.ieway.evmirror.webrtcclient.WebRtcClient;
 
 /**
  * FileName: MirrorApplication
@@ -34,8 +32,6 @@ public class MirrorApplication extends Application {
     private Long backGroundTiem;//界面进入后台的时间
     public boolean isWlanOpen = true;
 
-
-    public static WebRtcClient webRtcClient;
     public static MirrorApplication sMe;
     private int video_fps = 30;
     private WindowManager windowManager;

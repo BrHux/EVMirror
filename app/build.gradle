@@ -181,7 +181,7 @@ dependencies {
     //功能库（Zxing扫描与生成二维码条形码）
     implementation 'com.github.tamsiree.RxTool:RxFeature:2.6.2'
     //webrtc
-    implementation 'org.webrtc:google-webrtc:1.0.30039'
+//    implementation 'org.webrtc:google-webrtc:1.0.30039'
     //socket
     implementation('io.socket:socket.io-client:1.0.0') {
         // excluding org.json which is provided by Android

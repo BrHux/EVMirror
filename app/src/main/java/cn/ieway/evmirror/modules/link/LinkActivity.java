@@ -31,7 +31,7 @@ import cn.ieway.evmirror.modules.link.fragment.USBLinkFragment;
 import cn.ieway.evmirror.modules.link.fragment.WIfiFSearchragment;
 import cn.ieway.evmirror.modules.screenshare.ScreenShareActivityNew;
 import cn.ieway.evmirror.util.NetWorkUtil;
-import cn.ieway.evmirror.webrtcclient.JWebSocketClient;
+import cn.ieway.evmirror.net.websocket.JWebSocketClient;
 
 import static cn.ieway.evmirror.application.MirrorApplication.sMe;
 

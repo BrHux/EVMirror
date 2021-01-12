@@ -11,9 +11,6 @@ import com.tamsiree.rxkit.view.RxToast;
 
 import org.java_websocket.handshake.ServerHandshake;
 
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.URI;
 import java.util.List;
 
@@ -23,7 +20,7 @@ import cn.ieway.evmirror.entity.DeviceBean;
 import cn.ieway.evmirror.entity.DeviceBeanMult;
 import cn.ieway.evmirror.modules.screenshare.ScreenShareActivityNew;
 import cn.ieway.evmirror.util.NetWorkUtil;
-import cn.ieway.evmirror.webrtcclient.JWebSocketClient;
+import cn.ieway.evmirror.net.websocket.JWebSocketClient;
 
 import static cn.ieway.evmirror.application.MirrorApplication.sMe;
 
@@ -127,7 +124,7 @@ public class ScanningActivity extends BaseActivity {
         intent.setClass(this, ScreenShareActivityNew.class);
         intent.putExtra("name", bean.getName());
         intent.putExtra("url", bean.getIp());
-        intent.putExtra("port", bean.getPort());
+        intent.putExtra("port", bean.getIp());
         startActivity(intent);
         finish();
     }
