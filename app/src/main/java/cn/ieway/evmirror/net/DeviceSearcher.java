@@ -48,8 +48,8 @@ public abstract class DeviceSearcher extends Thread {
     private TimerTask timerTask = new TimerTask() {
         @Override
         public void run() {
-            long temp = System.currentTimeMillis()-lastAddTime;
-            if (lastAddTime != 0 && temp > 1000){
+            long temp = System.currentTimeMillis() - lastAddTime;
+            if (lastAddTime != 0 && temp > 1000) {
                 interrupt();
                 timer.cancel();
             }
@@ -128,7 +128,7 @@ public abstract class DeviceSearcher extends Thread {
     public void run() {
         try {
             onSearchStart();
-            timer.schedule(timerTask,TIMER_TIME_OUT,RECEIVE_TIME_OUT);
+            timer.schedule(timerTask, TIMER_TIME_OUT, RECEIVE_TIME_OUT);
 
             BroadCastBean broadCastBean = new BroadCastBean();
             broadCastBean.setId(String.valueOf(System.currentTimeMillis()));
@@ -161,7 +161,7 @@ public abstract class DeviceSearcher extends Thread {
                 DatagramPacket recePack = new DatagramPacket(receData, receData.length);
                 try {
                     // 最多接收RESPONSE_DEVICE_MAX个，或超时跳出循环
-                   int rspCount = RESPONSE_DEVICE_MAX;
+                    int rspCount = RESPONSE_DEVICE_MAX;
                     while (rspCount-- > 0 && !isInterrupted()) {
                         hostSocket.receive(recePack);
                         if (parsePack(recePack)) {
@@ -171,14 +171,13 @@ public abstract class DeviceSearcher extends Thread {
                 } catch (SocketTimeoutException e) {
                     LogUtil.i("[DeviceSearcher] run() SocketTimeoutException " + e.toString());
 //                    e.printStackTrace();
-                }
-                catch (InterruptedIOException e){
+                } catch (InterruptedIOException e) {
                     LogUtil.i("[DeviceSearcher] run() InterruptedIOException " + e.toString());
                     break;
                 }
             }
-//            onSearchFinish(mDeviceSet);
-        }catch (UnknownHostException e) {
+
+        } catch (UnknownHostException e) {
             Log.d(TAG, "run: UnknownHostException: " + e.getMessage());
 //            e.printStackTrace();
         } catch (SocketException e) {
@@ -194,7 +193,7 @@ public abstract class DeviceSearcher extends Thread {
             if (hostSocket != null) {
                 hostSocket.close();
             }
-            if (timer != null){
+            if (timer != null) {
                 timer.cancel();
             }
             onSearchFinish(mDeviceSet);
@@ -211,7 +210,10 @@ public abstract class DeviceSearcher extends Thread {
      *
      * @param deviceSet 搜索到的设备集合
      */
-    public abstract void onSearchFinish(Set deviceSet);
+    public abstract void onSearchFinish(Set<DeviceBean> deviceSet);
+
+
+    public abstract void onSearchChange(Set<DeviceBean> deviceSet);
 
     /**
      * 解析报文
@@ -229,11 +231,6 @@ public abstract class DeviceSearcher extends Thread {
             return false;
         }
 
-        for (DeviceBean d : mDeviceSet) { //过滤重复广播
-            if (d.getIp().contains(ip)) {
-                return false;
-            }
-        }
 
         int dataLen = pack.getLength();
         DeviceBean device = null;
@@ -247,15 +244,27 @@ public abstract class DeviceSearcher extends Thread {
 
         BroadCastBean bean = gson.fromJson(dataStr, BroadCastBean.class);
 
+        if (bean.getIp() == null || bean.getPort() == null) return false;
+        boolean already = false;
+        for (DeviceBean d : mDeviceSet) { //过滤重复广播
+            if (d.getIp().equals(bean.getIp())) {
+                already = true;
+            }
+        }
+
+        if (already) return false;
 
         device = new DeviceBean();
         device.setName(bean.getName());
         device.setIp(bean.getIp());
         device.setPort(bean.getPort());
 
-        Log.d(TAG, "parsePack: "+device.getName());
+
+        Log.d(TAG, "parsePack: " + device.getName());
         if (device != null) {
             mDeviceSet.add(device);
+
+            onSearchChange(mDeviceSet);
             lastAddTime = System.currentTimeMillis();
             return true;
         }

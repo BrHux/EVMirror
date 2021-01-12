@@ -65,6 +65,7 @@ public class WifiSearchListFragment extends Fragment {
     private IpAddressAdapter addressAdapter;
     private View view;
     private boolean isConnceted;
+    private DeviceSearcher deviceSearcher;
 
 
     public static Fragment getFragment() {
@@ -73,7 +74,6 @@ public class WifiSearchListFragment extends Fragment {
         }
         Log.d(TAG, "getFragment: " + fragment);
         fragment = new WifiSearchListFragment();
-        Log.d(TAG, "getFragment: " + fragment);
         return fragment;
     }
 
@@ -118,7 +118,7 @@ public class WifiSearchListFragment extends Fragment {
         switch (view.getId()) {
             case R.id.tv_scanner: {
                 Fragment fragment = getParentFragment();
-                if (fragment !=null && fragment instanceof WIfiFSearchragment) {
+                if (fragment != null && fragment instanceof WIfiFSearchragment) {
                     ((WIfiFSearchragment) fragment).goToScanner(getActivity(), CaptureFragment.newInstance());
                 }
                 break;
@@ -144,7 +144,7 @@ public class WifiSearchListFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed()){
+                if (getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed()) {
                     return;
                 }
                 int state = NetWorkUtil.getNetWorkState(getContext());
@@ -163,7 +163,7 @@ public class WifiSearchListFragment extends Fragment {
         addressAdapter.setItemClickListener(new IpAddressAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                onSharebtnPress(mDeviceList.get(position).getName(), mDeviceList.get(position).getUrl());
+                onSharebtnPress(mDeviceList.get(position).getName(), mDeviceList.get(position).getIp(), mDeviceList.get(position).getPort());
             }
         });
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -176,12 +176,19 @@ public class WifiSearchListFragment extends Fragment {
      * 搜索局域网内可连接设备
      */
     private void search() {
-        DeviceSearcher deviceSearcher = new DeviceSearcher() {
+        if(deviceSearcher != null && deviceSearcher.isAlive()) {
+            Log.d(TAG, "search: ===========  0000 "+deviceSearcher.isAlive());
+            return;
+        }
+        Log.d(TAG, "search: =========== 1111 ");
+        deviceSearcher = new DeviceSearcher() {
             @Override
             public void onSearchStart() {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        mDeviceList.clear();
+                        addressAdapter.notifyDataSetChanged();
                         updateStatusAre(REFRESHING);
                         if (swipeRefreshLayout.isRefreshing()) return;
                         swipeRefreshLayout.setRefreshing(true);
@@ -190,10 +197,12 @@ public class WifiSearchListFragment extends Fragment {
             }
 
             @Override
-            public void onSearchFinish(Set deviceSet) {
+            public void onSearchFinish(Set<DeviceBean> deviceSet) {
                 if (fragment == null || fragment.isRemoving() || fragment.isDetached()) return;
-                mDeviceList.clear();
-                mDeviceList.addAll(deviceSet);
+                Log.d(TAG, "onSearchFinish:  ============== "+deviceSet.size());
+                if (mDeviceList.size() == 0 && deviceSet.size() > 0) {
+                    mDeviceList.addAll(deviceSet);
+                }
 
                 try {
                     if (getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed())
@@ -225,6 +234,29 @@ public class WifiSearchListFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
+
+            @Override
+            public void onSearchChange(Set<DeviceBean> deviceSet) {
+                try {
+                    if (getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed())
+                        return;
+
+                    mDeviceList.clear();
+                    mDeviceList.addAll(deviceSet);
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (addressAdapter != null) {
+                                addressAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.d(TAG, "onSearchChange: "+e.getMessage());
+                }
+
+            }
         };
         deviceSearcher.start();
         updateStatusAre(REFRESHING);
@@ -255,14 +287,14 @@ public class WifiSearchListFragment extends Fragment {
     /**
      * 列表点击事件处理
      */
-    private void onSharebtnPress(@NonNull String nickName, @NonNull String url) {
+    private void onSharebtnPress(@NonNull String nickName, @NonNull String url, Integer port) {
         Log.d(TAG, "onSharebtnPress: " + nickName + "  / " + url);
         if (fragment.isRemoving()) return;
 
         WIfiFSearchragment wIfiFSearchragment = (WIfiFSearchragment) fragment.getParentFragment();
         if (wIfiFSearchragment instanceof WIfiFSearchragment) {
             LinkActivity linkActivity = (LinkActivity) wIfiFSearchragment.getActivity();
-            linkActivity.checkConfiguration(nickName, url);
+            linkActivity.checkConfiguration(nickName, url, port);
         }
 //        FragmentManager manager = getFragmentManager();//获取到父fragment的管理器
 //        //获取到父parentFragment

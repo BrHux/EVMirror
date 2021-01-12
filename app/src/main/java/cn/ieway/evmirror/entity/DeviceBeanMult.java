@@ -1,6 +1,5 @@
 package cn.ieway.evmirror.entity;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -8,38 +7,58 @@ import java.util.List;
  * 只要IP一样，则认为是同一个设备
  */
 public class DeviceBeanMult {
-    String name;    // 设备名称
-    List<String> url;    // 设备所在房间
+    /**
+     * ip : ["192.168.1.128"]
+     * port : 10020
+     * serverName : EVMirror[123456]
+     */
+
+    private Integer port;
+    private String serverName;
+    private List<String> ip;
+
 
     public DeviceBeanMult() {
     }
 
-    public DeviceBeanMult(String name, List<String> url) {
-        this.name = name;
-        this.url = url;
+    public DeviceBeanMult(Integer port, String serverName, List<String> ip) {
+        this.port = port;
+        this.serverName = serverName;
+        this.ip = ip;
     }
 
-    public List<String> getUrl() {
-        return url;
+
+    public Integer getPort() {
+        return port;
     }
 
-    public void setUrl(List<String> url) {
-        this.url = url;
+    public void setPort(Integer port) {
+        this.port = port;
     }
 
-    public String getName() {
-        return name;
+    public String getServerName() {
+        return serverName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
     }
+
+    public List<String> getIp() {
+        return ip;
+    }
+
+    public void setIp(List<String> ip) {
+        this.ip = ip;
+    }
+
 
     @Override
     public String toString() {
         return "DeviceBeanMult{" +
-                "name='" + name + '\'' +
-                ", url=" + url +
+                "port=" + port +
+                ", serverName='" + serverName + '\'' +
+                ", ip=" + ip +
                 '}';
     }
 }

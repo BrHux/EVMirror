@@ -91,7 +91,7 @@ public class ScreenShareActivityNew extends BaseActivity {
         getWindowManager().getDefaultDisplay().getRealSize(displaySize);
         socketUrl = getIntent().getStringExtra("url");
         socketName = getIntent().getStringExtra("name");
-        requestPort = getIntent().getIntExtra("port", -1);
+        requestPort = getIntent().getIntExtra("port", 0);
         if (socketUrl == null || socketUrl.isEmpty()) {
             RxToast.error(getString(R.string.abnormal_device_parameters));
             exitActivity();

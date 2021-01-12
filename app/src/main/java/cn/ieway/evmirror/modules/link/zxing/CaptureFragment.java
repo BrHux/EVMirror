@@ -30,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.alibaba.fastjson.JSON;
 import com.tamsiree.rxkit.view.RxToast;
 
 import org.json.JSONArray;
@@ -219,43 +220,11 @@ public class CaptureFragment extends Fragment implements OnCaptureCallback {
         Log.d(TAG, "onResultCallback:" + result);
         Fragment fragment = CaptureFragment.this.getParentFragment();
         boolean checked = false;
-        DeviceBeanMult deviceBean = null;
-
-        try {
-            JSONObject jsonObject = new JSONObject(result);
-            String name = jsonObject.optString("serverName");
-            String urls = jsonObject.optString("url");
-            if (name.isEmpty() || urls.isEmpty()) {
-                scanContinue();
-                return false;
-            }
-
-            //地址数组
-            JSONArray array = new JSONArray(urls);
-            List<String> arrayList = new ArrayList<>();
-            for (int i = 0;i<array.length();i++){
-                String u = array.optString(i);
-                if (!u.isEmpty() && u.startsWith("ws://")){
-                    arrayList.add(u);
-                }
-                Log.d(TAG, "onResultCallback: array:"+array.get(i));
-            }
-
-            if (arrayList.size() == 0) {
-                scanContinue();
-                return false;
-            }
-
-            deviceBean = new DeviceBeanMult(name,arrayList);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-            RxToast.error("二维码解析失败：" + e.getMessage());
+        DeviceBeanMult deviceBean = JSON.parseObject(result, DeviceBeanMult.class);
+        if (deviceBean == null || deviceBean.getIp().size() == 0 || deviceBean.getPort() == 0) {
             scanContinue();
             return false;
         }
-
-
         try {
             if (fragment == null) {
                 Activity activity = CaptureFragment.this.getActivity();
