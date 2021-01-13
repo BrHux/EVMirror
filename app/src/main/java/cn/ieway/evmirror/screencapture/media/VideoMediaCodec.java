@@ -70,6 +70,10 @@ public class VideoMediaCodec extends MediaCodecBase {
         this.isRun = isR;
     }
 
+    public boolean isRun(){
+        return  this.isRun;
+    }
+
 
     public void setMediaCodecCallBack(MediaCodecCallBack codecCallBack) {
         this.mediaCodecCallBack = codecCallBack;

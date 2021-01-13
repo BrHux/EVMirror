@@ -25,6 +25,7 @@
             android:text="检测到您的WIFI连接已断开，投屏中断，请退出后重新连接。"
             android:textSize="@dimen/sp_14"
             android:textColor="@color/color_text_33"
+            android:textIsSelectable="true"
             />
         <LinearLayout
             android:layout_width="match_parent"

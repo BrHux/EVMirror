@@ -114,7 +114,11 @@ public class ScreenShareActivityNew extends BaseActivity {
                 break;
             }
             case UNKNOWN: {
-                disConnection(getString(R.string.remote_disconnect), getString(R.string.sure), 0);
+                if(event.getReason().isEmpty()){
+                    disConnection(getString(R.string.remote_disconnect), getString(R.string.sure), 0);
+                    break;
+                }
+                disConnection(event.getReason(), getString(R.string.sure), 1);
             }
             default: {
                 break;
@@ -148,7 +152,10 @@ public class ScreenShareActivityNew extends BaseActivity {
         } else if (requestCode == EXITE_ACTIVITY && resultCode == EXITE_ACTIVITY) {
 
         } else if (requestCode == DISCONNECT_DIALOG) {
-            exitActivity();
+            if (resultCode == 0){
+                exitActivity();
+            }
+
         }
     }
 

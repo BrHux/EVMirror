@@ -236,13 +236,11 @@ public class WifiSearchListFragment extends Fragment {
                 try {
                     if (getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed())
                         return;
-
-                    mDeviceList.clear();
-                    mDeviceList.addAll(deviceSet);
-
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            mDeviceList.clear();
+                            mDeviceList.addAll(deviceSet);
                             if (addressAdapter != null) {
                                 addressAdapter.notifyDataSetChanged();
                             }

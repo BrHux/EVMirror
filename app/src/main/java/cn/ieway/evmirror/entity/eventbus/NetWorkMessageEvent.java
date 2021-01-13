@@ -16,9 +16,22 @@ class NetWorkMessageEvent {
 
     public State currentState;
 
+    private String reason = "";
+
     public NetWorkMessageEvent(State state) {
         currentState = state;
     }
 
+    public NetWorkMessageEvent(State currentState, String reason) {
+        this.currentState = currentState;
+        this.reason = reason;
+    }
 
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 }

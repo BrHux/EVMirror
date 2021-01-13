@@ -21,6 +21,7 @@ public class DisConnectDialog extends BaseActivity {
     TextView tvContent;
     @BindView(R.id.tv_sure)
     TextView tvSure;
+    private int type = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class DisConnectDialog extends BaseActivity {
     protected void initData() {
         tvContent.setText(getIntent().getStringExtra("content"));
         tvSure.setText(getIntent().getStringExtra("sure"));
+        type = getIntent().getIntExtra("type",-1);
     }
 
     @OnClick({R.id.tv_sure})
@@ -57,7 +59,7 @@ public class DisConnectDialog extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        setResult(-1);
+        setResult(type);
         super.onDestroy();
     }
 }

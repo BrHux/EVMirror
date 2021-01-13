@@ -46,16 +46,20 @@ public class IpAddressAdapter extends RecyclerView.Adapter<IpAddressAdapter.VH> 
 
     @Override
     public void onBindViewHolder(@NonNull  IpAddressAdapter.VH holder, int position) {
-        if (list.get(position) == null) return;
-        holder.address.setText(list.get(position).getName());
-        holder.item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(itemClickListener != null){
-                    itemClickListener.onItemClick(v,position);
+        try {
+            if (list.get(position) == null) return;
+            holder.address.setText(list.get(position).getName());
+            holder.item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(itemClickListener != null){
+                        itemClickListener.onItemClick(v,position);
+                    }
                 }
-            }
-        });
+            });
+        }catch (IndexOutOfBoundsException e){
+            return;
+        }
     }
 
     @Override
