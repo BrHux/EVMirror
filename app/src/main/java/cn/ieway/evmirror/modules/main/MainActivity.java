@@ -9,6 +9,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.application.BaseConfig;
 import cn.ieway.evmirror.base.BaseActivity;
 import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
+import cn.ieway.evmirror.floatwindow.FloatGuardService;
 import cn.ieway.evmirror.modules.link.LinkActivity;
 import cn.ieway.evmirror.modules.about.AboutActivity;
 import cn.ieway.evmirror.receiver.NetWorkStateReceiver;
@@ -77,6 +79,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView() {
         initPermission();
+        if (XXPermissions.isGrantedPermission(sMe, Permission.SYSTEM_ALERT_WINDOW)) {
+            FloatGuardService.requestShow(sMe, "");
+        }
     }
 
     @Override
@@ -191,13 +196,23 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onGranted(List<String> permissions, boolean all) {
                     mNetName.setText(getString(R.string.network_name, NetWorkUtil.getConnectWifiSsid()));
+                    FloatPermission();
                 }
 
                 @Override
                 public void onDenied(List<String> permissions, boolean never) {
                     ToastUtils.show("您未授权应用获取网络位置权限，可能无法获取您的Wifi名称。");
+                    FloatPermission();
                 }
             });
+        } else {
+            FloatPermission();
+        }
+    }
+
+    private void FloatPermission() {
+        if (!XXPermissions.isGrantedPermission(this, Permission.SYSTEM_ALERT_WINDOW)) {
+            showPermissionTips("[悬浮窗]是投屏功能的重要权限，为保证您正常使用，我们需要您授权[悬浮窗]权限。","以后开启","立刻授权>>");
         }
     }
 
@@ -283,6 +298,49 @@ public class MainActivity extends BaseActivity {
                 }
             });
         }
+        rxDialogSureCancel.show();
+    }
+
+
+    private void showPermissionTips(String title,String actStr, String sureStr) {
+        final RxDialogSureCancel rxDialogSureCancel = new RxDialogSureCancel(this);
+        rxDialogSureCancel.setTitle("重要提示");
+        rxDialogSureCancel.getTitleView().setTextColor(ContextCompat.getColor(this,R.color.colorBlue));
+        rxDialogSureCancel.getTitleView().setTextSize(16.0f);
+        rxDialogSureCancel.setContent(title);
+        rxDialogSureCancel.getContentView().setGravity(Gravity.LEFT);
+        rxDialogSureCancel.getContentView().setTextColor(ContextCompat.getColor(this, R.color.color_text_66));
+        rxDialogSureCancel.getContentView().setLinksClickable(true);
+        rxDialogSureCancel.getContentView().setTextSize(16.0f);
+        rxDialogSureCancel.setCancel(sureStr);
+        rxDialogSureCancel.getCancelView().setTextColor(ContextCompat.getColor(this, R.color.colorBlue));
+        rxDialogSureCancel.getCancelView().setTextSize(14.0f);
+        rxDialogSureCancel.getSureView().setTextSize(14.0f);
+        rxDialogSureCancel.getSureView().setTextColor(ContextCompat.getColor(this,R.color.color_text_99));
+        rxDialogSureCancel.setCancelListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                XXPermissions.with(MainActivity.this).permission(Permission.SYSTEM_ALERT_WINDOW).request(new OnPermissionCallback() {
+                    @Override
+                    public void onGranted(List<String> permissions, boolean all) {
+                    }
+
+                    @Override
+                    public void onDenied(List<String> permissions, boolean never) {
+                        ToastUtils.show("您未开启悬浮窗权限，可能会影响投屏功能的使用。");
+                    }
+                });
+                rxDialogSureCancel.cancel();
+            }
+        });
+        rxDialogSureCancel.setSure(actStr);
+        rxDialogSureCancel.setSureListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                rxDialogSureCancel.cancel();
+            }
+        });
         rxDialogSureCancel.show();
     }
 

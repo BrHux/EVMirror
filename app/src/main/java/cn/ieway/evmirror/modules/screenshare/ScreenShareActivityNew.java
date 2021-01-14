@@ -38,6 +38,7 @@ import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.base.BaseActivity;
 import cn.ieway.evmirror.entity.ControlMessageEntity;
 import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
+import cn.ieway.evmirror.floatwindow.FloatGuardService;
 import cn.ieway.evmirror.modules.about.AboutActivity;
 import cn.ieway.evmirror.util.CommonUtils;
 
@@ -134,6 +135,7 @@ public class ScreenShareActivityNew extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        FloatGuardService.requestQuit(sMe);
         Settings.System.putInt(sMe.getContentResolver(), Settings.Global.WIFI_SLEEP_POLICY, Settings.Global.WIFI_SLEEP_POLICY_NEVER_WHILE_PLUGGED);
         stopService(new Intent(this, ScreenShareService.class));
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -149,6 +151,9 @@ public class ScreenShareActivityNew extends BaseActivity {
             mMediaProjectionPermissionResultCode = resultCode;
             mMediaProjectionPermissionResultData = data;
             startScreenCapture(mMediaProjectionPermissionResultData, mMediaProjectionPermissionResultCode);
+            if (XXPermissions.isGrantedPermission(sMe, Permission.SYSTEM_ALERT_WINDOW)) {
+                FloatGuardService.requestShow(sMe, "");
+            }
         } else if (requestCode == EXITE_ACTIVITY && resultCode == EXITE_ACTIVITY) {
 
         } else if (requestCode == DISCONNECT_DIALOG) {
