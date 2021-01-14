@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
+import android.text.method.ScrollingMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
@@ -62,7 +63,7 @@ public class ShowClauseActivity extends AppCompatActivity implements View.OnClic
         tv_exit = findViewById(R.id.tv_exit);
         checkBoxLayout = findViewById(R.id.ll_checkbox);
         checkbox = findViewById(R.id.checkbox);
-
+        tv_text_content.setMovementMethod(ScrollingMovementMethod.getInstance());
         tv_text_content.setText(
                 "欢迎使用EV投屏 ！\n" +
                         "\n" +

@@ -20,6 +20,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_3"
             android:text="权限请求"
             android:textColor="#333"
             android:textSize="@dimen/sp_16"
@@ -27,60 +28,45 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ScrollView
+        <TextView
+            android:id="@+id/tv_text_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="10dp">
-            <TextView
-                android:id="@+id/tv_text_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center|left"
-                android:scrollbars="vertical"
-                android:singleLine="false"
-                android:textColor="#333"
-                android:textSize="@dimen/sp_13"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </ScrollView>
+            android:gravity="center|left"
+            android:maxHeight="@dimen/dp_360"
+            android:scrollbars="vertical"
+            android:singleLine="false"
+            android:textColor="#333"
+            android:textSize="@dimen/sp_13" />
 
         <LinearLayout
             android:id="@+id/ll_checkbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center|left"
-            >
-           <CheckBox
-               android:id="@+id/checkbox"
-               android:checked="true"
-               android:padding="@dimen/dp_5"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:theme="@style/MyCheckBox"
-               />
+            android:gravity="center|left">
+
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:padding="@dimen/dp_5"
+                android:theme="@style/MyCheckBox" />
 
             <TextView
                 android:id="@+id/tv_text_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp_13"
-                android:textColor="#333"/>
+                android:textColor="#333"
+                android:textSize="@dimen/sp_13" />
         </LinearLayout>
-
-<!--        <TextView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="1dp"-->
-<!--            android:background="#AEAEAE" />-->
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_45"
-            android:paddingTop="@dimen/dp_10"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dp_10">
 
             <TextView
                 android:id="@+id/tv_exit"
