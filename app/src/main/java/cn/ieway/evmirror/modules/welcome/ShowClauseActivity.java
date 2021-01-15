@@ -44,7 +44,7 @@ public class ShowClauseActivity extends AppCompatActivity implements View.OnClic
 
         WindowManager.LayoutParams p = getWindow().getAttributes();  //获取对话框当前的参数值
         p.height = WindowManager.LayoutParams.WRAP_CONTENT;   //高度设置为屏幕的1.0
-        p.width = (int) (displaySize.x * 0.8);    //宽度设置为屏幕的0.8
+        p.width = (int) (displaySize.x * 0.85);    //宽度设置为屏幕的0.8
         p.gravity = Gravity.CENTER;
         getWindow().setAttributes(p);
 
