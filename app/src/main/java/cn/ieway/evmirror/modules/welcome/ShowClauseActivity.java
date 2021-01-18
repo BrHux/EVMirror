@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.hjq.toast.ToastUtils;
 import com.tamsiree.rxkit.RxSPTool;
 
 import cn.ieway.evmirror.R;
@@ -63,6 +64,11 @@ public class ShowClauseActivity extends AppCompatActivity implements View.OnClic
         tv_exit = findViewById(R.id.tv_exit);
         checkBoxLayout = findViewById(R.id.ll_checkbox);
         checkbox = findViewById(R.id.checkbox);
+
+
+        setAgreementClickable(checkbox.isChecked());
+
+
         tv_text_content.setMovementMethod(ScrollingMovementMethod.getInstance());
         tv_text_content.setText(
                 "欢迎使用EV投屏 ！\n" +
@@ -163,6 +169,8 @@ public class ShowClauseActivity extends AppCompatActivity implements View.OnClic
                     RxSPTool.putBoolean(ShowClauseActivity.this, Const.IS_AGREE_CLAUSE, true);
                     setResult(1);
                     finish();
+                }else {
+//                    ToastUtils.show("请勾选并同意《服务协议》和《隐私政策》");
                 }
 
                 break;
