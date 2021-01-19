@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -66,7 +67,7 @@ public class HelpTipsActivity extends BaseActivity {
         tvUrl.setText(text);
 
         final SpannableStringBuilder style = new SpannableStringBuilder();
-        String url = "iewayaskdj.cn";
+        String url = "点击复制";
         //设置文字
         style.append(url);
         //设置部分文字点击事件
@@ -83,6 +84,7 @@ public class HelpTipsActivity extends BaseActivity {
 //        style.setSpan(clickableSpan, 0, url.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         //设置部分文字颜色
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(ContextCompat.getColor(this, R.color.colorBlue));
+
         style.setSpan(foregroundColorSpan, 0, url.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         //配置给TextView
         tvUrl.setMovementMethod(LinkMovementMethod.getInstance());

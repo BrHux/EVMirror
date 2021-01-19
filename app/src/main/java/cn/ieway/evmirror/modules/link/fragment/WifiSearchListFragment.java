@@ -1,5 +1,7 @@
 package cn.ieway.evmirror.modules.link.fragment;
 
+import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -33,6 +35,7 @@ import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
 import cn.ieway.evmirror.modules.link.LinkActivity;
 import cn.ieway.evmirror.modules.link.adapter.IpAddressAdapter;
 import cn.ieway.evmirror.modules.link.zxing.CaptureFragment;
+import cn.ieway.evmirror.modules.main.HelpTipsActivity;
 import cn.ieway.evmirror.net.DeviceSearcher;
 import cn.ieway.evmirror.util.NetWorkUtil;
 
@@ -49,6 +52,8 @@ public class WifiSearchListFragment extends Fragment {
     TextView wifiName;
     @BindView(R.id.tv_status)
     TextView tvStatus;
+    @BindView(R.id.tv_help)
+    TextView tvHelp;
     @BindView(R.id.iv_status_img)
     ImageView imgStatus;
 
@@ -85,6 +90,7 @@ public class WifiSearchListFragment extends Fragment {
     }
 
     private void initView(View view) {
+        tvHelp.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         swipeRefreshLayout = view.findViewById(R.id.swipeRedreshLayout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimaryDark);
         setWifiName();
@@ -109,7 +115,7 @@ public class WifiSearchListFragment extends Fragment {
         setWifiName();
     }
 
-    @OnClick({R.id.tv_scanner})
+    @OnClick({R.id.tv_scanner, R.id.tv_help})
     public void OnClick(View view) {
         switch (view.getId()) {
             case R.id.tv_scanner: {
@@ -117,6 +123,10 @@ public class WifiSearchListFragment extends Fragment {
                 if (fragment != null && fragment instanceof WIfiFSearchragment) {
                     ((WIfiFSearchragment) fragment).goToScanner(getActivity(), CaptureFragment.newInstance());
                 }
+                break;
+            }
+            case R.id.tv_help: {
+                startActivity(new Intent(getActivity(), HelpTipsActivity.class));
                 break;
             }
         }
@@ -172,7 +182,7 @@ public class WifiSearchListFragment extends Fragment {
      * 搜索局域网内可连接设备
      */
     private void search() {
-        if(deviceSearcher != null && deviceSearcher.isAlive()) {
+        if (deviceSearcher != null && deviceSearcher.isAlive()) {
 //            Log.d(TAG, "search: ===========  0000 "+deviceSearcher.isAlive());
             return;
         }
@@ -195,7 +205,7 @@ public class WifiSearchListFragment extends Fragment {
             @Override
             public void onSearchFinish(Set<DeviceBean> deviceSet) {
                 if (fragment == null || fragment.isRemoving() || fragment.isDetached()) return;
-                Log.d(TAG, "onSearchFinish:  ============== "+deviceSet.size());
+                Log.d(TAG, "onSearchFinish:  ============== " + deviceSet.size());
                 if (mDeviceList.size() == 0 && deviceSet.size() > 0) {
                     mDeviceList.addAll(deviceSet);
                 }
@@ -214,6 +224,7 @@ public class WifiSearchListFragment extends Fragment {
                                 if (addressAdapter != null) {
                                     if (recyclerView.getVisibility() != View.VISIBLE) {
                                         recyclerView.setVisibility(View.VISIBLE);
+                                        tvHelp.setVisibility(View.GONE);
                                     }
                                     addressAdapter.notifyDataSetChanged();
                                 }
@@ -221,6 +232,7 @@ public class WifiSearchListFragment extends Fragment {
                                 updateStatusAre(UNDISCOVERED);
                                 if (recyclerView.getVisibility() == View.VISIBLE) {
                                     recyclerView.setVisibility(View.GONE);
+                                    tvHelp.setVisibility(View.VISIBLE);
                                 }
 //                                RxToast.normal("未发现设备");
                             }
@@ -247,7 +259,7 @@ public class WifiSearchListFragment extends Fragment {
                         }
                     });
                 } catch (Exception e) {
-                    Log.d(TAG, "onSearchChange: "+e.getMessage());
+                    Log.d(TAG, "onSearchChange: " + e.getMessage());
                 }
 
             }

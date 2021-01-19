@@ -65,6 +65,17 @@
                                 android:text="@string/searching_device"
                                 android:textColor="@color/color_text_66"
                                 android:textSize="@dimen/sp_14"/>
+
+
+                            <TextView
+                                android:id="@+id/tv_help"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/dp_15"
+                                android:text="@string/searching_help"
+                                android:textColor="@color/colorBlue"
+                                android:textSize="@dimen/sp_14"
+                                android:visibility="gone"/>
                         </LinearLayout>
 
                         <androidx.recyclerview.widget.RecyclerView
