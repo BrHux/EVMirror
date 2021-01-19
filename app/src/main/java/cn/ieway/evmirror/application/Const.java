@@ -60,6 +60,6 @@ public class Const {
 
     public static final int VIDEO_FRAMERATE = 25;
 
-    public static final int VIDEO_IFRAME_INTER = 10;
+    public static final int VIDEO_IFRAME_INTER = 25;
 
 }
