@@ -8,6 +8,9 @@ import com.tamsiree.rxkit.RxDataTool;
 import com.tamsiree.rxkit.RxDeviceTool;
 import com.tamsiree.rxkit.RxSPTool;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import cn.ieway.evmirror.util.MachineCodeUtils;
 
 import static cn.ieway.evmirror.application.MirrorApplication.sMe;
@@ -31,7 +34,8 @@ public class BaseConfig {
     public static String TurnPassword = "test";
     public static String TurnRoom_ID = "";
 
-
+    //-- 渠道 id (key键应与build.gradle一致)--
+    public static Map<String, Integer> FLAVORS = new HashMap<String, Integer>();
     /**
      * 每次启动均初始化配置文件
      *
@@ -39,8 +43,27 @@ public class BaseConfig {
      */
     public static void init(Context mContext) {
         serialId = RxDeviceTool.getAndroidId(mContext);
+        setFlavors();
     }
 
+    private static void setFlavors() {
+        if (FLAVORS == null) FLAVORS = new HashMap<String,Integer>();
+        FLAVORS.clear();
+        FLAVORS.put("ieway", 0);    //一位官方平台
+        FLAVORS.put("qihu360", 10);    //360软件中心
+        FLAVORS.put("tencent", 20); //腾讯应用宝
+        FLAVORS.put("huawei", 30);  //华为应用市场
+        FLAVORS.put("xiaomi", 40);  //小米应用市场
+        FLAVORS.put("vivo", 50);    //vivo应用市场
+//            FLAVORS.put("apple", 60);
+        FLAVORS.put("meizu", 70);   //魅族
+        FLAVORS.put("oppo", 80);    //OPPO
+        FLAVORS.put("samsung", 90); //三星
+        FLAVORS.put("lenovo", 100); //联想
+        FLAVORS.put("ali", 110);    //阿里应用开放平台
+        FLAVORS.put("soguo", 120);  //搜狗
+        FLAVORS.put("baidu", 130);  //百度助手
+    }
 
     //=================================================================================================
     public static void put(Context mContext, String key, String value) {
