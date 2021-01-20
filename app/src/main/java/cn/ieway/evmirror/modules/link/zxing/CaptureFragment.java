@@ -64,6 +64,8 @@ public class CaptureFragment extends Fragment implements OnCaptureCallback {
 
     private CaptureHelper mCaptureHelper;
 
+    public CaptureFragment() {}
+
     public static Fragment newInstance() {
 
         Bundle args = new Bundle();
@@ -220,12 +222,12 @@ public class CaptureFragment extends Fragment implements OnCaptureCallback {
         Log.d(TAG, "onResultCallback:" + result);
         Fragment fragment = CaptureFragment.this.getParentFragment();
         boolean checked = false;
-        DeviceBeanMult deviceBean = JSON.parseObject(result, DeviceBeanMult.class);
-        if (deviceBean == null || deviceBean.getIp().size() == 0 || deviceBean.getPort() == 0) {
-            scanContinue();
-            return false;
-        }
         try {
+            DeviceBeanMult deviceBean = JSON.parseObject(result, DeviceBeanMult.class);
+            if (deviceBean == null || deviceBean.getIp() == null || deviceBean.getIp().size() == 0 || deviceBean.getPort() == 0) {
+                scanContinue();
+                return false;
+            }
             if (fragment == null) {
                 Activity activity = CaptureFragment.this.getActivity();
                 if (activity instanceof ScanningActivity) {

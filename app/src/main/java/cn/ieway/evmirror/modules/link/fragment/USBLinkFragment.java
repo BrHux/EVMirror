@@ -13,6 +13,7 @@ import cn.ieway.evmirror.R;
 
 public class USBLinkFragment extends Fragment {
 
+    public USBLinkFragment(){}
 
     public static Fragment newInstance() {
         USBLinkFragment fragment = new USBLinkFragment();

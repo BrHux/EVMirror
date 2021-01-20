@@ -119,6 +119,13 @@ public class MirrorApplication extends Application {
             screenWidth = screenHeight;
             screenHeight = tem;
         }
+        //奇数判断
+        if ((screenHeight & 1) != 0) {
+            screenHeight = screenHeight + 1;
+        }
+        if ((screenWidth & 1) != 0) {
+            screenWidth = screenWidth + 1;
+        }
     }
 
 

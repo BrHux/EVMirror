@@ -64,6 +64,7 @@ public class ScreenRecord extends Thread {
         //连接成功后发送key
         byte[] bytes = sendStream(0, getElen(-1, -1), socketKey.getBytes());
         outputStream.write(bytes);
+        outputStream.flush();
     }
 
     @Override
@@ -240,6 +241,7 @@ public class ScreenRecord extends Thread {
                     try {
                         byte[] bytes1 = sendStream(1, getElen(type, frame), bytes);
                         outputStream.write(bytes1);
+                        outputStream.flush();
                     }
                     catch (Exception e){
                         Log.d(TAG, "onVideoFrameMessage: "+e.getMessage());
