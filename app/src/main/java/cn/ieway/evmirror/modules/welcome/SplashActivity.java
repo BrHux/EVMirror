@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -111,7 +112,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == 1) {
-                checkVersion();
+                enterActivity();
             } else {
                 finish();
                 System.exit(0);
@@ -124,13 +125,23 @@ public class SplashActivity extends AppCompatActivity {
         startActivityForResult(intent, 1);
     }
 
+    private void showGuideActivity() {
+        Intent intent = new Intent(SplashActivity.this, WelcomeGuideActivity.class);
+        startActivityForResult(intent, 1);
+    }
+
     private void enterActivity() {
         // 如果没有展示用户协议和隐私政策则提示
         if (!RxSPTool.getBoolean(SplashActivity.this, Const.IS_AGREE_CLAUSE)) {
             showClauseActivity();
-        } else {
-            checkVersion();
+            return;
         }
+        Log.d("huangx", "enterActivity: "+(RxSPTool.getBoolean(SplashActivity.this, Const.IS_FIRST_START)));
+        if (!RxSPTool.getBoolean(SplashActivity.this, Const.IS_FIRST_START)) {
+            showGuideActivity();
+            return;
+        }
+        checkVersion();
     }
 
     private void enterHomeActivity() {

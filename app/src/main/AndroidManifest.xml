@@ -88,6 +88,11 @@
         <activity
             android:name=".modules.welcome.ShowClauseActivity"
             android:theme="@style/activity_dialog_un" />
+        <activity
+            android:name=".modules.welcome.WelcomeGuideActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
+
 
         <meta-data
             android:name="UMENG_APPKEY"
