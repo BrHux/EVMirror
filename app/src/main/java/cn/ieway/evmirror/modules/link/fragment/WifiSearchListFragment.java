@@ -204,6 +204,7 @@ public class WifiSearchListFragment extends Fragment {
 
             @Override
             public void onSearchFinish(Set<DeviceBean> deviceSet) {
+
                 if (fragment == null || fragment.isRemoving() || fragment.isDetached()) return;
                 Log.d(TAG, "onSearchFinish:  ============== " + deviceSet.size());
                 if (mDeviceList.size() == 0 && deviceSet.size() > 0) {
@@ -245,6 +246,7 @@ public class WifiSearchListFragment extends Fragment {
 
             @Override
             public void onSearchChange(Set<DeviceBean> deviceSet) {
+                if (fragment == null || fragment.isRemoving() || fragment.isDetached()) return;
                 try {
                     if (getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed())
                         return;

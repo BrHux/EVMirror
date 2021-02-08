@@ -98,6 +98,7 @@ public class ScreenShareActivityNew extends BaseActivity {
         }
         mTips.setText(R.string.request_mirror);
         mDeviceName.setText(socketName);
+
     }
 
 
@@ -151,7 +152,7 @@ public class ScreenShareActivityNew extends BaseActivity {
             mMediaProjectionPermissionResultCode = resultCode;
             mMediaProjectionPermissionResultData = data;
             startScreenCapture(mMediaProjectionPermissionResultData, mMediaProjectionPermissionResultCode);
-            if (XXPermissions.isGrantedPermission(sMe, Permission.SYSTEM_ALERT_WINDOW)) {
+            if (XXPermissions.isGrantedPermission(sMe, Permission.SYSTEM_ALERT_WINDOW) && Settings.canDrawOverlays(sMe)) {
                 FloatGuardService.requestShow(sMe, "");
             }
         } else if (requestCode == EXITE_ACTIVITY && resultCode == EXITE_ACTIVITY) {

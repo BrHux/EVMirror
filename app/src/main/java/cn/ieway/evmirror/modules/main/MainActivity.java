@@ -79,7 +79,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView() {
         initPermission();
-        if (XXPermissions.isGrantedPermission(sMe, Permission.SYSTEM_ALERT_WINDOW)) {
+        if (XXPermissions.isGrantedPermission(sMe, Permission.SYSTEM_ALERT_WINDOW) /*&& Settings.canDrawOverlays(sMe)*/) {
             FloatGuardService.requestShow(sMe, "");
         }
     }
@@ -121,6 +121,9 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
         if (netWorkStateReceiver != null) {
             unregisterReceiver(netWorkStateReceiver);
+        }
+        if(FloatGuardService.isRunning){
+            FloatGuardService.requestQuit(sMe);
         }
     }
 

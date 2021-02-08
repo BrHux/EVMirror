@@ -43,7 +43,6 @@ public class MachineCodeUtils
 		androidId = "" + getAndroidId(context);
 		UUID deviceUuid = new UUID(androidId.hashCode(), ((long) signature.hashCode()));
 		String uniqueId = deviceUuid.toString();
-        Log.i(TAG,"uniqueId="+uniqueId+" signature="+signature+" androidId="+androidId+" deviceUuid="+deviceUuid);
 		return uniqueId;
 	}
 }

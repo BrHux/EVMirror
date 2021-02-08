@@ -86,8 +86,16 @@ public class VideoMediaCodec extends MediaCodecBase {
                 isRun = false;
                 mEncoder.stop();
             }
-            MediaFormat format = MediaFormat.createVideoFormat(Const.MIME_TYPE, sMe.screenWidth, sMe.screenHeight);
             Log.d(TAG, "prepare: ============ " + sMe.screenWidth + "  " + sMe.screenHeight);
+
+            if ((sMe.screenWidth & 1) == 1) {
+                sMe.screenWidth--;
+            }
+            if ((sMe.screenHeight & 1) == 1) {
+                sMe.screenHeight--;
+            }
+
+            MediaFormat format = MediaFormat.createVideoFormat(Const.MIME_TYPE, sMe.screenWidth, sMe.screenHeight);
             format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
             format.setInteger(MediaFormat.KEY_BITRATE_MODE, MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CBR);
             format.setInteger(MediaFormat.KEY_BIT_RATE, sMe.biteRate);
