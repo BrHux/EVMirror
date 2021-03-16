@@ -24,8 +24,8 @@ import com.hjq.toast.ToastUtils;
 import com.tamsiree.rxkit.RxTool;
 import com.tamsiree.rxkit.view.RxToast;
 import com.tamsiree.rxui.view.dialog.RxDialogSureCancel;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.commonsdk.UMConfigure;
+//import com.umeng.analytics.MobclickAgent;
+//import com.umeng.commonsdk.UMConfigure;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -350,9 +350,9 @@ public class MainActivity extends BaseActivity {
 
     private void umInit() {
         //初始化组件化基础库, 所有友盟业务SDK都必须调用此初始化接口。
-        UMConfigure.init(sMe, null, null, UMConfigure.DEVICE_TYPE_PHONE, "");
-        //选择AUTO页面采集模式，统计SDK基础指标无需手动埋点可自动采集。
-        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+//        UMConfigure.init(sMe, null, null, UMConfigure.DEVICE_TYPE_PHONE, "");
+//        //选择AUTO页面采集模式，统计SDK基础指标无需手动埋点可自动采集。
+//        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
         // 打开统计SDK调试模式
 //        UMConfigure.setLogEnabled(true);
         //获取 --设备识别信息-- 用于集成测试
