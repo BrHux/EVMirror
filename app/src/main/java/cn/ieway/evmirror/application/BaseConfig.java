@@ -16,23 +16,23 @@ import cn.ieway.evmirror.util.MachineCodeUtils;
 import static cn.ieway.evmirror.application.MirrorApplication.sMe;
 
 public class BaseConfig {
-    public static final int NOT = -1;
+//    public static final int NOT = -1;
     private static final String CLASSNAME = BaseConfig.class.getName();
 
-    public final static String appName = RxAppTool.getAppName(sMe); //应用名称
+//    public final static String appName = RxAppTool.getAppName(sMe); //应用名称
     public final static String appVersionName = RxAppTool.getAppVersionName(sMe); //版本名称
-    public final static int appVersionNo = RxAppTool.getAppVersionCode(sMe); //版本号
-    public final static String macAddress = RxDeviceTool.getMacAddress(sMe); //设备 MAC 地址
+//    public final static int appVersionNo = RxAppTool.getAppVersionCode(sMe); //版本号
+//    public final static String macAddress = RxDeviceTool.getMacAddress(sMe); //设备 MAC 地址
     public final static String deviceName = RxDeviceTool.getBuildBrand() + " " + RxDeviceTool.getBuildBrandModel(); //设备名
     public final static String brandModel = RxDeviceTool.getBuildBrandModel(); //型号名
-    public final static String machineId = MachineCodeUtils.getMachineId(); //机器码
+//    public final static String machineId = MachineCodeUtils.getMachineId(); //机器码
     public  static String serialId = "123456";//序列号(android_id)
 
     //Coturn信息
-    public static String TurnURL = "turn:124.232.150.19";
-    public static String TurnID = "test";
-    public static String TurnPassword = "test";
-    public static String TurnRoom_ID = "";
+//    public static String TurnURL = "turn:124.232.150.19";
+//    public static String TurnID = "test";
+//    public static String TurnPassword = "test";
+//    public static String TurnRoom_ID = "";
 
     //-- 渠道 id (key键应与build.gradle一致)--
     public static Map<String, Integer> FLAVORS = new HashMap<String, Integer>();

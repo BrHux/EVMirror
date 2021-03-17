@@ -194,8 +194,8 @@ public class MainActivity extends BaseActivity {
      * 权限请求
      */
     private void initPermission() {
-        if (!XXPermissions.isGrantedPermission(this, Permission.ACCESS_FINE_LOCATION)) {
-            XXPermissions.with(this).permission(Permission.ACCESS_FINE_LOCATION).request(new OnPermissionCallback() {
+        if (!XXPermissions.isGrantedPermission(this, Permission.ACCESS_COARSE_LOCATION)) {
+            XXPermissions.with(this).permission(Permission.ACCESS_COARSE_LOCATION).request(new OnPermissionCallback() {
                 @Override
                 public void onGranted(List<String> permissions, boolean all) {
                     mNetName.setText(getString(R.string.network_name, NetWorkUtil.getConnectWifiSsid()));

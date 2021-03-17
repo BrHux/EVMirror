@@ -198,24 +198,24 @@ public class ScreenShareActivityNew extends BaseActivity {
 
 
     private void dealAudioTrack(boolean audioTrack) {
-        if (audioTrack) {
-            boolean hasPermission = XXPermissions.isGrantedPermission(this, Permission.RECORD_AUDIO);
-            if (!hasPermission) {
-                XXPermissions.with(this).permission(Permission.RECORD_AUDIO).request(new OnPermissionCallback() {
-                    @Override
-                    public void onGranted(List<String> permissions, boolean all) {
-                        setAudioTrack(audioTrack);
-                    }
-
-                    @Override
-                    public void onDenied(List<String> permissions, boolean never) {
-                        showSureCancelAlertDialog(getString(R.string.request_audio), getString(R.string.authorization), getString(R.string.cancle), never ? 3 : 2);
-                    }
-                });
-                return;
-            }
-        }
-        setAudioTrack(audioTrack);
+//        if (audioTrack) {
+//            boolean hasPermission = XXPermissions.isGrantedPermission(this, Permission.RECORD_AUDIO);
+//            if (!hasPermission) {
+//                XXPermissions.with(this).permission(Permission.RECORD_AUDIO).request(new OnPermissionCallback() {
+//                    @Override
+//                    public void onGranted(List<String> permissions, boolean all) {
+//                        setAudioTrack(audioTrack);
+//                    }
+//
+//                    @Override
+//                    public void onDenied(List<String> permissions, boolean never) {
+//                        showSureCancelAlertDialog(getString(R.string.request_audio), getString(R.string.authorization), getString(R.string.cancle), never ? 3 : 2);
+//                    }
+//                });
+//                return;
+//            }
+//        }
+//        setAudioTrack(audioTrack);
     }
 
     private void setAudioTrack(boolean audioTrack) {

@@ -78,24 +78,17 @@ public class IntentShareActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void checkPermission(){
-        PermissionUtils.checPermission(this, Permission.WRITE_EXTERNAL_STORAGE, new OnPermissionCallback() {
-            @Override
-            public void onGranted(List<String> permissions, boolean all) {
-
-            }
-
-            @Override
-            public void onDenied(List<String> permissions, boolean never) {
-//                finish();
-//                if (never){
-//                    showDialog(getString(R.string.tips_permission),
-//                            "分享功能需要您授权应用 存储 权限，请手动授权",
-//                            getString(R.string.to_authorize), getString(R.string.temporarily_not_authorized), 2, denied);
-//                    return;
-//                }
-                RxToast.warning("您拒绝了应用存储权限,分享功能不可用，请重启应用或进入权限设置开启权限。",2000);
-            }
-        });
+//        PermissionUtils.checPermission(this, Permission.WRITE_EXTERNAL_STORAGE, new OnPermissionCallback() {
+//            @Override
+//            public void onGranted(List<String> permissions, boolean all) {
+//
+//            }
+//
+//            @Override
+//            public void onDenied(List<String> permissions, boolean never) {
+//                RxToast.warning("您拒绝了应用存储权限,分享功能不可用，请重启应用或进入权限设置开启权限。",2000);
+//            }
+//        });
     }
 
     private void initView() {
@@ -127,7 +120,7 @@ public class IntentShareActivity extends AppCompatActivity implements View.OnCli
                         shareNew(IntentShareActivity.this, mApps.get(position), contentStr);
                         return;
                     }
-                    shareNew(IntentShareActivity.this, mApps.get(position), new File(contentStr));
+//                    shareNew(IntentShareActivity.this, mApps.get(position), new File(contentStr));
                 }
             }
         });
@@ -198,7 +191,7 @@ public class IntentShareActivity extends AppCompatActivity implements View.OnCli
 
     }
 
-    public void shareNew(Context context, AppInfoVo resolveInfo, File file) {
+    /*public void shareNew(Context context, AppInfoVo resolveInfo, File file) {
         if(!PermissionUtils.hasPermissionGranted(context, Permission.READ_EXTERNAL_STORAGE)){
             checkPermission();
             return;
@@ -221,7 +214,7 @@ public class IntentShareActivity extends AppCompatActivity implements View.OnCli
         String cls = resolveInfo.getLauncherName();
         intent.setComponent(new ComponentName(pkg, cls));
         context.startActivity(intent);
-    }
+    }*/
 
     public void shareNew(Context context, AppInfoVo resolveInfo, String textStr) {
         Intent intent = new Intent(Intent.ACTION_SEND);
