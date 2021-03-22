@@ -62,4 +62,6 @@ public class Const {
 
     public static final int VIDEO_IFRAME_INTER = 25;
 
+    public static final long DURATION_TIME = 172800000; //48小时毫秒数
+
 }

@@ -9,7 +9,6 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.alibaba.fastjson.JSON;
 import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -38,12 +38,14 @@ import butterknife.OnClick;
 import cn.ieway.evmirror.R;
 import cn.ieway.evmirror.application.BaseConfig;
 import cn.ieway.evmirror.base.BaseActivity;
+import cn.ieway.evmirror.entity.PermissionInfo;
 import cn.ieway.evmirror.entity.eventbus.NetWorkMessageEvent;
 import cn.ieway.evmirror.floatwindow.FloatGuardService;
 import cn.ieway.evmirror.modules.link.LinkActivity;
 import cn.ieway.evmirror.modules.about.AboutActivity;
 import cn.ieway.evmirror.receiver.NetWorkStateReceiver;
 import cn.ieway.evmirror.util.NetWorkUtil;
+import cn.ieway.evmirror.util.PermissionUtils;
 
 import static cn.ieway.evmirror.application.MirrorApplication.sMe;
 
@@ -122,7 +124,7 @@ public class MainActivity extends BaseActivity {
         if (netWorkStateReceiver != null) {
             unregisterReceiver(netWorkStateReceiver);
         }
-        if(FloatGuardService.isRunning){
+        if (FloatGuardService.isRunning) {
             FloatGuardService.requestQuit(sMe);
         }
     }
@@ -165,15 +167,7 @@ public class MainActivity extends BaseActivity {
             }
             case R.id.iv_start_btn: {
 //                Toast.makeText(MainActivity.this, "开始", Toast.LENGTH_LONG).show();
-                if (sMe.isWlanOpen) {
-                    Intent intent = new Intent(MainActivity.this, LinkActivity.class);
-                    intent.setPackage(mContext.getPackageName());
-                    MainActivity.this.startActivity(intent);
-                    break;
-                }
-
-                showTips("检测到未开启WIFI，请开启", "开启", 0);
-
+                initStartButton();
                 break;
             }
             case R.id.iv_scanning: {
@@ -189,35 +183,60 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private void initStartButton() {
+        if (PermissionUtils.needShowPermission(this, Permission.SYSTEM_ALERT_WINDOW)) {
+            PermissionUtils.showPermissionTips(this, Permission.SYSTEM_ALERT_WINDOW,
+                    "权限请求", "我们需要您设备的定位权限，来获取WIFI名称",
+                    "暂不开启", "开启", null,
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            goToSearchDevice();
+                        }
+                    });
+            return;
+        }
+        goToSearchDevice();
+    }
+
+
+    private void goToSearchDevice() {
+        if (sMe.isWlanOpen) {
+            Intent intent = new Intent(MainActivity.this, LinkActivity.class);
+            intent.setPackage(mContext.getPackageName());
+            MainActivity.this.startActivity(intent);
+            return;
+        }
+        showTips("检测到未开启WIFI，请开启", "开启", 0);
+    }
 
     /**
      * 权限请求
      */
     private void initPermission() {
-        if (!XXPermissions.isGrantedPermission(this, Permission.ACCESS_COARSE_LOCATION)) {
-            XXPermissions.with(this).permission(Permission.ACCESS_COARSE_LOCATION).request(new OnPermissionCallback() {
+        if (PermissionUtils.needShowPermission(this, Permission.ACCESS_FINE_LOCATION)) {
+            PermissionUtils.requestPemission(this, Permission.ACCESS_FINE_LOCATION, new OnPermissionCallback() {
                 @Override
                 public void onGranted(List<String> permissions, boolean all) {
-                    mNetName.setText(getString(R.string.network_name, NetWorkUtil.getConnectWifiSsid()));
-                    FloatPermission();
+                    wifiName = NetWorkUtil.getConnectWifiSsid();
+                    mNetName.setText(getString(R.string.network_name, wifiName));
                 }
 
                 @Override
                 public void onDenied(List<String> permissions, boolean never) {
-                    ToastUtils.show("您未授权应用获取网络位置权限，可能无法获取您的Wifi名称。");
-                    FloatPermission();
+                    try {
+                        PermissionInfo info = new PermissionInfo(Permission.ACCESS_FINE_LOCATION);
+                        info.setNever(never);
+                        info.setLastTime(System.currentTimeMillis());
+                        BaseConfig.put(sMe, Permission.ACCESS_FINE_LOCATION, JSON.toJSONString(info));
+                    } catch (Exception e) {
+
+                    }
                 }
             });
-        } else {
-            FloatPermission();
         }
     }
 
-    private void FloatPermission() {
-        if (!XXPermissions.isGrantedPermission(this, Permission.SYSTEM_ALERT_WINDOW)) {
-            showPermissionTips("[悬浮窗]是投屏功能的重要权限，为保证您正常使用，我们需要您授权[悬浮窗]权限。","以后开启","立刻授权>>");
-        }
-    }
 
     /**
      * 相机权限检测及目标页面跳转
@@ -303,50 +322,6 @@ public class MainActivity extends BaseActivity {
         }
         rxDialogSureCancel.show();
     }
-
-
-    private void showPermissionTips(String title,String actStr, String sureStr) {
-        final RxDialogSureCancel rxDialogSureCancel = new RxDialogSureCancel(this);
-        rxDialogSureCancel.setTitle("重要提示");
-        rxDialogSureCancel.getTitleView().setTextColor(ContextCompat.getColor(this,R.color.colorBlue));
-        rxDialogSureCancel.getTitleView().setTextSize(16.0f);
-        rxDialogSureCancel.setContent(title);
-        rxDialogSureCancel.getContentView().setGravity(Gravity.LEFT);
-        rxDialogSureCancel.getContentView().setTextColor(ContextCompat.getColor(this, R.color.color_text_66));
-        rxDialogSureCancel.getContentView().setLinksClickable(true);
-        rxDialogSureCancel.getContentView().setTextSize(16.0f);
-        rxDialogSureCancel.setCancel(sureStr);
-        rxDialogSureCancel.getCancelView().setTextColor(ContextCompat.getColor(this, R.color.colorBlue));
-        rxDialogSureCancel.getCancelView().setTextSize(14.0f);
-        rxDialogSureCancel.getSureView().setTextSize(14.0f);
-        rxDialogSureCancel.getSureView().setTextColor(ContextCompat.getColor(this,R.color.color_text_99));
-        rxDialogSureCancel.setCancelListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                XXPermissions.with(MainActivity.this).permission(Permission.SYSTEM_ALERT_WINDOW).request(new OnPermissionCallback() {
-                    @Override
-                    public void onGranted(List<String> permissions, boolean all) {
-                    }
-
-                    @Override
-                    public void onDenied(List<String> permissions, boolean never) {
-                        ToastUtils.show("您未开启悬浮窗权限，可能会影响投屏功能的使用。");
-                    }
-                });
-                rxDialogSureCancel.cancel();
-            }
-        });
-        rxDialogSureCancel.setSure(actStr);
-        rxDialogSureCancel.setSureListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                rxDialogSureCancel.cancel();
-            }
-        });
-        rxDialogSureCancel.show();
-    }
-
 
     private void umInit() {
         //初始化组件化基础库, 所有友盟业务SDK都必须调用此初始化接口。
