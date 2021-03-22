@@ -186,8 +186,8 @@ public class MainActivity extends BaseActivity {
     private void initStartButton() {
         if (PermissionUtils.needShowPermission(this, Permission.SYSTEM_ALERT_WINDOW)) {
             PermissionUtils.showPermissionTips(this, Permission.SYSTEM_ALERT_WINDOW,
-                    "权限请求", "我们需要您设备的定位权限，来获取WIFI名称",
-                    "暂不开启", "开启", null,
+                    "权限请求", "[悬浮窗]是投屏功能的重要权限，为保证您正常使用，我们需要您授权[悬浮窗]权限。",
+                    "暂不开启", "立刻授权>>", null,
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
