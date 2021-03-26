@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">EV投屏</string>
     <string name="text_device_id">本机ID：EVScreenMirror[%1$s<!--手机型号-->]</string>
-    <string name="network_name">连接网络：%1$s<!--一唯科技访客--></string>
+    <string name="network_name">网络状态：%1$s<!--一唯科技访客--></string>
     <string name="denied_permission">您拒绝了%1$s权限，%2$s</string>
     <string name="text_instruction_book">投屏步骤说明</string>
     <string name="text_tips_1">1、请在Windows电脑上安装EV投屏软件</string>
