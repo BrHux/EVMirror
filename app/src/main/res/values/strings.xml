@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">EV投屏</string>
     <string name="text_device_id">本机ID：EVScreenMirror[%1$s<!--手机型号-->]</string>
     <string name="network_name">连接网络：%1$s<!--一唯科技访客--></string>
@@ -8,7 +8,7 @@
     <string name="text_tips_2">2、请将所有设备连接至同一个WiFi网络</string>
     <string name="text_tips_3">3、点击投屏按钮开始投屏</string>
     <string name="download_url">&#160;&#160;&#8201;&#160;&#160;&#8201;下载地址：</string>
-    <string name="todo">TODO</string>
+    <string name="todo" tools:keep="@string/todo">TODO</string>
     <string name="copyright_ieway">Copyright© ieway.cn Ltd. 版权所有</string>
     <string name="text_upgrade">更新</string>
     <string name="share_to_someone">分享给好友</string>
@@ -20,9 +20,9 @@
     <string name="search_again">下拉可再次搜索</string>
     <string name="undiscovered_device">未发现可用的投屏设备，请下拉重新搜索</string>
     <string name="wifi_name">已连接WiFi: %1$s<!--一唯科技访客--></string>
-    <string name="screen_mirror">正在投屏</string>
+    <string name="screen_mirror" tools:keep="@string/screen_mirror">正在投屏</string>
     <string name="request_mirror">正在请求投屏</string>
-    <string name="retry">启动投屏失败,尝试重新启动</string>
+    <string name="retry" tools:keep="@string/retry">启动投屏失败,尝试重新启动</string>
     <string name="cancelled_screen_request">您取消了投屏请求</string>
     <string name="continue_to">继续</string>
     <string name="exit_for_screen">退出投屏</string>
@@ -30,8 +30,8 @@
     <string name="exit_projection_screen">您即将退出投屏</string>
     <string name="exit">退出</string>
     <string name="cancle">取消</string>
-    <string name="request_audio">使用语音需要您授权[录音]权限</string>
-    <string name="authorization">授权</string>
+    <string name="request_audio" tools:keep="@string/request_audio">使用语音需要您授权[录音]权限</string>
+    <string name="authorization" tools:keep="@string/authorization">授权</string>
     <string name="abnormal_device_parameters">设备参数异常请重试！</string>
     <string name="connection_disconnected_please_reconnect">检测到您的WIFI连接已断开，投屏中断，请退出后重新连接。</string>
     <string name="remote_disconnect">客户端连接异常或网络中断，本次投屏结束。</string>
