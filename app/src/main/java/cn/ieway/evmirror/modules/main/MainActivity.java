@@ -182,6 +182,10 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initStartButton() {
+        if(!sMe.isWlanOpen) {
+            showTips("检测到未开启WIFI，请开启", "开启", 0);
+            return;
+        }
         if (PermissionUtils.needShowPermission(this, Permission.SYSTEM_ALERT_WINDOW)) {
             PermissionUtils.showPermissionTips(this, Permission.SYSTEM_ALERT_WINDOW,
                     "权限请求", "[悬浮窗]是投屏功能的重要权限，为保证您正常使用，我们需要您授权[悬浮窗]权限。",
