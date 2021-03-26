@@ -188,8 +188,8 @@ public class MainActivity extends BaseActivity {
         }
         if (PermissionUtils.needShowPermission(this, Permission.SYSTEM_ALERT_WINDOW)) {
             PermissionUtils.showPermissionTips(this, Permission.SYSTEM_ALERT_WINDOW,
-                    "权限请求", "[悬浮窗]是投屏功能的重要权限，为保证您正常使用，我们需要您授权[悬浮窗]权限。",
-                    "暂不开启", "立刻授权>>", null,
+                    "权限请求", "建议开启“在其他应用上层显示”的权限，使投屏功能后台运行更稳定。",
+                    "暂不开启", "立刻开启>>", null,
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
