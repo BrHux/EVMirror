@@ -178,25 +178,25 @@ public class MirrorApplication extends Application {
     }
 
     public void actionInten(Class<?> cls, int type) {
-        //获取ActivityManager
-        ActivityManager mAm = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        //获得当前运行的task
-        List<ActivityManager.RunningTaskInfo> taskList = mAm.getRunningTasks(100);
-        for (ActivityManager.RunningTaskInfo rti : taskList) {
-            //找到当前应用的task，并启动task的栈顶activity，达到程序切换到前台
-            if (rti.topActivity.getPackageName().equals(getPackageName())) {
-                mAm.moveTaskToFront(rti.id, 0);
-                Intent resultIntent = new Intent(this, cls);
-                resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                resultIntent.putExtra("type", type);
-                startActivity(resultIntent);
-                return;
-            }
-        }
-        //若没有找到运行的task，用户结束了task或被系统释放，则重新启动mainactivity
-        Intent resultIntent = new Intent(this, cls);
-        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        resultIntent.putExtra("type", type);
-        startActivity(resultIntent);
+//        //获取ActivityManager
+//        ActivityManager mAm = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+//        //获得当前运行的task
+//        List<ActivityManager.RunningTaskInfo> taskList = mAm.getRunningTasks(100);
+//        for (ActivityManager.RunningTaskInfo rti : taskList) {
+//            //找到当前应用的task，并启动task的栈顶activity，达到程序切换到前台
+//            if (rti.topActivity.getPackageName().equals(getPackageName())) {
+//                mAm.moveTaskToFront(rti.id, 0);
+//                Intent resultIntent = new Intent(this, cls);
+//                resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+////                resultIntent.putExtra("type", type);
+//                startActivity(resultIntent);
+//                return;
+//            }
+//        }
+//        //若没有找到运行的task，用户结束了task或被系统释放，则重新启动mainactivity
+//        Intent resultIntent = new Intent(this, cls);
+//        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+////        resultIntent.putExtra("type", type);
+//        startActivity(resultIntent);
     }
 }
