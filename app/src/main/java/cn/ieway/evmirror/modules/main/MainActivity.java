@@ -65,7 +65,7 @@ public class MainActivity extends BaseActivity {
     ImageView mScreen;
 
 
-    private String wifiName = "";
+//    private String wifiName = "";
     private IntentFilter intentFilter;
     NetWorkStateReceiver netWorkStateReceiver;
 
@@ -80,7 +80,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        initPermission();
         if (XXPermissions.isGrantedPermission(sMe, Permission.SYSTEM_ALERT_WINDOW) /*&& Settings.canDrawOverlays(sMe)*/) {
             FloatGuardService.requestShow(sMe, "");
         }
@@ -96,11 +95,10 @@ public class MainActivity extends BaseActivity {
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(netWorkStateReceiver, intentFilter);
 
-
-        wifiName = NetWorkUtil.getConnectWifiSsid();
+//        wifiName = NetWorkUtil.getConnectWifiSsid();
 
         mDeviceId.setText(getString(R.string.text_device_id, BaseConfig.brandModel));
-        mNetName.setText(getString(R.string.network_name, wifiName));
+//        mNetName.setText(getString(R.string.network_name, wifiName));
         mInstruction.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //设置下划线
 
     }
@@ -139,7 +137,7 @@ public class MainActivity extends BaseActivity {
                 break;
             }
             case CONNECTED: {
-                mNetName.setText(getString(R.string.network_name, NetWorkUtil.getConnectWifiSsid()));
+                mNetName.setText(getString(R.string.network_name, "WIFI已连接"));
                 break;
             }
             default: {
@@ -210,32 +208,7 @@ public class MainActivity extends BaseActivity {
         showTips("检测到未开启WIFI，请开启", "开启", 0);
     }
 
-    /**
-     * 权限请求
-     */
-    private void initPermission() {
-        if (PermissionUtils.needShowPermission(this, Permission.ACCESS_FINE_LOCATION)) {
-            PermissionUtils.requestPemission(this, Permission.ACCESS_FINE_LOCATION, new OnPermissionCallback() {
-                @Override
-                public void onGranted(List<String> permissions, boolean all) {
-                    wifiName = NetWorkUtil.getConnectWifiSsid();
-                    mNetName.setText(getString(R.string.network_name, wifiName));
-                }
 
-                @Override
-                public void onDenied(List<String> permissions, boolean never) {
-                    try {
-                        PermissionInfo info = new PermissionInfo(Permission.ACCESS_FINE_LOCATION);
-                        info.setNever(never);
-                        info.setLastTime(System.currentTimeMillis());
-                        BaseConfig.put(sMe, Permission.ACCESS_FINE_LOCATION, JSON.toJSONString(info));
-                    } catch (Exception e) {
-
-                    }
-                }
-            });
-        }
-    }
 
 
     /**

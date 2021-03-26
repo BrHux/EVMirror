@@ -147,21 +147,16 @@ public class WifiSearchListFragment extends Fragment {
     }
 
     private void setWifiName() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed()) {
-                    return;
-                }
-                int state = NetWorkUtil.getNetWorkState(getContext());
-                if (state != 1) {
-                    wifiName.setText("未连接Wifi");
-                    return;
-                }
-                search();
-                wifiName.setText(getString(R.string.wifi_name, NetWorkUtil.getConnectWifiSsid()));
-            }
-        }, 500);
+        if (getActivity() == null || getActivity().isFinishing() || getActivity().isDestroyed()) {
+            return;
+        }
+        int state = NetWorkUtil.getNetWorkState(getContext());
+        if (state != 1) {
+            wifiName.setText("未连接Wifi");
+            return;
+        }
+        search();
+        wifiName.setText(getString(R.string.wifi_name,""));
     }
 
     private void initRecyclerView() {
